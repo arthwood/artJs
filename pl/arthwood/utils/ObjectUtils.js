@@ -1,111 +1,121 @@
 var ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-	copy: function(obj_) {
-		var vCopy = new Object();
+	copy: function(obj) {
+		var copy = new Object();
 
-		this.copyProps(obj_, vCopy);
+		this.copyProps(obj, copy);
     
-		return vCopy;
+		return copy;
 	},
   
-	copyProps: function(from_, to_) {
-		for (var i in from_) {
-			to_[i] = from_[i];
+	copyProps: function(from, to) {
+		for (var i in from) {
+			to[i] = from[i];
 		}
 	},
 
-	removeValue: function(obj_, val_) {
-		this.eachPair(obj_, function(i_, j_) {
-			if (j_ === val_) {
-				delete obj_[i_];
+	removeValue: function(obj, val) {
+		this.eachPair(obj, function(i, j) {
+			if (j === val) {
+				delete obj[i];
 			}
 		});
 	},
 
-	removeValues: function(obj_, vals_) {
-		ArrayUtils.each(vals_, function(i_) {
-			ObjectUtils.removeValue(obj_, i_);
+	removeValues: function(obj, values) {
+		ArrayUtils.each(values, function(i) {
+			ObjectUtils.removeValue(obj, i);
 		});
 	},
 
-  map: function(obj_, func_) {
-    var vResult = new Object();
+  map: function(obj, func) {
+    var result = new Object();
 
 		for (var i in obj_) {
-			vResult[i] = func_(obj_[i]);
+			result[i] = func(obj[i]);
 		}
 
-		return vResult;
+		return result;
 	},
 
-	mapKey: function(obj_, func_) {
-		var vResult = new Object();
+	mapKey: function(obj, func) {
+		var result = new Object();
 
-		for (var i in obj_) {
-			vResult[func_(i)] = obj_[i];
+		for (var i in obj) {
+			result[func(i)] = obj[i];
 		}
 
-		return vResult;
+		return result;
 	},
 
-	each: function(obj_, func_) {
-		for (var i in obj_) {
-			func_(obj_[i]);
-		}
-	},
-
-	eachKey: function(obj_, func_) {
-		for (var i in obj_) {
-			func_(i);
+	each: function(obj, func) {
+		for (var i in obj) {
+			func(obj[i]);
 		}
 	},
 
-	eachPair: function(obj_, func_) {
-		for (var i in obj_) {
-			func_(i, obj_[i]);
+	eachKey: function(obj, func) {
+		for (var i in obj) {
+			func(i);
 		}
 	},
 
-	select: function(obj_, func_) {
-		var vResult = new Object();
+	eachPair: function(obj, func) {
+		for (var i in obj) {
+			func(i, obj[i]);
+		}
+	},
 
-		this.eachPair(obj_, function(i_, j_) {
-			if (func_(j_)) {
-				vResult[i_] = j_;
+	select: function(obj, func) {
+		var result = new Object();
+
+		this.eachPair(obj, function(i, j) {
+			if (func(j)) {
+				result[i] = j;
 			}
 		});
 
-		return vResult;
+		return result;
 	},
 
-	selectWithKey: function(obj_, func_) {
-		var vResult = new Object();
+	selectWithKey: function(obj, func) {
+		var result = new Object();
 
-		this.eachPair(obj_, function(i_, j_) {
-			if (func_(i_, j_)) {
-				vResult[i_] = j_;
+		this.eachPair(obj, function(i, j) {
+			if (func(i, j)) {
+				result[i] = j;
 			}
 		});
 
-		return vResult;
+		return result;
 	},
 
-	reject: function(obj_, func_) {
-		var vResult = new Object();
+	reject: function(obj, func) {
+		var result = new Object();
 
-		this.eachPair(obj_, function(i_, j_) {
-			if (!func_(j_)) {
-				vResult[i_] = j_;
+		this.eachPair(obj, function(i, j) {
+			if (!func(j)) {
+				result[i] = j;
 			}
 		});
 
-		return vResult;
+		return result;
 	},
 
-	isEmpty: function(obj_) {
-		for (var i in obj_) {
+	isEmpty: function(obj) {
+		for (var i in obj) {
 			return false;
 		}
     
 		return true;
-	}
+	},
+
+  toArray: function(obj) {
+    var result = new Array();
+
+    for (var i in obj) {
+			result.push([i, obj[i]]);
+		}
+
+    return result;
+  }
 };

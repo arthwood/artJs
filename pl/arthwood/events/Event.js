@@ -24,5 +24,5 @@ Event.prototype.length = function() {
 };
 
 Event.prototype.toString = function() {
-  return "Event " + this.name + ", length = " + this.length();
+  return 'Event "' + this.name + '", listeners: ' + this.length();
 };
