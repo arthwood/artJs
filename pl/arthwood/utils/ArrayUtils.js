@@ -18,7 +18,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     }
   },
 
-  getArguments: function(v, idx) {
+  arrify: function(v, idx) {
     var args = new Array();
 
     var n = v.length;
@@ -208,4 +208,4 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return '[' + arr.join(', ') + ']';
   }
 };
-var $args = ArrayUtils.getArguments;
+var $args = ArrayUtils.arrify;

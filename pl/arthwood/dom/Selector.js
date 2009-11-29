@@ -41,9 +41,8 @@ Selector.getElementsBySingleSelector = function(selector) {
   var elementsByTag = tag && Selector.getElementsByTagName(tag);
   var elementsById = ids && ArrayUtils.uniq(ArrayUtils.map(ids, Selector.getElementById));
   var elementsByClass = classes && ArrayUtils.uniq(ArrayUtils.flatten(ArrayUtils.map(classes, Selector.getElementsByClassName)));
-  alert(elementsByClass);
-  //log(ArrayUtils.toString(elementsByTag));
-  //log(ArrayUtils.toString([3, 4, 5, 6]));
+  log(ArrayUtils.flatten([[1, 2], [3, 4]]));
+
   return ArrayUtils.uniq(ArrayUtils.flatten([elementsByTag, elementsById, elementsByClass]));
 };
 
