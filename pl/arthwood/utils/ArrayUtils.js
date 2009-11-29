@@ -71,9 +71,20 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   inject: function(arr, func, init) {
     var vResult = init;
     var n = arr.length;
-
+    
     for (var i = 0; i < n; i++) {
       vResult = func(vResult, arr[i]);
+    }
+
+    return vResult;
+  },
+
+  flatten: function(arr) {
+    var vResult = [];
+    var n = arr.length;
+    
+    for (var i = 0; i < n; i++) {
+      vResult = vResult.concat(arr[i]);
     }
 
     return vResult;
@@ -99,7 +110,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
         vResult.push(i);
       }
     });
-
+    
     return vResult;
   },
 
@@ -143,6 +154,32 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return false;
   },
 
+  uniq: function(arr, func) {
+    var comparison = func || this.uniqDefault;
+    var copy = arr.concat();
+    var result = new Array();
+    var item, n;
+    
+    while (copy.length) {
+      item = copy[0];
+      result.push(item);
+
+      n = copy.length;
+      
+      while (n-- > 0) {
+        if (comparison(copy[n], item)) {
+          copy.splice(n, 1);
+        }
+      }
+    }
+
+    return result;
+  },
+
+  uniqDefault: function(i, j) {
+    return i === j;
+  },
+
   numerize: function(arr) {
     return this.map(arr, this.numerizeCallback);
   },
@@ -165,6 +202,10 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   stringifyCallback: function(i) {
     return i.toString();
+  },
+
+  toString: function(arr) {
+    return '[' + arr.join(', ') + ']';
   }
 };
 var $args = ArrayUtils.getArguments;
