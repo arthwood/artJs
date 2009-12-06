@@ -18,7 +18,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     }
   },
 
-  getArguments: function(v, idx) {
+  arrify: function(v, idx) {
     var args = new Array();
 
     var n = v.length;
@@ -249,8 +249,8 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     this.each(arr, p);
   }
 };
-var $args = ArrayUtils.getArguments;
+var $args = ArrayUtils.arrify;
+
 ArrayUtils.commonElementSelectDelegate = $DC(ArrayUtils, ArrayUtils.commonElementSelect);
 ArrayUtils.hasTestElementDelegate = $DC(ArrayUtils, ArrayUtils.hasTestElement);
 ArrayUtils.nonEmptyDelegate = $DC(ArrayUtils, ArrayUtils.nonEmpty);
-//ArrayUtils.nonEmptyDelegate = $DC(ArrayUtils, ArrayUtils.nonEmpty);
