@@ -47,5 +47,5 @@ log(ArrayUtils.uniq(arr, function(i, j) {return i.name.length == j.name.length})
 */
 
 window.onload = function() {
-  Selector.getElementsBySingleSelector('p.title');
+  ArrayUtils.print(Selector.getElementsBySingleSelector('p'));
 };

@@ -32,19 +32,17 @@ Selector.getElementsBySingleSelector = function(selector) {
   var idsRE = /#{1}\w+/gi;
 
   var tag = selector.match(tagRE);
-  var ids = selector.match(idsRE);
-  var classes = selector.match(classesRE);
+  var ids = ArrayUtils.map(selector.match(idsRE) || [], Selector.stripSelector);
+  var classes = ArrayUtils.map(selector.match(classesRE) || [], Selector.stripSelector);
 
-  ids = ids && ArrayUtils.map(ids, Selector.stripSelector);
-  classes = classes && ArrayUtils.map(classes, Selector.stripSelector);
+  var elementsOfClasses = ArrayUtils.map(classes, Selector.getElementsByClassName);
 
-  var elementsByTag = tag && Selector.getElementsByTagName(tag);
-  var elementsById = ids && ArrayUtils.uniq(ArrayUtils.map(ids, Selector.getElementById));
-  var elementsByClass = classes && ArrayUtils.uniq(ArrayUtils.flatten(ArrayUtils.map(classes, Selector.getElementsByClassName)));
-  alert(elementsByClass);
-  //log(ArrayUtils.toString(elementsByTag));
-  //log(ArrayUtils.toString([3, 4, 5, 6]));
-  return ArrayUtils.uniq(ArrayUtils.flatten([elementsByTag, elementsById, elementsByClass]));
+  var elementsByTag = Selector.getElementsByTagName(tag);
+  var elementsById = ArrayUtils.uniq(ArrayUtils.map(ids, Selector.getElementById));
+  var elementsByClass = ArrayUtils.uniq(ArrayUtils.flattenHtmlCollections(elementsOfClasses));
+  var nonEmpty = ArrayUtils.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
+
+  return ArrayUtils.commonElement(nonEmpty);
 };
 
 Selector.stripSelector = function(selector) {

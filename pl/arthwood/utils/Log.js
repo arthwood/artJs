@@ -1,3 +1,1 @@
-if (console) {
-  window.log = console.debug;
-}
+window.p = window.console ? window.console.debug : alert;

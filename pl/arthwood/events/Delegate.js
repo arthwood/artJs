@@ -5,7 +5,9 @@ var Delegate = pl.arthwood.events.Delegate = function(object, method) {
 };
 
 Delegate.prototype.invoke = function() {
-  return this.method.apply(this.object, $args(arguments).concat(this.args));
+  var args = $args(arguments).concat(this.args);
+  
+  return this.method.apply(this.object, args);
 };
 
 Delegate.prototype.invokeWithSource = function(src, args) {
@@ -18,7 +20,7 @@ Delegate.prototype.callback = function(withSource) {
     var delegate = callee.delegate;
     var args = $args(arguments);
     
-    callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
+    return callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
   };
 
   result.withSource = withSource;
@@ -27,7 +29,7 @@ Delegate.prototype.callback = function(withSource) {
   return result;
 };
 
-Delegate.callback = function(object, method, withSource) {
+var $DC = Delegate.callback = function(object, method, withSource) {
   var delegate = new Delegate(object, method);
   var callback = delegate.callback(withSource);
   
