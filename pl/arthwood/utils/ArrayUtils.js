@@ -44,7 +44,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   each: function(arr, func) {
     var n = arr.length;
     var vArgs = $args(arguments, 2);
-
+    
     for (var i = 0; i < n; i++) {
       func.apply(null, [arr[i]].concat(vArgs));
     }
@@ -80,13 +80,26 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   flatten: function(arr) {
-    var vResult = [];
-    var n = arr.length;
-    
-    for (var i = 0; i < n; i++) {
-      vResult = vResult.concat(arr[i]);
-    }
+    return this.inject(arr, this.flattenCallback, []);
+  },
+  
+  flattenCallback: function(mem, i) {
+    return mem.concat(i);
+  },
 
+  flattenHtmlCollections: function(arr) {
+    var vResult = new Array();
+    var n = arr.length;
+    var collection;
+
+    for (var i = 0; i < n; i++) {
+      collection = arr[i];
+
+      for (var j = 0; j < collection.length; j++) {
+        vResult.push(collection[j]);
+      }
+    }
+    
     return vResult;
   },
 
@@ -98,7 +111,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
         vResult.push(i);
       }
     });
-
+    
     return vResult;
   },
 
@@ -160,12 +173,10 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var result = new Array();
     var item, n;
     
-    while (copy.length) {
+    while (n = copy.length) {
       item = copy[0];
       result.push(item);
 
-      n = copy.length;
-      
       while (n-- > 0) {
         if (comparison(copy[n], item)) {
           copy.splice(n, 1);
@@ -178,6 +189,32 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   uniqDefault: function(i, j) {
     return i === j;
+  },
+
+  commonElement: function(arr) {
+    this.commonTestArray = arr.slice(1);
+
+    return this.select(arr[0], this.commonElementSelectDelegate);
+  },
+
+  commonElementSelect: function(i) {
+    this.testElement = i;
+    
+    return this.all(this.commonTestArray, this.hasTestElementDelegate);
+  },
+
+  hasTestElement: function(arr) {
+    var has = Boolean(arr.indexOf(this.testElement) + 1);
+    
+    return has;
+  },
+
+  selectNonEmpty: function(arr) {
+    return this.select(arr, this.nonEmptyDelegate);
+  },
+
+  nonEmpty: function(arr) {
+    return !(arr.length == 0);
   },
 
   numerize: function(arr) {
@@ -206,6 +243,14 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   toString: function(arr) {
     return '[' + arr.join(', ') + ']';
+  },
+
+  print: function(arr) {
+    this.each(arr, p);
   }
 };
 var $args = ArrayUtils.arrify;
+
+ArrayUtils.commonElementSelectDelegate = $DC(ArrayUtils, ArrayUtils.commonElementSelect);
+ArrayUtils.hasTestElementDelegate = $DC(ArrayUtils, ArrayUtils.hasTestElement);
+ArrayUtils.nonEmptyDelegate = $DC(ArrayUtils, ArrayUtils.nonEmpty);
