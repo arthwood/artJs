@@ -1,4 +1,44 @@
 var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
+  init: function() {
+    this.commonElementSelectDelegate = $DC(this, this.commonElementSelect);
+    this.includeDelegate = $DC(this, this.include);
+    this.nonEmptyDelegate = $DC(this, this.nonEmpty);
+  },
+
+  first: function(arr) {
+    return this.getItem(arr, 0);
+  },
+
+  second: function(arr) {
+    return this.getItem(arr, 1);
+  },
+
+  third: function(arr) {
+    return this.getItem(arr, 2);
+  },
+
+  last: function(arr) {
+    return this.getItem(arr, arr.length - 1);
+  },
+
+  beforeLast: function(arr) {
+    return this.getItem(arr, arr.length - 2);
+  },
+
+  getItem: function(arr, i) {
+    return arr[i];
+  },
+
+  include: function(arr, item) {
+    return Boolean(arr.indexOf(item) + 1);
+  },
+
+  includeAll: function(arr, subset) {
+    this.includeDelegate.delegate.args = [arr];
+    
+    return this.all(subset, this.includeDelegate);
+  },
+  
   insertAt: function(arr, at, obj) {
     return arr.slice(0, at).concat(obj).concat(arr.slice(at));
   },
@@ -198,23 +238,19 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   commonElementSelect: function(i) {
-    this.testElement = i;
-    
-    return this.all(this.commonTestArray, this.hasTestElementDelegate);
-  },
-
-  hasTestElement: function(arr) {
-    var has = Boolean(arr.indexOf(this.testElement) + 1);
-    
-    return has;
+    return this.includeAll(i, this.commonTestArray);
   },
 
   selectNonEmpty: function(arr) {
     return this.select(arr, this.nonEmptyDelegate);
   },
 
+  empty: function(arr) {
+    return arr.length == 0;
+  },
+
   nonEmpty: function(arr) {
-    return !(arr.length == 0);
+    return !this.empty(arr);
   },
 
   numerize: function(arr) {
@@ -251,6 +287,4 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 };
 var $args = ArrayUtils.arrify;
 
-ArrayUtils.commonElementSelectDelegate = $DC(ArrayUtils, ArrayUtils.commonElementSelect);
-ArrayUtils.hasTestElementDelegate = $DC(ArrayUtils, ArrayUtils.hasTestElement);
-ArrayUtils.nonEmptyDelegate = $DC(ArrayUtils, ArrayUtils.nonEmpty);
+ArrayUtils.init();
