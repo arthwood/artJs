@@ -1,9 +1,13 @@
 window.onload = function() {
-  var clock = new Clock($DC(this, this.onTick, true), 200, 40);
-
-  clock.trigger(true);
+  this.onTickDelegate = $DC(this, this.onTick, true);
+  this.qc = new QueuedClock(2000);
+  ArrayUtils.first($$('.box')).onclick = $DC(this, this.onClick);
 };
 
-function onTick(clock_) {
-  p('tick# ' + clock_.getCounter());
+function onClick() {
+  this.qc.addCall(this.onTickDelegate);
+}
+
+function onTick(source) {
+  p('tick ' + source);
 }
