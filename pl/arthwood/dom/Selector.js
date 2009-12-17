@@ -3,14 +3,27 @@ var Selector = pl.arthwood.dom.Selector = {
   classesRE: /\.{1}\w+/gi,
   idsRE: /#{1}\w+/gi,
 
-  getElements: function(path) {
-    this.items = path.split(' ');
+  init: function() {
+    this.filterFamilyDelegate = $DC(this, this.filterFamily);
+    this.getFamilyDelegate = $DC(this, this.getFamily);
+    this.getFamilyDescendantDelegate = $DC(this, this.getFamilyDescendant);
 
-    var item = ArrayUtils.last(this.items);
-    var candidates = Selector.getElementsBySingleSelector(item);
+    window.$ = $DC(this, this.getElementById);
+    window.$$ = $DC(this, this.getElements);
+  },
+
+  getElements: function(path) {
+    var items = path.split(' ');
+
+    this.signatures = ArrayUtils.map(items, $DC(this, this.getSignature));
+
+    if (ArrayUtils.empty(this.signatures)) return [];
+
+    var signature = ArrayUtils.last(this.signatures);
+    var candidates = Selector.getElementsBySignature(signature);
     var families = ArrayUtils.map(candidates, this.getFamilyDelegate);
     var firteredFamilies = ArrayUtils.select(families, this.filterFamilyDelegate);
-    var result = ArrayUtils.map(firteredFamilies, this.getFamilyLastDescendantDelegate);
+    var result = ArrayUtils.map(firteredFamilies, this.getFamilyDescendantDelegate);
 
     return result;
   },
@@ -26,62 +39,64 @@ var Selector = pl.arthwood.dom.Selector = {
   },
 
   filterFamily: function(family) {
-    var i = this.items.length - 1;
-    var item;
-    var result;
-    var j = family.length - 2;
+    var i = this.signatures.length - 1;
+    var j = 1;
+    var n = family.length;
+    var signature;
+    var ok;
+
+    if (n == 1) return true;
+
+    this.immediateParent = false;
 
     while (i--) {
-      item = this.items[i];
+      signature = this.signatures[i];
 
-      var immediateParent = (item == '>');
-      
+      var immediateParent = (signature == '>');
+
       if (!immediateParent) {
-        var tag = this.getTag(item);
-        var ids = this.getIds(item);
-        var classes = this.getClasses(item);
-
-        if (this.immediateParent) {
+        do {
+          ok = this.checkNode(family[j++], signature);
         }
-        else {
-          while (j > -1 && !this.checkNode(family[j], item)) {
+        while (!ok && !this.immediateParent && j < n);
 
-          }
-        }
+        if (!ok) return false;
       }
 
       this.immediateParent = immediateParent;
     }
+    
+    return true;
   },
 
-  checkNode: function(node, item) {
-    var signature = this.getSignature(item);
+  checkNode: function(node, signature) {
     var tag = signature.tag;
     var ids = signature.ids;
     var classes = signature.classes;
 
-    return (!tag || (node.tagName == tag))
+    return (!tag || (node.tagName.toLowerCase() == tag))
       && (ArrayUtils.empty(ids) || ArrayUtils.include(ids, node.id))
-      && (ArrayUtils.empty(classes) || ArrayUtils.includeAll(node.class.split(' '), classes));
+      && (ArrayUtils.empty(classes) || ArrayUtils.includeAll(node.className.split(' '), classes));
   },
 
   getSignature: function(selector) {
-    return {tag: this.getTag(selector), ids: this.getIds(selector), classes: this.getClasses(selector)};
+    return (selector == '>')
+      ? selector
+      : {tag: this.getTag(selector), ids: this.getIds(selector), classes: this.getClasses(selector)};
   },
 
-  getFamilyLastDescendant: function(i) {
-    return ArrayUtils.last(i);
+  getFamilyDescendant: function(i) {
+    return ArrayUtils.first(i);
   },
 
-  getElementsBySingleSelector: function(selector) {
-    var signature = this.getSignature(selector);
+  getElementsBySignature: function(signature) {
     var elementsOfClasses = ArrayUtils.map(signature.classes, Selector.getElementsByClassName);
     var elementsByTag = Selector.getElementsByTagName(signature.tag);
     var elementsById = ArrayUtils.uniq(ArrayUtils.map(signature.ids, Selector.getElementById));
     var elementsByClass = ArrayUtils.uniq(ArrayUtils.flattenHtmlCollections(elementsOfClasses));
     var nonEmpty = ArrayUtils.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
-
-    return ArrayUtils.commonElement(nonEmpty);
+    
+    return ArrayUtils.empty(nonEmpty) ? [] : ArrayUtils.commonElement(nonEmpty);
   },
 
   getTag: function(selector) {
@@ -113,9 +128,4 @@ var Selector = pl.arthwood.dom.Selector = {
   }
 };
 
-var $ = $DC(Selector, Selector.getElementById);
-var $$ = $DC(Selector, Selector.getElements);
-
-Selector.filterFamilyDelegate = $DC(Selector, Selector.filterFamily);
-Selector.getFamilyDelegate = $DC(Selector, Selector.getFamily);
-Selector.getFamilyLastDescendantDelegate = $DC(Selector, Selector.getFamilyLastDescendant);
+Selector.init();

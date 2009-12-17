@@ -1,3 +1,3 @@
 window.onload = function() {
-  ArrayUtils.print($$('.main > p span.bold'));
+  p($$('.content .boxes .box'));
 };
