@@ -1,7 +1,7 @@
 var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   init: function() {
     this.commonElementSelectDelegate = $DC(this, this.commonElementSelect);
-    this.includeDelegate = $DC(this, this.include);
+    this.reversedIncludeDelegate = $DC(this, this.reversedInclude);
     this.nonEmptyDelegate = $DC(this, this.nonEmpty);
   },
 
@@ -29,14 +29,18 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return arr[i];
   },
 
+  reversedInclude: function(item, arr) {
+    return this.include(arr, item);
+  },
+
   include: function(arr, item) {
     return Boolean(arr.indexOf(item) + 1);
   },
 
   includeAll: function(arr, subset) {
-    this.includeDelegate.delegate.args = [arr];
+    this.reversedIncludeDelegate.delegate.args = [arr];
     
-    return this.all(subset, this.includeDelegate);
+    return this.all(subset, this.reversedIncludeDelegate);
   },
   
   insertAt: function(arr, at, obj) {
