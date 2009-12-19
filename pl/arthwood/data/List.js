@@ -24,23 +24,19 @@ List.prototype.addItemAt = function(item, position, noEvent) {
 
 
 List.prototype.removeItem = function(item, onlyFirst, noEvent) {
-  var n = this.getLength();
-  var removed = false;
-
   ArrayUtils.removeItem(this._items, item, onlyFirst);
 
-  if ((removed = (this.getLength() == n - 1)) && !noEvent) {
+  if (!noEvent) {
     this.onChange.fire(this);
   }
-
-  return removed;
 };
 
 List.prototype.removeItemAt = function(position, noEvent) {
-  var item = this.getItemAt(position);
-  var removed = this.removeItem(item, false, noEvent);
+  ArrayUtils.removeAt(this._items, position);
 
-  return {item: item, removed: removed};
+  if (!noEvent) {
+    this.onChange.fire(this);
+  }
 };
 
 List.prototype.removeAll = function() {

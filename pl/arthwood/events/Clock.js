@@ -23,10 +23,10 @@ Clock.found = function(i) {
   return arguments.callee.id == i.getId();
 };
 
-Clock.prototype.trigger = function(now_) {
+Clock.prototype.start = function(now_) {
   var code = 'Clock.getClockById(' + this._id + ')._onIntervalDelegate()';
   
-  this.clear();
+  this.stop();
   this._intervalId = setInterval(code, this._interval);
 
   if (now_) {
@@ -39,16 +39,19 @@ Clock.prototype.onInterval = function() {
   this._delegate();
 
   if (this._counter == this._repeat) {
-    this.clear();
+    this.stop();
   }
 };
 
-Clock.prototype.clear = function() {
+Clock.prototype.stop = function() {
   clearInterval(this._intervalId);
   this._intervalId = null;
   this._counter = 0;
 };
 
+Clock.prototype.isRunning = function() {
+  return !(this._intervalId == null);
+};
 
 Clock.prototype.getCounter = function() {
   return this._counter;

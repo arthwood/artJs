@@ -1,31 +1,24 @@
 var QueuedClock = pl.arthwood.events.QueuedClock = function(interval_) {
+  this._busy = false;
   this._interval = interval_;
   this._queue = new Queue();
-  this._triggerDelegate = $DC(this, this.trigger);
+  this._startDelegate = $DC(this, this._start);
+  this.clock = new Clock(this._startDelegate, this._interval);
 };
 
-QueuedClock.prototype.trigger = function() {
-  if (!this.isBusy()) {
-    return;
+QueuedClock.prototype._start = function() {
+  if (this._queue.isEmpty()) {
+    this.clock.stop();
   }
-
-  var element = this._queue.getItem();
-
-  element();
-
-  Clock.fire(this._triggerDelegate, this._interval, 1);
+  else {
+    this._queue.getItem()();
+  }
 };
 
-QueuedClock.prototype.addCall = function(delegate_) {
-  this._queue.addItem(delegate_);
+QueuedClock.prototype.addCallback = function(i_) {
+  this._queue.addItem(i_);
 
-  this.trigger();
-};
-
-QueuedClock.prototype.isBusy = function() {
-  return !this._queue.isEmpty();
-};
-
-QueuedClock.prototype.getLength = function() {
-  return this._queue.getLength();
+  if (!this.clock.isRunning()) {
+    this.clock.start(true);
+  }
 };
