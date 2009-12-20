@@ -30,7 +30,7 @@ var ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   map: function(obj, func) {
     var result = new Object();
 
-		for (var i in obj_) {
+		for (var i in obj) {
 			result[i] = func(obj[i]);
 		}
 
@@ -101,13 +101,25 @@ var ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 		return result;
 	},
 
-	isEmpty: function(obj) {
+	empty: function(obj) {
 		for (var i in obj) {
 			return false;
 		}
     
 		return true;
 	},
+
+  fromArray: function(arr) {
+    var result = new Object();
+    var item;
+
+    for (var i in arr) {
+      item = arr[i];
+      result[item[0]] = item[1];
+    }
+
+    return result;
+  },
 
   toArray: function(obj) {
     var result = new Array();
@@ -117,5 +129,15 @@ var ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 		}
 
     return result;
+  },
+
+  includeAll: function(obj, subset) {
+    for (var i in subset) {
+      if (subset[i] != obj[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 };
