@@ -17,10 +17,28 @@ var Selector = pl.arthwood.dom.Selector = {
     window.$ = $DC(this, this.getElementById);
     window.$$ = $DC(this, this.getElements);
     window.$down = $DC(this, this.down);
+    window.$up = $DC(this, this.up);
   },
 
   down: function(element, path) {
     return this.getElements(path, element);
+  },
+
+  up: function(element, path) {
+    if (!path) return element.parentNode;
+
+    var signature = this.getSignature(path);
+    var family = this.getFamily(element);
+    var j = 1;
+    var n = family.length;
+    var ok;
+
+    do {
+      ok = this.checkNode(family[j++], signature);
+    }
+    while (!ok && j < n);
+
+    return ok ? family[j - 1] : null;
   },
 
   getElements: function(path, root) {

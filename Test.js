@@ -1,5 +1,5 @@
 window.onload = function() {
-  var root = ArrayUtils.first($$('.boxes'));
+  var root = ArrayUtils.first($$('.second'));
 
-  p($down(root, 'a'));
+  p($up(root, '.clearfix'));
 };
