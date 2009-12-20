@@ -1,5 +1,5 @@
 var Selector = pl.arthwood.dom.Selector = {
-  tagRE: /^[a-z]+/gi,
+  tagRE: /^\w+/gi,
   classesRE: /\.\w+/gi,
   idsRE: /#\w+/gi,
   attrsRE: /\[.*\]/gi,
@@ -16,31 +16,35 @@ var Selector = pl.arthwood.dom.Selector = {
 
     window.$ = $DC(this, this.getElementById);
     window.$$ = $DC(this, this.getElements);
+    window.$down = $DC(this, this.down);
   },
 
-  getElements: function(path) {
+  down: function(element, path) {
+    return this.getElements(path, element);
+  },
+
+  getElements: function(path, root) {
     var items = path.split(' ');
 
+    this.root = root || document.body;
     this.signatures = ArrayUtils.map(items, $DC(this, this.getSignature));
-    
-    if (ArrayUtils.empty(this.signatures)) return [];
 
     var signature = ArrayUtils.last(this.signatures);
     var candidates = this.getElementsBySignature(signature);
     var families = ArrayUtils.map(candidates, this.getFamilyDelegate);
-    var firteredFamilies = ArrayUtils.select(families, this.filterFamilyDelegate);
+    var firteredFamilies = ArrayUtils.select(ArrayUtils.compact(families), this.filterFamilyDelegate);
     
     return ArrayUtils.map(firteredFamilies, this.getFamilyDescendantDelegate);
   },
 
   getFamily: function(node) {
     var result = [node];
-
-    while ((node = node.parentNode) != document.body) {
+    
+    while ((node = node.parentNode) != this.root && node) {
       result.push(node);
     }
     
-    return result;
+    return node && result;
   },
 
   filterFamily: function(family) {

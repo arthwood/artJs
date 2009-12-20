@@ -1,3 +1,5 @@
 window.onload = function() {
-  p($$('.second input'));
+  var root = ArrayUtils.first($$('.boxes'));
+
+  p($down(root, 'a'));
 };

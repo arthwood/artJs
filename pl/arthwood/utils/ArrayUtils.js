@@ -3,6 +3,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     this.commonElementSelectDelegate = $DC(this, this.commonElementSelect);
     this.reversedIncludeDelegate = $DC(this, this.reversedInclude);
     this.nonEmptyDelegate = $DC(this, this.nonEmpty);
+    this.notNullDelegate = $DC(this, this.notNull);
   },
 
   first: function(arr) {
@@ -247,6 +248,14 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   selectNonEmpty: function(arr) {
     return this.select(arr, this.nonEmptyDelegate);
+  },
+
+  compact: function(arr) {
+    return this.select(arr, this.notNullDelegate);
+  },
+
+  notNull: function(i) {
+    return Boolean(i);
   },
 
   empty: function(arr) {
