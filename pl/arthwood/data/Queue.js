@@ -1,18 +1,19 @@
-var Queue = pl.arthwood.data.Queue = function(queue) {
-  this.onModelChange = new Event('onModelChange');
-  this._onModelChangeDelegate = $D(this, this._onModelChange);
-  this._list = new List(queue);
+ArtJs.Queue = pl.arthwood.data.Queue = function(queue) {
+  this.onModelChange = new ArtJs.Event('onModelChange');
+  this._onModelChangeDelegate = ArtJs.$D(this, this._onModelChange);
+  this._list = new ArtJs.List(queue);
   this._list.onChange.add(this._onModelChangeDelegate);
 };
 
-Queue.prototype._onModelChange = function() {
+ArtJs.Queue.prototype._onModelChange = function() {
   this.onModelChange.fire(this);
 };
-Queue.prototype.addItem = function(item) {
+
+ArtJs.Queue.prototype.addItem = function(item) {
   this._list.addItem(item);
 };
 
-Queue.prototype.getItem = function() {
+ArtJs.Queue.prototype.getItem = function() {
   var item = this._list.getItemAt(0);
 
   this._list.removeItemAt(0);
@@ -20,14 +21,14 @@ Queue.prototype.getItem = function() {
   return item;
 };
 
-Queue.prototype.setQueue = function(queue) {
-  this._list = new List(queue);
+ArtJs.Queue.prototype.setQueue = function(queue) {
+  this._list = new ArtJs.List(queue);
 };
 
-Queue.prototype.getLength = function() {
+ArtJs.Queue.prototype.getLength = function() {
   return this._list.getLength();
 };
 
-Queue.prototype.isEmpty = function() {
+ArtJs.Queue.prototype.isEmpty = function() {
   return this._list.isEmpty();
 };

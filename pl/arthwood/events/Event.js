@@ -1,28 +1,28 @@
-var Event = pl.arthwood.events.Event = function(name) {
+ArtJs.Event = pl.arthwood.events.Event = function(name) {
   this.name = name;
-  this.delegateCollection = new DelegateCollection();
+  this.delegateCollection = new ArtJs.DelegateCollection();
 };
 
-Event.prototype.fire = function() {
-  return this.delegateCollection.invoke.apply(this.delegateCollection, $args(arguments));
+ArtJs.Event.prototype.fire = function() {
+  return this.delegateCollection.invoke.apply(this.delegateCollection, ArtJs.$args(arguments));
 };
 
-Event.prototype.add = function(delegate) {
+ArtJs.Event.prototype.add = function(delegate) {
   this.delegateCollection.combine(delegate);
 };
 
-Event.prototype.remove = function(delegate) {
+ArtJs.Event.prototype.remove = function(delegate) {
   this.delegateCollection.removeDelegate(delegate);
 };
 
-Event.prototype.removeAll = function() {
+ArtJs.Event.prototype.removeAll = function() {
   this.delegateCollection.clear();
 };
 
-Event.prototype.length = function() {
+ArtJs.Event.prototype.length = function() {
   return this.delegateCollection.length();
 };
 
-Event.prototype.toString = function() {
+ArtJs.Event.prototype.toString = function() {
   return 'Event "' + this.name + '", listeners: ' + this.length();
 };

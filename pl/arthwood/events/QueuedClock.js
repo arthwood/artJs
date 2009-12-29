@@ -1,12 +1,12 @@
-var QueuedClock = pl.arthwood.events.QueuedClock = function(interval_) {
+ArtJs.QueuedClock = pl.arthwood.events.QueuedClock = function(interval_) {
   this._busy = false;
   this._interval = interval_;
-  this._queue = new Queue();
-  this._startDelegate = $DC(this, this._start);
-  this.clock = new Clock(this._startDelegate, this._interval);
+  this._queue = new ArtJs.Queue();
+  this._startDelegate = ArtJs.$DC(this, this._start);
+  this.clock = new ArtJs.Clock(this._startDelegate, this._interval);
 };
 
-QueuedClock.prototype._start = function() {
+ArtJs.QueuedClock.prototype._start = function() {
   if (this._queue.isEmpty()) {
     this.clock.stop();
   }
@@ -15,7 +15,7 @@ QueuedClock.prototype._start = function() {
   }
 };
 
-QueuedClock.prototype.addCallback = function(i_) {
+ArtJs.QueuedClock.prototype.addCallback = function(i_) {
   this._queue.addItem(i_);
 
   if (!this.clock.isRunning()) {

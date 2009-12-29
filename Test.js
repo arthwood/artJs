@@ -1,5 +1,14 @@
-window.onload = function() {
-  var root = ArrayUtils.first($$('.second'));
+ArtJs.globalize();
+ArtJs.doInjection();
 
-  p($up(root, '.clearfix'));
+window.onload = function() {
+  /*
+  var arr = $$('.second');
+  var root = arr.first();
+  p(root);
+  */
+  var obj = {a: 5, b: 'text', c: true, k: 5};
+
+  p(obj.toArray());
+  //p($up(root, '.clearfix'));
 };

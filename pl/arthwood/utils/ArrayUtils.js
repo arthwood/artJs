@@ -1,9 +1,10 @@
-var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
+ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   init: function() {
-    this.commonElementSelectDelegate = $DC(this, this.commonElementSelect);
-    this.reversedIncludeDelegate = $DC(this, this.reversedInclude);
-    this.nonEmptyDelegate = $DC(this, this.nonEmpty);
-    this.notNullDelegate = $DC(this, this.notNull);
+    this.commonElementSelectDelegate = ArtJs.$DC(this, this.commonElementSelect);
+    this.includeDelegate = ArtJs.$DC(this, this.include);
+    this.invertedIncludeDelegate = ArtJs.$DC(this, this.invertedInclude);
+    this.nonEmptyDelegate = ArtJs.$DC(this, this.nonEmpty);
+    this.notNullDelegate = ArtJs.$DC(this, this.notNull);
   },
 
   first: function(arr) {
@@ -30,7 +31,7 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return arr[i];
   },
 
-  reversedInclude: function(item, arr) {
+  invertedInclude: function(item, arr) {
     return this.include(arr, item);
   },
 
@@ -243,7 +244,9 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   commonElementSelect: function(i) {
-    return this.includeAll(i, this.commonTestArray);
+    this.includeDelegate.delegate.args = [i];
+    
+    return this.all(this.commonTestArray, this.includeDelegate);
   },
 
   selectNonEmpty: function(arr) {
@@ -270,12 +273,12 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return this.map(arr, this.numerizeCallback);
   },
 
-  sum: function(arr) {
-    return Number(this.inject(arr, this.sumCallback, 0));
-  },
-
   numerizeCallback: function (i) {
     return Number(i);
+  },
+
+  sum: function(arr) {
+    return Number(this.inject(arr, this.sumCallback, 0));
   },
 
   sumCallback: function(sum, i) {
@@ -290,14 +293,49 @@ var ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     return i.toString();
   },
 
-  toString: function(arr) {
-    return '[' + arr.join(', ') + ']';
-  },
-
   print: function(arr) {
     this.each(arr, p);
+  },
+
+  doInjection: function() {
+    var proto = Array.prototype;
+    var dc = ArtJs.$DC;
+
+    proto.first = dc(this, this.first, true);
+    proto.second = dc(this, this.second, true);
+    proto.third = dc(this, this.third, true);
+    proto.beforeLast = dc(this, this.beforeLast, true);
+    proto.last = dc(this, this.last, true);
+    proto.getItem = dc(this, this.getItem, true);
+    proto.include = dc(this, this.include, true);
+    proto.includeAll = dc(this, this.includeAll, true);
+    proto.insertAt = dc(this, this.insertAt, true);
+    proto.removeAt = dc(this, this.removeAt, true);
+    proto.removeItem = dc(this, this.removeItem, true);
+    proto.map = dc(this, this.map, true);
+    proto.each = dc(this, this.each, true);
+    proto.eachIndex = dc(this, this.eachIndex, true);
+    proto.eachPair = dc(this, this.eachPair, true);
+    proto.inject = dc(this, this.inject, true);
+    proto.flatten = dc(this, this.flatten, true);
+    proto.flattenHtmlCollections = dc(this, this.flattenHtmlCollections, true);
+    proto.select = dc(this, this.select, true);
+    proto.reject = dc(this, this.reject, true);
+    proto.$reject = dc(this, this.$reject, true);
+    proto.detect = dc(this, this.detect, true);
+    proto.all = dc(this, this.all, true);
+    proto.any = dc(this, this.any, true);
+    proto.uniq = dc(this, this.uniq, true);
+    proto.commonElement = dc(this, this.commonElement, true);
+    proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
+    proto.compact = dc(this, this.compact, true);
+    proto.empty = dc(this, this.empty, true);
+    proto.nonEmpty = dc(this, this.nonEmpty, true);
+    proto.numerize = dc(this, this.numerize, true);
+    proto.sum = dc(this, this.sum, true);
+    proto.stringify = dc(this, this.stringify, true);
+    proto.print = dc(this, this.print, true);
   }
 };
-var $args = ArrayUtils.arrify;
 
-ArrayUtils.init();
+ArtJs.$args = ArtJs.ArrayUtils.arrify;
