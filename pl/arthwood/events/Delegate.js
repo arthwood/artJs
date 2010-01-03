@@ -1,24 +1,24 @@
-var Delegate = pl.arthwood.events.Delegate = function(object, method) {
+ArtJs.Delegate = pl.arthwood.events.Delegate = function(object, method) {
   this.object = object;
   this.method = method;
-  this.args = $args(arguments, 2);
+  this.args = ArtJs.$args(arguments, 2);
 };
 
-Delegate.prototype.invoke = function() {
-  var args = $args(arguments).concat(this.args);
+ArtJs.Delegate.prototype.invoke = function() {
+  var args = ArtJs.$args(arguments).concat(this.args);
   
   return this.method.apply(this.object, args);
 };
 
-Delegate.prototype.invokeWithSource = function(src, args) {
+ArtJs.Delegate.prototype.invokeWithSource = function(src, args) {
   return this.method.apply(this.object, [src].concat(args).concat(this.args));
 };
 
-Delegate.prototype.callback = function(withSource) {
+ArtJs.Delegate.prototype.callback = function(withSource) {
   var result = function() {
     var callee = arguments.callee;
     var delegate = callee.delegate;
-    var args = $args(arguments);
+    var args = ArtJs.$args(arguments);
     
     return callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
   };
@@ -29,19 +29,19 @@ Delegate.prototype.callback = function(withSource) {
   return result;
 };
 
-var $DC = Delegate.callback = function(object, method, withSource) {
-  var delegate = new Delegate(object, method);
+ArtJs.$DC = ArtJs.Delegate.callback = function(object, method, withSource) {
+  var delegate = new ArtJs.Delegate(object, method);
   var callback = delegate.callback(withSource);
   
-  delegate.args = $args(arguments, 3);
+  delegate.args = ArtJs.$args(arguments, 3);
   
   return callback;
 };
 
-var $D = Delegate.create = function(object, method) {
-  var delegate = new Delegate(object, method);
+ArtJs.$D = ArtJs.Delegate.create = function(object, method) {
+  var delegate = new ArtJs.Delegate(object, method);
 
-  delegate.args = $args(arguments, 2);
+  delegate.args = ArtJs.$args(arguments, 2);
 
   return delegate;
 };

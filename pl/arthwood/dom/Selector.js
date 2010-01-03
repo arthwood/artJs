@@ -1,23 +1,23 @@
-var Selector = pl.arthwood.dom.Selector = {
+ArtJs.Selector = pl.arthwood.dom.Selector = {
   tagRE: /^\w+/gi,
   classesRE: /\.\w+/gi,
   idsRE: /#\w+/gi,
   attrsRE: /\[.*\]/gi,
 
   init: function() {
-    this.filterFamilyDelegate = $DC(this, this.filterFamily);
-    this.getFamilyDelegate = $DC(this, this.getFamily);
-    this.getFamilyDescendantDelegate = $DC(this, this.getFamilyDescendant);
-    this.attrToArrayDelegate = $DC(this, this.attrToArray);
-    this.getElementsByTagNameDelegate = $DC(this, this.getElementsByTagName);
-    this.getElementsByClassNameDelegate = $DC(this, this.getElementsByClassName);
-    this.getElementByIdDelegate = $DC(this, this.getElementById);
-    this.filterByAttributesDelegate = $DC(this, this.filterByAttributes);
+    this.filterFamilyDelegate = ArtJs.$DC(this, this.filterFamily);
+    this.getFamilyDelegate = ArtJs.$DC(this, this.getFamily);
+    this.getFamilyDescendantDelegate = ArtJs.$DC(this, this.getFamilyDescendant);
+    this.attrToArrayDelegate = ArtJs.$DC(this, this.attrToArray);
+    this.getElementsByTagNameDelegate = ArtJs.$DC(this, this.getElementsByTagName);
+    this.getElementsByClassNameDelegate = ArtJs.$DC(this, this.getElementsByClassName);
+    this.getElementByIdDelegate = ArtJs.$DC(this, this.getElementById);
+    this.filterByAttributesDelegate = ArtJs.$DC(this, this.filterByAttributes);
 
-    window.$ = $DC(this, this.getElementById);
-    window.$$ = $DC(this, this.getElements);
-    window.$down = $DC(this, this.down);
-    window.$up = $DC(this, this.up);
+    ArtJs.$ = ArtJs.$DC(this, this.getElementById);
+    ArtJs.$$ = ArtJs.$DC(this, this.getElements);
+    ArtJs.$down = ArtJs.$DC(this, this.down);
+    ArtJs.$up = ArtJs.$DC(this, this.up);
   },
 
   down: function(element, path) {
@@ -43,16 +43,17 @@ var Selector = pl.arthwood.dom.Selector = {
 
   getElements: function(path, root) {
     var items = path.split(' ');
+    var au = ArtJs.ArrayUtils;
 
     this.root = root || document.body;
-    this.signatures = ArrayUtils.map(items, $DC(this, this.getSignature));
+    this.signatures = au.map(items, ArtJs.$DC(this, this.getSignature));
 
-    var signature = ArrayUtils.last(this.signatures);
+    var signature = au.last(this.signatures);
     var candidates = this.getElementsBySignature(signature);
-    var families = ArrayUtils.map(candidates, this.getFamilyDelegate);
-    var firteredFamilies = ArrayUtils.select(ArrayUtils.compact(families), this.filterFamilyDelegate);
+    var families = au.map(candidates, this.getFamilyDelegate);
+    var firteredFamilies = au.select(au.compact(families), this.filterFamilyDelegate);
     
-    return ArrayUtils.map(firteredFamilies, this.getFamilyDescendantDelegate);
+    return au.map(firteredFamilies, this.getFamilyDescendantDelegate);
   },
 
   getFamily: function(node) {
@@ -101,11 +102,13 @@ var Selector = pl.arthwood.dom.Selector = {
     var ids = signature.ids;
     var classes = signature.classes;
     var attributes = signature.attributes;
+    var au = ArtJs.ArrayUtils;
+    var ou = ArtJs.ObjectUtils;
 
     return (!tag || (node.tagName.toLowerCase() == tag))
-      && (ArrayUtils.empty(ids) || ArrayUtils.include(ids, node.id))
-      && (ArrayUtils.empty(classes) || ArrayUtils.includeAll(node.className.split(' '), classes))
-      && (ObjectUtils.empty(attributes) || ObjectUtils.includeAll(node.attributes, attributes));
+      && (au.empty(ids) || au.include(ids, node.id))
+      && (au.empty(classes) || au.includeAll(node.className.split(' '), classes))
+      && (ou.empty(attributes) || ou.includeAll(node.attributes, attributes));
   },
 
   getSignature: function(selector) {
@@ -116,24 +119,25 @@ var Selector = pl.arthwood.dom.Selector = {
   },
 
   getFamilyDescendant: function(i) {
-    return ArrayUtils.first(i);
+    return ArtJs.ArrayUtils.first(i);
   },
 
   getElementsBySignature: function(signature) {
-    var elementsOfClasses = ArrayUtils.map(signature.classes, this.getElementsByClassNameDelegate);
+    var au = ArtJs.ArrayUtils;
+    var elementsOfClasses = au.map(signature.classes, this.getElementsByClassNameDelegate);
     var elementsByTag = this.getElementsByTagName(signature.tag);
-    var elementsById = ArrayUtils.uniq(ArrayUtils.map(signature.ids, this.getElementByIdDelegate));
-    var elementsByClass = ArrayUtils.uniq(ArrayUtils.flattenHtmlCollections(elementsOfClasses));
-    var nonEmpty = ArrayUtils.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
-    var commonElements = ArrayUtils.empty(nonEmpty) ? [] : ArrayUtils.commonElement(nonEmpty);
+    var elementsById = au.uniq(au.map(signature.ids, this.getElementByIdDelegate));
+    var elementsByClass = au.uniq(au.flattenHtmlCollections(elementsOfClasses));
+    var nonEmpty = au.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
+    var commonElements = au.empty(nonEmpty) ? [] : au.commonElement(nonEmpty);
 
     this.filterByAttributesDelegate.delegate.args = [signature.attributes];
 
-    return ArrayUtils.select(commonElements, this.filterByAttributesDelegate);
+    return au.select(commonElements, this.filterByAttributesDelegate);
   },
 
   filterByAttributes: function(i, attributes) {
-    return ObjectUtils.includeAll(i, attributes);
+    return ArtJs.ObjectUtils.includeAll(i, attributes);
   },
 
   getTag: function(selector) {
@@ -141,18 +145,19 @@ var Selector = pl.arthwood.dom.Selector = {
   },
 
   getIds: function(selector) {
-    return ArrayUtils.map(selector.match(this.idsRE) || [], this.stripIdSelector);
+    return ArtJs.ArrayUtils.map(selector.match(this.idsRE) || [], this.stripIdSelector);
   },
 
   getClasses: function(selector) {
-    return ArrayUtils.map(selector.match(this.classesRE) || [], this.stripClassSelector);
+    return ArtJs.ArrayUtils.map(selector.match(this.classesRE) || [], this.stripClassSelector);
   },
 
   getAttributes: function(selector) {
-    var matches = ArrayUtils.map(selector.match(this.attrsRE) || [], this.stripAttributeSelector);
-    var arr = ArrayUtils.map(matches[0] && matches[0].split(',') || [], this.attrToArrayDelegate);
+    var au = ArtJs.ArrayUtils;
+    var matches = au.map(selector.match(this.attrsRE) || [], this.stripAttributeSelector);
+    var arr = au.map(matches[0] && matches[0].split(',') || [], this.attrToArrayDelegate);
 
-    return ObjectUtils.fromArray(arr);
+    return ArtJs.ObjectUtils.fromArray(arr);
   },
 
   attrToArray: function(i) {
@@ -184,4 +189,4 @@ var Selector = pl.arthwood.dom.Selector = {
   }
 };
 
-Selector.init();
+ArtJs.Selector.init();

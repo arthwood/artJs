@@ -1,24 +1,22 @@
-var DelegateCollection = pl.arthwood.events.DelegateCollection = function(delegates) {
+ArtJs.DelegateCollection = pl.arthwood.events.DelegateCollection = function(delegates) {
   this.delegates = delegates || new Array();
-  this.delegateToResultCallback = Delegate.callback(this, this.delegateToResult, false);
+  this.delegateToResultCallback = ArtJs.$DC(this, this.delegateToResult, false);
 };
 
-DelegateCollection.prototype.invoke = function() {
-  var args = $args(arguments);
+ArtJs.DelegateCollection.prototype.invoke = function() {
+  this.delegateToResultCallback.delegate.args = ArtJs.$args(arguments);
   
-  this.delegateToResultCallback.delegate.args = args;
-  
-  return ArrayUtils.map(this.delegates, this.delegateToResultCallback);
+  return ArtJs.ArrayUtils.map(this.delegates, this.delegateToResultCallback);
 };
 
-DelegateCollection.prototype.combine = function(delegate) {
+ArtJs.DelegateCollection.prototype.combine = function(delegate) {
   this.delegates.push(delegate);
 };
 
-DelegateCollection.prototype.remove = function(object, method) {
+ArtJs.DelegateCollection.prototype.remove = function(object, method) {
   var vDelegate;
   var n = this.length();
-  var vRemoveAt = ArrayUtils.removeAt;
+  var vRemoveAt = ArtJs.ArrayUtils.removeAt;
   
   while (n-- > 0) {
     vDelegate = this.delegates[n];
@@ -29,22 +27,22 @@ DelegateCollection.prototype.remove = function(object, method) {
   }
 };
 
-DelegateCollection.prototype.removeDelegateAt = function(i) {
-  ArrayUtils.removeAt(this.delegates, i);
+ArtJs.DelegateCollection.prototype.removeDelegateAt = function(i) {
+  ArtJs.ArrayUtils.removeAt(this.delegates, i);
 };
 
-DelegateCollection.prototype.removeDelegate = function(delegate) {
-  ArrayUtils.removeItem(this.delegates, delegate);
+ArtJs.DelegateCollection.prototype.removeDelegate = function(delegate) {
+  ArtJs.ArrayUtils.removeItem(this.delegates, delegate);
 };
 
-DelegateCollection.prototype.clear = function() {
+ArtJs.DelegateCollection.prototype.clear = function() {
   this.delegates.splice(0);
 };
 
-DelegateCollection.prototype.length = function() {
+ArtJs.DelegateCollection.prototype.length = function() {
   return this.delegates.length;
 };
 
-DelegateCollection.prototype.delegateToResult = function(delegate, idx) {
-  return delegate.invoke($args(arguments, 2));
+ArtJs.DelegateCollection.prototype.delegateToResult = function(delegate, idx) {
+  return delegate.invoke(ArtJs.$args(arguments, 2));
 };
