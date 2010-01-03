@@ -1,5 +1,5 @@
 window.onload = function() {
-  var root = ArrayUtils.first($$('.second'));
+  var ajax = new Ajax('http://localhost/phpmyadmin/');
 
-  p($up(root, '.clearfix'));
+  ajax.request();
 };
