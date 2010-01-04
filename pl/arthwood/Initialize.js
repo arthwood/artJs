@@ -3,6 +3,7 @@ var pl = {
     data: {},
     dom: {},
     events: {},
+    net: {},
     utils: {}
   }
 };
