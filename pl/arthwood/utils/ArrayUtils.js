@@ -1,10 +1,20 @@
 ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
+  INJECTED_PROPS: ['first', 'second', 'third', 'beforeLast', 'last', 'getItem', 'include', 'includeAll', 'insertAt',
+    'removeAt', 'removeItem', 'map', 'each', 'eachIndex', 'eachPair', 'inject', 'flatten', 'flattenHtmlCollections',
+    'select', 'reject', '$reject', 'detect', 'all', 'any', 'uniq', 'commonElement', 'selectNonEmpty', 'compact', 
+    'empty', 'nonEmpty', 'numerize', 'sum', 'stringify', 'print'
+  ].concat(ArtJs.ObjectUtils.INJECTED_PROPS),
+  
   init: function() {
     this.commonElementSelectDelegate = ArtJs.$DC(this, this.commonElementSelect);
     this.includeDelegate = ArtJs.$DC(this, this.include);
     this.invertedIncludeDelegate = ArtJs.$DC(this, this.invertedInclude);
     this.nonEmptyDelegate = ArtJs.$DC(this, this.nonEmpty);
     this.notNullDelegate = ArtJs.$DC(this, this.notNull);
+  },
+  
+  ownProperty: function(property) {
+    return !this.include(this.INJECTED_PROPS, property);
   },
 
   first: function(arr) {
@@ -40,9 +50,9 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   includeAll: function(arr, subset) {
-    this.reversedIncludeDelegate.delegate.args = [arr];
+    this.invertedIncludeDelegate.delegate.args = [arr];
     
-    return this.all(subset, this.reversedIncludeDelegate);
+    return this.all(subset, this.invertedIncludeDelegate);
   },
   
   insertAt: function(arr, at, obj) {
@@ -78,55 +88,60 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   map: function(arr, func) {
     var result = new Array();
-    var n = arr.length;
 
-    for (var i = 0; i < n; i++) {
-      result.push(func(arr[i], i));
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        result.push(func(arr[i], i));
+      }
     }
 
     return result;
   },
 
   each: function(arr, func) {
-    var n = arr.length;
-    var vArgs = $args(arguments, 2);
+    var vArgs = ArtJs.$args(arguments, 2);
     
-    for (var i = 0; i < n; i++) {
-      func.apply(null, [arr[i]].concat(vArgs));
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        func.apply(null, [arr[i]].concat(vArgs));
+      }
     }
   },
 
-  eachIndex: function(arr_, func_) {
-    var n = arr_.length;
-    var vArgs = $args(arguments, 2);
+  eachIndex: function(arr, func) {
+    var vArgs = ArtJs.$args(arguments, 2);
 
-    for (var i = 0; i < n; i++) {
-      func_.apply(null, [i].concat(vArgs));
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        func.apply(null, [i].concat(vArgs));
+      }
     }
   },
 
-  eachPair: function(arr_, func_) {
-    var n = arr_.length;
-    var vArgs =  $args(arguments, 2);
+  eachPair: function(arr, func) {
+    var vArgs = ArtJs.$args(arguments, 2);
 
-    for (var i = 0; i < n; i++) {
-      func_.apply(null, [i, arr_[i]].concat(vArgs));
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        func.apply(null, [i, arr[i]].concat(vArgs));
+      }
     }
   },
 
-  inject: function(arr, func, init) {
+  inject: function(arr, init, func) {
     var vResult = init;
-    var n = arr.length;
     
-    for (var i = 0; i < n; i++) {
-      vResult = func(vResult, arr[i]);
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        vResult = func(vResult, arr[i]);
+      }
     }
 
     return vResult;
   },
 
   flatten: function(arr) {
-    return this.inject(arr, this.flattenCallback, []);
+    return this.inject(arr, [], this.flattenCallback);
   },
   
   flattenCallback: function(mem, i) {
@@ -135,14 +150,17 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   flattenHtmlCollections: function(arr) {
     var vResult = new Array();
-    var n = arr.length;
     var collection;
+    var n;
 
-    for (var i = 0; i < n; i++) {
-      collection = arr[i];
-
-      for (var j = 0; j < collection.length; j++) {
-        vResult.push(collection[j]);
+    for (var i in arr) {
+      if (this.ownProperty(i)) {
+        collection = arr[i];
+        n = collection.length;
+        
+        for (var j = 0; j < n; j++) {
+          vResult.push(collection[j]);
+        }
       }
     }
     
@@ -153,9 +171,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vResult = new Array();
 
     this.each(arr, function(i) {
-      if (func(i)) {
-        vResult.push(i);
-      }
+      if (func(i)) vResult.push(i);
     });
     
     return vResult;
@@ -165,9 +181,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vResult = new Array();
 
     this.each(arr, function(i) {
-      if (!func(i)) {
-        vResult.push(i);
-      }
+      if (!func(i)) vResult.push(i);
     });
     
     return vResult;
@@ -177,37 +191,35 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var n = arr.length - 1;
 
     for (var i = n; i >= 0; i--) {
-      if (func(arr[i])) {
-        arr.splice(i, 1);
-      }
+      if (func(arr[i])) arr.splice(i, 1);
     }
   },
 
   detect: function(arr, func) {
-    var n = arr.length;
-
-    for (var i = 0; i < n; i++) {
-      if (func(arr[i])) return arr[i];
+    for (var i in arr) {
+      if (this.ownProperty(i) && func(arr[i])) {
+        return arr[i];
+      }
     }
 
     return null;
   },
 
   all: function(arr, func) {
-    var n = arr.length;
-
-    for (var i = 0; i < n; i++) {
-      if (!func(arr[i])) return false;
+    for (var i in arr) {
+      if (this.ownProperty(i) && !func(arr[i])) {
+        return false;
+      }
     }
-
+    
     return true;
   },
 
   any: function (arr, func) {
-    var n = arr.length;
-
-    for (var i = 0; i < n; i++) {
-      if (func(arr[i])) return true;
+    for (var i in arr) {
+      if (this.ownProperty(i) && func(arr[i])) {
+        return true;
+      }
     }
 
     return false;
@@ -278,7 +290,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   sum: function(arr) {
-    return Number(this.inject(arr, this.sumCallback, 0));
+    return Number(this.inject(arr, 0, this.sumCallback));
   },
 
   sumCallback: function(sum, i) {
