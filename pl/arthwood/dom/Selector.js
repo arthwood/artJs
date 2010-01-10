@@ -18,6 +18,8 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$down = ArtJs.$DC(this, this.down);
     ArtJs.$up = ArtJs.$DC(this, this.up);
+    
+    this.injected = false;
   },
 
   down: function(element, path) {
@@ -47,7 +49,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
 
     this.root = root || document.body;
     this.signatures = au.map(items, ArtJs.$DC(this, this.getSignature));
-
+    
     var signature = au.last(this.signatures);
     var candidates = this.getElementsBySignature(signature);
     var families = au.map(candidates, this.getFamilyDelegate);
@@ -130,7 +132,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     var elementsByClass = au.uniq(au.flattenHtmlCollections(elementsOfClasses));
     var nonEmpty = au.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
     var commonElements = au.empty(nonEmpty) ? [] : au.commonElement(nonEmpty);
-
+    
     this.filterByAttributesDelegate.delegate.args = [signature.attributes];
 
     return au.select(commonElements, this.filterByAttributesDelegate);
@@ -186,6 +188,16 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
 
   getElementsByTagName: function(selector) {
     return document.getElementsByTagName(selector);
+  },
+
+  doInjection: function() {
+    var proto = Element.prototype;
+    var dc = ArtJs.$DC;
+    
+    proto.up = dc(this, this.up, true);
+    proto.down = dc(this, this.down, true);
+
+    this.injected = true;
   }
 };
 

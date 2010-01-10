@@ -6,10 +6,11 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   init: function() {
     this.invertedRemoveValueDelegate = ArtJs.$DC(this, this.invertedRemoveValue);
     this.eachPairDeleteValueDelegate = ArtJs.$DC(this, this.eachPairDeleteValue);
+    this.injected = false;
   },
   
   ownProperty: function(property) {
-    return !ArtJs.ArrayUtils.include(this.INJECTED_PROPS, property);
+    return !this.injected || !ArtJs.ArrayUtils.include(this.INJECTED_PROPS, property);
   },
 
   copy: function(obj) {
@@ -169,7 +170,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
 
   includeAll: function(obj, subset) {
-    for (var i in obj) {
+    for (var i in subset) {
       if (this.ownProperty(i) && subset[i] != obj[i]) {
         return false;
       }
@@ -197,5 +198,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.fromArray = dc(this, this.toArray, false);
     proto.toArray = dc(this, this.toArray, true);
     proto.includeAll = dc(this, this.includeAll, true);
+    
+    this.injected = true;
   }
 };

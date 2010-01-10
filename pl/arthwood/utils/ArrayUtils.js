@@ -11,10 +11,11 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     this.invertedIncludeDelegate = ArtJs.$DC(this, this.invertedInclude);
     this.nonEmptyDelegate = ArtJs.$DC(this, this.nonEmpty);
     this.notNullDelegate = ArtJs.$DC(this, this.notNull);
+    this.injected = false; 
   },
   
   ownProperty: function(property) {
-    return !this.include(this.INJECTED_PROPS, property);
+    return !this.injected || !this.include(this.INJECTED_PROPS, property);
   },
 
   first: function(arr) {
@@ -347,6 +348,8 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     proto.sum = dc(this, this.sum, true);
     proto.stringify = dc(this, this.stringify, true);
     proto.print = dc(this, this.print, true);
+    
+    this.injected = true;
   }
 };
 
