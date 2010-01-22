@@ -1,11 +1,15 @@
 ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'each', 'eachPair',
-    'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll'
+  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'each', 'eachPair', 'select', 
+    'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'toArrayWithCallback', 'includeAll', 'toQueryString'
   ],
+  
+  QUERY_DELIMITER: '&',
   
   init: function() {
     this.invertedRemoveValueDelegate = ArtJs.$DC(this, this.invertedRemoveValue);
     this.eachPairDeleteValueDelegate = ArtJs.$DC(this, this.eachPairDeleteValue);
+    this.keyValueArrayDelegate = ArtJs.$DC(this, this.keyValueArray);
+    this.objToQueryStringDelegate = ArtJs.$D(this, this.objToQueryString);
     this.injected = false;
   },
   
@@ -158,11 +162,19 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
 
   toArray: function(obj) {
+    return this.toArrayWithCallback(obj, this.keyValueArrayDelegate);
+  },
+  
+  keyValueArray: function(key, value) {
+    return [key, value];
+  },
+  
+  toArrayWithCallback: function(obj, func) {
     var result = new Array();
     
     for (var i in obj) {
       if (this.ownProperty(i)) {
-        result.push([i, obj[i]]);
+        result.push(func(i, obj[i]));
       }
     }
 
@@ -177,6 +189,32 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     }
 
     return true;
+  },
+  
+  toQueryString: function(obj) {
+    // {points: [{x: 3, y: 7}, {x: 8, y: -2}, value: 8, options: {max: 9}]}
+    // points[][x]=3&points[][y]=7&points[][x]=8&points[][y]=-2&value=8&options[max]=9
+    switch (typeof obj) {
+      case 'Number':
+        return obj.toString();
+        break;
+      case 'Array':
+        break;
+      case 'Object':
+        return this.toQueryString(obj, '');
+      default:
+        return obj;
+    }
+  },
+  
+  toQueryString: function(obj, prefix) {
+    this.objToQueryStringDelegate.delegate.args = [prefix];
+    
+    return this.toArrayWithCallback(obj, this.objToQueryStringDelegate).join(this.QUERY_DELIMITER);
+  },
+  
+  objToQueryString: function(key, value, prefix) {
+    return prefix + '[' + key + ']=' + this.toQueryString(value);
   },
 
   doInjection: function() {
@@ -197,7 +235,9 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.empty = dc(this, this.empty, true);
     proto.fromArray = dc(this, this.toArray, false);
     proto.toArray = dc(this, this.toArray, true);
+    proto.toArrayWithCallback = dc(this, this.toArrayWithCallback, true);
     proto.includeAll = dc(this, this.includeAll, true);
+    proto.toQueryString = dc(this, this.toQueryString, true);
     
     this.injected = true;
   }

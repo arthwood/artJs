@@ -15,9 +15,9 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
   
   this._request.open(this.method, this.url, true);
   
-  //this.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  //this.setRequestHeader('X-ArtJs-Version', ArtJs.VERSION);
-  //this.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
+  this.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  this.setRequestHeader('X-ArtJs-Version', ArtJs.VERSION);
+  this.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
   
   r.onreadystatechange = this.onReadyStateChangeDelegate;
   r.onprogress = this.onProgressDelegate;
@@ -38,19 +38,16 @@ ArtJs.Ajax.prototype.abort = function() {
 };
 
 ArtJs.Ajax.prototype.onReadyStateChange = function(event) {
-  p('getReadyState ' + this.getReadyState());
 };
 
 ArtJs.Ajax.prototype.onProgress = function(event) {
   var r = event.position / event.totalSize;
   
   this.onProgress.fire(this, r);
-
-  p('onProgress ' + r);
 };
 
 ArtJs.Ajax.prototype.onLoad = function(event) {
-  p('onLoad');
+  this.onSuccess.fire(this);
 };
 
 ArtJs.Ajax.prototype.onError = function(event) {
@@ -105,3 +102,24 @@ ArtJs.Ajax.ReadyState = {
   RECEIVING: 3,
   LOADED: 4
 };
+
+ArtJs.Ajax.get = function(url, onSuccess) {
+  var ajax = new Ajax(url, null, Ajax.Methods.GET);
+  
+  onSuccess && ajax.onSuccess.add(onSuccess);
+  
+  ajax.request();
+  
+  return ajax;
+};
+
+ArtJs.Ajax.post = function(url, data, onSuccess) {
+  var ajax = new Ajax(url, data, Ajax.Methods.POST);
+  
+  onSuccess && ajax.onSuccess.add(onSuccess);
+  
+  ajax.request();
+  
+  return ajax;
+}
+
