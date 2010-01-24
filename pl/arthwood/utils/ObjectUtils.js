@@ -1,6 +1,6 @@
 ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'each', 'eachPair', 'select', 
-    'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'toArrayWithCallback', 'includeAll', 'toQueryString'
+  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 'each', 'eachPair', 
+    'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll', 'toQueryString', 'inspect'
   ],
   
   QUERY_DELIMITER: '&',
@@ -9,7 +9,8 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     this.invertedRemoveValueDelegate = ArtJs.$DC(this, this.invertedRemoveValue);
     this.eachPairDeleteValueDelegate = ArtJs.$DC(this, this.eachPairDeleteValue);
     this.keyValueArrayDelegate = ArtJs.$DC(this, this.keyValueArray);
-    this.objToQueryStringDelegate = ArtJs.$D(this, this.objToQueryString);
+    this.pairToQueryStringDelegate = ArtJs.$DC(this, this.pairToQueryString);
+    this.parseArrayValueDelegate = ArtJs.$DC(this, this.parseArrayValue);
     this.injected = false;
   },
   
@@ -54,6 +55,18 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
 
   map: function(obj, func) {
+    var result = new Array();
+    
+    for (var i in obj) {
+      if (this.ownProperty(i)) {
+        result.push(func(i, obj[i]));
+      }
+    }
+
+    return result;
+  },
+  
+  mapValue: function(obj, func) {
     var result = new Object();
 
     for (var i in obj) {
@@ -162,25 +175,13 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
 
   toArray: function(obj) {
-    return this.toArrayWithCallback(obj, this.keyValueArrayDelegate);
+    return this.map(obj, this.keyValueArrayDelegate);
   },
   
   keyValueArray: function(key, value) {
     return [key, value];
   },
   
-  toArrayWithCallback: function(obj, func) {
-    var result = new Array();
-    
-    for (var i in obj) {
-      if (this.ownProperty(i)) {
-        result.push(func(i, obj[i]));
-      }
-    }
-
-    return result;
-  },
-
   includeAll: function(obj, subset) {
     for (var i in subset) {
       if (this.ownProperty(i) && subset[i] != obj[i]) {
@@ -192,31 +193,70 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
   
   toQueryString: function(obj) {
-    // {points: [{x: 3, y: 7}, {x: 8, y: -2}, value: 8, options: {max: 9}]}
-    // points[][x]=3&points[][y]=7&points[][x]=8&points[][y]=-2&value=8&options[max]=9
-    switch (typeof obj) {
-      case 'Number':
-        return obj.toString();
-        break;
-      case 'Array':
-        break;
-      case 'Object':
-        return this.toQueryString(obj, '');
-      default:
-        return obj;
-    }
+    return this.toQueryStringWithPrefix(obj, '');
   },
   
-  toQueryString: function(obj, prefix) {
-    this.objToQueryStringDelegate.delegate.args = [prefix];
+  toQueryStringWithPrefix: function(obj, prefix) {
+    var delegate = ArtJs.$DC(this, this.pairToQueryString, false, prefix);
     
-    return this.toArrayWithCallback(obj, this.objToQueryStringDelegate).join(this.QUERY_DELIMITER);
+    return this.map(obj, delegate).join(this.QUERY_DELIMITER);
   },
   
-  objToQueryString: function(key, value, prefix) {
-    return prefix + '[' + key + ']=' + this.toQueryString(value);
+  pairToQueryString: function(key, value, prefix) {
+    var result;
+    
+    prefix = ArtJs.StringUtils.empty(prefix) ? key : prefix + '[' + key + ']';
+    
+    if (typeof value == 'object') {
+      if (isNaN(value.length)) {
+        result = this.toQueryStringWithPrefix(value, prefix)
+      }
+      else {
+        var delegate = ArtJs.$DC(this, this.parseArrayValue, false, prefix + '[]');
+        
+        result = ArtJs.ArrayUtils.map(value, delegate).join(this.QUERY_DELIMITER)
+      }
+    }
+    else {
+      result = prefix + '=' + encodeURIComponent(this.primitiveToQueryString(value));
+    }
+    
+    return result;
   },
-
+  
+  parseArrayValue: function(value, idx, prefix) {
+    return this.toQueryStringWithPrefix(value, prefix);
+  },
+  
+  primitiveToQueryString: function(obj) {
+    var result;
+    
+    switch (typeof obj) {
+      case 'number':
+        result = obj.toString();
+        break;
+      case 'boolean':
+        result = Number(obj).toString();
+        break;
+      default:
+        result = obj;
+    }
+    
+    return result;
+  },
+  
+  inspect: function(obj, indent, prop) {
+    var str = (this.getMultiPattern('|   ', indent) + (prop || (obj ? 'Object' : 'Null')));
+  
+    for (var i in obj) {
+      str += (typeof(obj[i]) == 'object')
+        ? arguments.callee(obj[i], indent + 1, i)
+        : (this.getMultiPattern('|   ', indent + 1) + i + ' = ' + obj[i]);
+    }
+  
+    return str;
+  },
+  
   doInjection: function() {
     var proto = Object.prototype;
     var dc = ArtJs.$DC;
@@ -227,6 +267,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.removeValues = dc(this, this.removeValues, true);
     proto.map = dc(this, this.map, true);
     proto.mapKey = dc(this, this.mapKey, true);
+    proto.mapValue = dc(this, this.mapValue, true);
     proto.each = dc(this, this.each, true);
     proto.eachPair = dc(this, this.eachPair, true);
     proto.select = dc(this, this.select, true);
@@ -235,9 +276,9 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.empty = dc(this, this.empty, true);
     proto.fromArray = dc(this, this.toArray, false);
     proto.toArray = dc(this, this.toArray, true);
-    proto.toArrayWithCallback = dc(this, this.toArrayWithCallback, true);
     proto.includeAll = dc(this, this.includeAll, true);
     proto.toQueryString = dc(this, this.toQueryString, true);
+    proto.inspect = dc(this, this.objectToString, true);
     
     this.injected = true;
   }

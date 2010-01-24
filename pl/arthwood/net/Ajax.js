@@ -7,13 +7,20 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
   this.onFailure = new ArtJs.Event('Ajax:onFailure');
   this.onProgress = new ArtJs.Event('Ajax:onProgress');
   
+  var methods = ArtJs.Ajax.Methods;
+  
   this.url = url;
   this.data = data;
-  this.method = method || ArtJs.Ajax.Methods.GET;
+  this.method = method || methods.GET;
+  
+  if (ArtJs.ArrayUtils.include([methods.PUT, methods.DELETE], this.method)) {
+    method = methods.POST;
+    this.data._method = this.method;
+  }
   
   var r = this._request = new XMLHttpRequest();
   
-  this._request.open(this.method, this.url, true);
+  r.open(method, this.url, true);  
   
   this.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   this.setRequestHeader('X-ArtJs-Version', ArtJs.VERSION);
@@ -26,11 +33,15 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
 };
 
 ArtJs.Ajax.prototype.request = function() {
+  var data;
+  
   if (this.method == ArtJs.Ajax.Methods.POST) {
     this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    
+    if (this.data) data = ArtJs.ObjectUtils.toQueryString(this.data);
   }
   
-  this._request.send(this.data);
+  this._request.send(data);
 };
 
 ArtJs.Ajax.prototype.abort = function() {
@@ -104,17 +115,23 @@ ArtJs.Ajax.ReadyState = {
 };
 
 ArtJs.Ajax.get = function(url, onSuccess) {
-  var ajax = new Ajax(url, null, Ajax.Methods.GET);
-  
-  onSuccess && ajax.onSuccess.add(onSuccess);
-  
-  ajax.request();
-  
-  return ajax;
+  return ArtJs.Ajax.request(url, null, Ajax.Methods.GET, onSuccess);
 };
 
 ArtJs.Ajax.post = function(url, data, onSuccess) {
-  var ajax = new Ajax(url, data, Ajax.Methods.POST);
+  return ArtJs.Ajax.request(url, data, Ajax.Methods.POST, onSuccess);
+};
+
+ArtJs.Ajax.put = function(url, data, onSuccess) {
+  return ArtJs.Ajax.request(url, data, Ajax.Methods.PUT, onSuccess);
+};
+
+ArtJs.Ajax.del = function(url, data, onSuccess) {
+  return ArtJs.Ajax.request(url, data, Ajax.Methods.DELETE, onSuccess);
+};
+
+ArtJs.Ajax.request = function(url, data, method, onSuccess) {
+  var ajax = new Ajax(url, data, method);
   
   onSuccess && ajax.onSuccess.add(onSuccess);
   
@@ -122,4 +139,3 @@ ArtJs.Ajax.post = function(url, data, onSuccess) {
   
   return ajax;
 }
-

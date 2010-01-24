@@ -16,6 +16,8 @@ var ArtJs = {
   doInjection: function() {
     this.ArrayUtils.doInjection();
     this.ObjectUtils.doInjection();
+    this.StringUtils.doInjection();
     this.Selector.doInjection();
+    this.ElementUtils.doInjection();
   }
 };
