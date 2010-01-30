@@ -45,3 +45,12 @@ ArtJs.$D = ArtJs.Delegate.create = function(object, method) {
 
   return delegate;
 };
+
+ArtJs.Delegate.injected = false;
+ArtJs.Delegate.doInjection = function() {
+  Function.prototype.bind = function(obj, withSource) {
+    return ArtJs.$DC.apply(ArtJs.$DC, [obj, this, withSource].concat(ArtJs.$args(arguments, 2)));
+  };
+
+  ArtJs.Delegate.injected = true;
+};
