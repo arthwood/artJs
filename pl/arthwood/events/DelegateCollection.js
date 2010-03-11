@@ -39,10 +39,10 @@ ArtJs.DelegateCollection.prototype.clear = function() {
   this.delegates.splice(0);
 };
 
-ArtJs.DelegateCollection.prototype.length = function() {
+ArtJs.DelegateCollection.prototype.getLength = function() {
   return this.delegates.length;
 };
 
 ArtJs.DelegateCollection.prototype.delegateToResult = function(delegate, idx) {
-  return delegate.invoke(ArtJs.$args(arguments, 2));
+  return delegate.invoke.apply(delegate, ArtJs.$args(arguments, 2));
 };

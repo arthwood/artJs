@@ -102,6 +102,11 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.parent(ref).insertBefore(e, ref);
   },
   
+  setPosition: function(e, p) {
+    e.style.top = p.x + 'px';
+    e.style.left = p.y + 'px';
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -121,6 +126,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.putAtTop = dc(this, this.putAtTop, true);
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
+    proto.setPosition = dc(this, this.setPosition, true);
                                                               
     this.injected = true;
   }
