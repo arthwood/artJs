@@ -7,36 +7,58 @@ ArtJs.Point.prototype.getLength = function() {
   return Math.sqrt(this.x * this.x + this.y * this.y);
 };
 
-ArtJs.Point.dot = function(p1, p2) {
-  return (p1.x * p2.x + p1.y * p2.y);
+ArtJs.Point.prototype.dot = function(p) {
+  return (this.x * p.x + this.y * p.y);
 };
 
-ArtJs.Point.add = function(p) {
+ArtJs.Point.prototype.add = function(p) {
   return new ArtJs.Point(this.x + p.x, this.y + p.y);
 };
 
-ArtJs.Point.sub = function(p) {
+ArtJs.Point.prototype.sub = function(p) {
   return this.add(p.getReversed());
 };
 
-ArtJs.Point.getReversed = function() {
+ArtJs.Point.prototype.getReversed = function() {
   return this.times(-1);
 };
 
-ArtJs.Point.reverseX = function() {
+ArtJs.Point.prototype.reverseX = function() {
   this.x = - this.x;
+  
+  return this;
 };
 
-ArtJs.Point.reverseY = function() {
+ArtJs.Point.prototype.reverseY = function() {
   this.y = - this.y;
+  
+  return this;
 };
 
-ArtJs.Point.reverse = function() {
+ArtJs.Point.prototype.transpose = function() {
+  var temp = this.x;
+  
+  this.x = this.y;
+  this.y = temp;
+  
+  return this;
+};
+
+ArtJs.Point.prototype.getTransposed = function() {
+  return new ArtJs.Point(this.y, this.x);
+};
+
+ArtJs.Point.prototype.reverse = function() {
   this.reverseX();
   this.reverseY();
+  
+  return this;
 };
 
-ArtJs.Point.times = function(k) {
+ArtJs.Point.prototype.times = function(k) {
   return new ArtJs.Point(k * this.x, k * this.y);
 };
 
+ArtJs.Point.prototype.toString = function() {
+  return '[' + this.x + ', ' + this.y + ']';
+};

@@ -1,6 +1,7 @@
 ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   HIDDEN_ELEMENTS: [],
-  
+  DEFAULT_DISPLAY: 'block',
+        
   init: function() {
     this.detectHiddenElementDelegate = ArtJs.$DC(this, this.detectHiddenElement);
     this.isElementDelegate = ArtJs.$DC(this, this.isElement);
@@ -10,11 +11,11 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   show: function(e) {
     var hidden = this.getHidden(e);
     
-    if (hidden) {
-      ArtJs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
-      
-      e.style.display = hidden.display;
-    }
+    ArtJs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
+    
+    var display = hidden && hidden.display || e.style.display;
+    
+    e.style.display = (display == 'none') ? this.DEFAULT_DISPLAY : display;
   },
   
   hide: function(e) {
@@ -24,6 +25,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
       this.HIDDEN_ELEMENTS.push({element: e, display: e.style.display});
       e.style.display = 'none';
     }
+  },
+  
+  setVisible: function(e, v) {
+    v ? this.show(e) : this.hide(e);
   },
   
   getHidden: function(e) {
@@ -46,6 +51,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   
   isElement: function(e) {
     return e.nodeType == 1;
+  },
+  
+  getSize: function(e) {
+    return new ArtJs.Point(e.clientWidth, e.clientHeight);
   },
   
   elements: function(e) {
@@ -102,9 +111,41 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.parent(ref).insertBefore(e, ref);
   },
   
+  center: function(e) {
+    this.setPosition(e, this.getCenteredPosition(this.getSize(e)));
+  },
+  
+  centerH: function(e) {
+    var size = this.getSize(e);
+    var pos = this.getCenteredPosition(size);
+    var value = e.style.top.match(/\d+/) || ['0'];
+    
+    //pos.y = parseInt(ArtJs.ArrayUtils.first(value));
+    
+    //this.setPosition(e, pos);
+  },
+  
+  centerV: function(e) {
+    var position = this.getCenteredPosition(this.getSize(e));
+    
+    position.x = e.style.left;
+    
+    this.setPosition(e, position);
+  },
+  
+  getCenteredPosition: function(size) {
+    return this.getDocumentSize().sub(size).times(0.5);
+  },
+  
+  getDocumentSize: function() {
+    var doc = window.document;
+    
+    return new ArtJs.Point(doc.width, doc.height);
+  },
+  
   setPosition: function(e, p) {
-    e.style.top = p.x + 'px';
-    e.style.left = p.y + 'px';
+    e.style.top = p.y + 'px';
+    e.style.left = p.x + 'px';
   },
   
   doInjection: function() {
@@ -114,9 +155,11 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     
     proto.show = dc(this, this.show, true);
     proto.hide = dc(this, this.hide, true);
+    proto.setVisible = dc(this, this.setVisible, true);
     proto.setAlpha = dc(this, this.setAlpha, true);
     proto.getAlpha = dc(this, this.getAlpha, true);
     proto.isElement = dc(this, this.isElement, true);
+    proto.getSize = dc(this, this.getSize, true);
     proto.elements = dc(this, this.elements, true);
     proto.remove = dc(this, this.remove, true);
     proto.parent = dc(this, this.parent, true);
@@ -127,6 +170,9 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
     proto.setPosition = dc(this, this.setPosition, true);
+    proto.center = dc(this, this.center, true);
+    proto.centerH = dc(this, this.centerH, true);
+    proto.centerV = dc(this, this.centerV, true);
                                                               
     this.injected = true;
   }
