@@ -1,10 +1,9 @@
-ArtJs.Clock = pl.arthwood.events.Clock = function(delegate_, interval_, repeat_) {
+ArtJs.Clock = pl.arthwood.events.Clock = function(interval_, repeat_) {
   this._interval = interval_;
   this._repeat = repeat_;
   this._intervalId = null;
   this._counter = 0;
-  this._delegate = delegate_;
-  this._onIntervalDelegate = ArtJs.$DC(this, this.onInterval);
+  this.onChange = new ArtJs.Event('Clock:onChange');
   
   var instances = this.constructor.instances;
 
@@ -24,19 +23,19 @@ ArtJs.Clock.found = function(i) {
 };
 
 ArtJs.Clock.prototype.start = function(now_) {
-  var code = 'Clock.getClockById(' + this._id + ')._onIntervalDelegate()';
+  var code = 'Clock.getClockById(' + this._id + ').tick()';
   
   this.stop();
   this._intervalId = setInterval(code, this._interval);
 
   if (now_) {
-    this.onInterval();
+    this.tick();
   }
 };
 
-ArtJs.Clock.prototype.onInterval = function() {
+ArtJs.Clock.prototype.tick = function() {
   this._counter++;
-  this._delegate();
+  this.onChange.fire(this);
 
   if (this._counter == this._repeat) {
     this.stop();
@@ -55,10 +54,6 @@ ArtJs.Clock.prototype.isRunning = function() {
 
 ArtJs.Clock.prototype.getCounter = function() {
   return this._counter;
-};
-
-ArtJs.Clock.prototype.setDelegate = function(delegate_) {
-  this._delegate = delegate_;
 };
 
 ArtJs.Clock.prototype.setRepeat = function(repeat_) {
