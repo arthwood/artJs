@@ -21,6 +21,7 @@ var ArtJs = {
     this.ArrayUtils.doInjection();
     this.ObjectUtils.doInjection();
     this.StringUtils.doInjection();
+    this.DateUtils.doInjection();
     this.Selector.doInjection();
     this.ElementUtils.doInjection();
     this.Delegate.doInjection();
