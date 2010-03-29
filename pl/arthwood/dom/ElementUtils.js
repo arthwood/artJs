@@ -27,6 +27,12 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     }
   },
   
+  toggle: function(e) {
+    var hidden = this.getHidden(e);
+    
+    this.setVisible(e, hidden || e.style.display == 'none');
+  },
+  
   setVisible: function(e, v) {
     v ? this.show(e) : this.hide(e);
   },
@@ -157,6 +163,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     
     proto.show = dc(this, this.show, true);
     proto.hide = dc(this, this.hide, true);
+    proto.toggle = dc(this, this.toggle, true);
     proto.setVisible = dc(this, this.setVisible, true);
     proto.setAlpha = dc(this, this.setAlpha, true);
     proto.getAlpha = dc(this, this.getAlpha, true);

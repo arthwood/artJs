@@ -114,19 +114,19 @@ ArtJs.Ajax.ReadyState = {
   LOADED: 4
 };
 
-ArtJs.Ajax.get = function(url, onSuccess) {
+ArtJs.Ajax.get = ArtJs.$get = function(url, onSuccess) {
   return ArtJs.Ajax.request(url, null, Ajax.Methods.GET, onSuccess);
 };
 
-ArtJs.Ajax.post = function(url, data, onSuccess) {
+ArtJs.Ajax.post = ArtJs.$post = function(url, data, onSuccess) {
   return ArtJs.Ajax.request(url, data, Ajax.Methods.POST, onSuccess);
 };
 
-ArtJs.Ajax.put = function(url, data, onSuccess) {
+ArtJs.Ajax.put = ArtJs.$put = function(url, data, onSuccess) {
   return ArtJs.Ajax.request(url, data, Ajax.Methods.PUT, onSuccess);
 };
 
-ArtJs.Ajax.del = function(url, data, onSuccess) {
+ArtJs.Ajax.del = ArtJs.$del = function(url, data, onSuccess) {
   return ArtJs.Ajax.request(url, data, Ajax.Methods.DELETE, onSuccess);
 };
 
@@ -138,4 +138,4 @@ ArtJs.Ajax.request = function(url, data, method, onSuccess) {
   ajax.request();
   
   return ajax;
-}
+};
