@@ -54,13 +54,13 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
   
   addZeros: function(str, length, right) {
     var zeros = this.getMultiPattern('0', length - str.length);
-  
+    
     return right ? str + zeros : zeros + str;
   },
   
   getMultiPattern: function (pattern, n) {
     var str = '';
-  
+    
     while (n-- > 0) {
       str += pattern;
     }

@@ -106,8 +106,8 @@ ArtJs.Calendar.prototype = {
       var date = new Date(this.date);
       
       date.setDate(parseInt(value));
-    
-      this.field.value = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear();
+      
+      this.field.value = ArtJs.DateUtils.toDMY(date, '-');
       this.hide();
     }
     
