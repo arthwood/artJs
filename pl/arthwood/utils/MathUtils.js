@@ -1,4 +1,8 @@
 ArtJs.MathUtils = pl.arthwood.utils.MathUtils = {
+  sgn: function(x) {
+    return x == 0 ? 0 : Math.abs(x) / x;
+  },
+  
   castToSet: function(x, a, b) {
     return x - this.stairs(x, a, b) * (b - a);
   },

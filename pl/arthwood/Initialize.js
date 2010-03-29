@@ -5,6 +5,7 @@ var pl = {
     events: {},
     math: {},
     net: {},
+    tween: {},
     ui: {
       containers: {}
     },
@@ -16,6 +17,10 @@ var ArtJs = {
   VERSION: '1.0',
   globalize: function() {
     this.ObjectUtils.copyProps(this, window);
+    
+    delete window.globalize;
+    delete window.doInjection;
+    delete window.VERSION;
   },
   doInjection: function() {
     this.ArrayUtils.doInjection();

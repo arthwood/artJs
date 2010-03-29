@@ -116,25 +116,19 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   centerH: function(e) {
-    var size = this.getSize(e);
-    var pos = this.getCenteredPosition(size);
-    var value = e.style.top.match(/\d+/) || ['0'];
+    var pos = this.getCenteredPosition(e);
     
-    //pos.y = parseInt(ArtJs.ArrayUtils.first(value));
-    
-    //this.setPosition(e, pos);
+    this.setX(e, pos.x);
   },
   
   centerV: function(e) {
-    var position = this.getCenteredPosition(this.getSize(e));
+    var pos = this.getCenteredPosition(e);
     
-    position.x = e.style.left;
-    
-    this.setPosition(e, position);
+    this.setY(e, pos.y);
   },
   
-  getCenteredPosition: function(size) {
-    return this.getDocumentSize().sub(size).times(0.5);
+  getCenteredPosition: function(e) {
+    return this.getDocumentSize().sub(this.getSize(e)).times(0.5);
   },
   
   getDocumentSize: function() {
@@ -144,8 +138,16 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   setPosition: function(e, p) {
-    e.style.top = p.y + 'px';
-    e.style.left = p.x + 'px';
+    this.setX(e, p.x);
+    this.setY(e, p.y);
+  },
+  
+  setX: function(e, v) {
+    e.style.left = v + 'px';
+  },
+  
+  setY: function(e, v) {
+    e.style.top = v + 'px';
   },
   
   doInjection: function() {
@@ -170,6 +172,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
     proto.setPosition = dc(this, this.setPosition, true);
+    proto.setX = dc(this, this.setX, true);
+    proto.setY = dc(this, this.setY, true);
     proto.center = dc(this, this.center, true);
     proto.centerH = dc(this, this.centerH, true);
     proto.centerV = dc(this, this.centerV, true);

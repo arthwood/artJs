@@ -5,14 +5,14 @@ ArtJs.Clock = pl.arthwood.events.Clock = function(interval_, repeat_) {
   this._counter = 0;
   this.onChange = new ArtJs.Event('Clock:onChange');
   
-  var instances = this.constructor.instances;
+  var instances = arguments.callee.instances;
 
   this._id = instances.length;
   
   instances.push(this);
 };
 
-ArtJs.Clock.getClockById = function(id_) {
+ArtJs.Clock.findById = function(id_) {
   this.found.id = id_;
   
   return ArtJs.ArrayUtils.detect(this.instances, this.found);
@@ -23,7 +23,7 @@ ArtJs.Clock.found = function(i) {
 };
 
 ArtJs.Clock.prototype.start = function(now_) {
-  var code = 'Clock.getClockById(' + this._id + ').tick()';
+  var code = 'Clock.findById(' + this._id + ')._onIntervalDelegate()';
   
   this.stop();
   this._intervalId = setInterval(code, this._interval);
