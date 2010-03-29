@@ -26,6 +26,21 @@ ArtJs.DatePicker.prototype = {
 
 ArtJs.Calendar = pl.arthwood.ui.Calendar = function() {
   this.node = ArtJs.ArrayUtils.first(ArtJs.$$('.datepicker_calendar'));
+  
+  var arrows = ArtJs.Selector.down(this.node, '.nav a');
+  
+  this.prevMonth = arrows[0];
+  this.nextMonth = arrows[1];
+  this.prevMonth.onclick = ArtJs.$DC(this, this.onPrevMonth);
+  this.nextMonth.onclick = ArtJs.$DC(this, this.onNextMonth);
+  
+  var selects = ArtJs.Selector.down(this.node, '.nav select');
+  
+  this.monthSelect = selects[0];
+  this.yearSelect = selects[1];
+  this.monthSelect.onchange = ArtJs.$DC(this, this.onMonthSelect);
+  this.yearSelect.onchange = ArtJs.$DC(this, this.onYearSelect);
+  
   this.headers = ArtJs.Selector.down(this.node, 'th');
   this.items = ArtJs.Selector.down(this.node, 'td');
   this.updateHeaderDC = ArtJs.$DC(this, this.updateHeader);
@@ -92,9 +107,50 @@ ArtJs.Calendar.prototype = {
       
       date.setDate(parseInt(value));
     
-      this.field.value = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+      this.field.value = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear();
       this.hide();
     }
+    
+    return false;
+  },
+  
+  onPrevMonth: function(e) {
+    return this.onMonth(-1);
+  },
+  
+  onNextMonth: function(e) {
+    return this.onMonth(1);
+  },
+  
+  onMonth: function(v) {
+    var date = new Date(this.date);
+    
+    date.setMonth(date.getMonth() + v);
+    
+    this.monthSelect.value = date.getMonth() + 1;
+    this.yearSelect.value = date.getFullYear();
+    
+    this.update(date);
+    
+    return false;
+  },
+  
+  onMonthSelect: function(e) {
+    var date = new Date(this.date);
+    
+    date.setMonth(parseInt(e.target.value) - 1);
+    
+    this.update(date);
+    
+    return false;
+  },
+  
+  onYearSelect: function(e) {
+    var date = new Date(this.date);
+    
+    date.setFullYear(parseInt(e.target.value));
+    
+    this.update(date);
     
     return false;
   }
