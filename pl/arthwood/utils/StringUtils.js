@@ -16,12 +16,16 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     return this.replace(str, ' ', '');
   },
   
+  stripNewLines: function(str) {
+    return this.replace(str, "\n", '');
+  },
+  
   stripTabs: function(str) {
     return this.replace(str, '	', '');
   },
   
   strip: function(str) {
-    return this.stripSpaces(this.stripTabs(str));
+    return this.stripSpaces(this.stripTabs(this.stripNewLines(str)));
   },
   
   blank: function(str) {
@@ -128,6 +132,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     
     proto.stripSpaces = dc(this, this.stripSpaces, true);
     proto.stripTabs = dc(this, this.stripTabs, true);
+    proto.stripNewLines = dc(this, this.stripNewLines, true);
     proto.strip = dc(this, this.strip, true);
     proto.blank = dc(this, this.blank, true);
     proto.empty = dc(this, this.empty, true);

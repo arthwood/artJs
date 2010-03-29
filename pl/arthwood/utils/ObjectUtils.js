@@ -1,5 +1,5 @@
 ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 'each', 'eachPair', 
+  INJECTED_PROPS: ['copy', 'copyProps', 'extend', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 'each', 'eachPair', 
     'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll', 'toQueryString', 'inspect'
   ],
   
@@ -30,6 +30,10 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     for (var i in from) {
       to[i] = from[i];
     }
+  },
+  
+  extend: function(obj, withObj) {
+    this.copyProps(withObj, obj)
   },
 
   removeValue: function(obj, val) {
@@ -263,6 +267,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     
     proto.copy = dc(this, this.copy, true);
     proto.copyProps = dc(this, this.copyProps, true);
+    proto.extend = dc(this, this.extend, true);
     proto.removeValue = dc(this, this.removeValue, true);
     proto.removeValues = dc(this, this.removeValues, true);
     proto.map = dc(this, this.map, true);
