@@ -60,7 +60,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   getSize: function(e) {
-    return new ArtJs.Point(e.clientWidth, e.clientHeight);
+    return this.getLayout(e).getSize(); 
   },
   
   elements: function(e) {
@@ -156,6 +156,12 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     e.style.top = v + 'px';
   },
   
+  getLayout: function(e) {
+    var b = e.getBoundingClientRect();
+    
+    return new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -184,6 +190,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.center = dc(this, this.center, true);
     proto.centerH = dc(this, this.centerH, true);
     proto.centerV = dc(this, this.centerV, true);
+    proto.getLayout = dc(this, this.getLayout, true);
                                                               
     this.injected = true;
   }
