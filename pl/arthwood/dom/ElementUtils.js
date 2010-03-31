@@ -28,13 +28,17 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   toggle: function(e) {
-    var hidden = this.getHidden(e);
-    
-    this.setVisible(e, hidden || e.style.display == 'none');
+    this.setVisible(e, this.isHidden(e));
   },
   
   setVisible: function(e, v) {
     v ? this.show(e) : this.hide(e);
+  },
+  
+  isHidden: function(e) {
+    var hidden = this.getHidden(e);
+    
+    return hidden || e.style.display == 'none';
   },
   
   getHidden: function(e) {
@@ -148,6 +152,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.setY(e, p.y);
   },
   
+  getPosition: function(e) {
+    return this.getLayout().getLeftTop();
+  },
+  
   setX: function(e, v) {
     e.style.left = v + 'px';
   },
@@ -157,9 +165,20 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   getLayout: function(e) {
-    var b = e.getBoundingClientRect();
+    var hidden = this.isHidden(e);
     
-    return new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+    if (hidden) {
+      this.show(e);
+    }
+    
+    var b = e.getBoundingClientRect();
+    var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+    
+    if (hidden) {
+      this.hide(e);
+    }
+    
+    return layout;
   },
   
   doInjection: function() {
@@ -171,6 +190,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.hide = dc(this, this.hide, true);
     proto.toggle = dc(this, this.toggle, true);
     proto.setVisible = dc(this, this.setVisible, true);
+    proto.isHidden = dc(this, this.isHidden, true);
     proto.setAlpha = dc(this, this.setAlpha, true);
     proto.getAlpha = dc(this, this.getAlpha, true);
     proto.isElement = dc(this, this.isElement, true);
@@ -184,6 +204,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.putAtTop = dc(this, this.putAtTop, true);
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
+    proto.getPosition = dc(this, this.getPosition, true);
     proto.setPosition = dc(this, this.setPosition, true);
     proto.setX = dc(this, this.setX, true);
     proto.setY = dc(this, this.setY, true);
