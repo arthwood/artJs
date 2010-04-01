@@ -22,8 +22,16 @@ ArtJs.Rectangle.prototype = {
     return new ArtJs.Point(this.left, this.top);
   },
   
+  getRightTop: function() {
+    return new ArtJs.Point(this.right, this.top);
+  },
+  
   getRightBottom: function() {
    return new ArtJs.Point(this.right, this.bottom);
+  },
+  
+  getLeftBottom: function() {
+    return new ArtJs.Point(this.left, this.bottom);
   },
   
   getSize: function() {

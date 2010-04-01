@@ -16,9 +16,15 @@ ArtJs.DatePicker.prototype = {
   
   onImg: function(e) {
     var img = e.target;
-    var position = new ArtJs.Point(img.x + img.width + 1, img.y + 1);
+    var imgRT = ArtJs.ElementUtils.getLayout(img).getRightTop();
+    var position = imgRT.add(new ArtJs.Point(1, 1));
     
-    this.calendar.show(ArtJs.ElementUtils.prev(img), position);
+    if (this.calendar.isHidden()) {
+      this.calendar.show(ArtJs.ElementUtils.prev(img), position);
+    }
+    else {
+      this.calendar.hide();
+    }
     
     return false;
   }
@@ -67,6 +73,10 @@ ArtJs.Calendar.prototype = {
   hide: function() {
     this.field = null;
     ArtJs.ElementUtils.hide(this.node);
+  },
+  
+  isHidden: function() {
+    return ArtJs.ElementUtils.isHidden(this.node);
   },
   
   update: function(date) {
