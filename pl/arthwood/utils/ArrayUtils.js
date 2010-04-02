@@ -1,10 +1,4 @@
 ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
-  INJECTED_PROPS: ['first', 'second', 'third', 'beforeLast', 'last', 'getItem', 'include', 'includeAll', 'insertAt',
-    'removeAt', 'removeItem', 'map', 'each', 'eachIndex', 'eachPair', 'inject', 'flatten', 'flattenHtmlCollections',
-    'select', 'reject', '$reject', 'detect', 'all', 'any', 'uniq', 'commonElement', 'selectNonEmpty', 'compact', 
-    'empty', 'nonEmpty', 'numerize', 'sum', 'stringify', 'print'
-  ].concat(ArtJs.ObjectUtils.INJECTED_PROPS),
-  
   init: function() {
     this.commonElementSelectDelegate = ArtJs.$DC(this, this.commonElementSelect);
     this.includeDelegate = ArtJs.$DC(this, this.include);
@@ -15,7 +9,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
   
   ownProperty: function(property) {
-    return !this.injected || !this.include(this.INJECTED_PROPS, property);
+    return !isNaN(parseInt(property));
   },
 
   first: function(arr) {
@@ -252,7 +246,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   commonElement: function(arr) {
     this.commonTestArray = arr.slice(1);
-
+    
     return this.select(arr[0], this.commonElementSelectDelegate);
   },
 
