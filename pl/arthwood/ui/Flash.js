@@ -68,7 +68,7 @@ ArtJs.Flash.prototype = {
   onFadeFinish: function(arg) {
     ArtJs.ElementUtils.hide(this.flash);
     this.span.innerHTML = null;
-    this.image.src = '/images/blank.png';
+    this.image.src = '/images/flash/blank.png';
   },
   
   onFlashClick: function(e) {
