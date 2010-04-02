@@ -181,6 +181,18 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return layout;
   },
   
+  enable: function(e) {
+    e.removeAttribute('disabled'); 
+  },
+  
+  disable: function(e) {
+    e.setAttribute('disabled', 'disabled'); 
+  },
+  
+  setEnabled: function(e, enabled) {
+    enabled ? this.enable(e) : this.disable(e);
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -212,6 +224,9 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.centerH = dc(this, this.centerH, true);
     proto.centerV = dc(this, this.centerV, true);
     proto.getLayout = dc(this, this.getLayout, true);
+    proto.enable = dc(this, this.enable, true);
+    proto.disable = dc(this, this.disable, true);
+    proto.setEnabled = dc(this, this.setEnabled, true);
                                                               
     this.injected = true;
   }
