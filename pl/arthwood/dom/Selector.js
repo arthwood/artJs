@@ -6,7 +6,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
 
   init: function() {
     this.filterFamilyDelegate = ArtJs.$DC(this, this.filterFamily);
-    this.getFamilyDelegate = ArtJs.$DC(this, this.getFamily);
+    this.candidateFamilyMapDelegate = ArtJs.$DC(this, this.candidateFamilyMap);
     this.getFamilyDescendantDelegate = ArtJs.$DC(this, this.getFamilyDescendant);
     this.attrToArrayDelegate = ArtJs.$DC(this, this.attrToArray);
     this.getElementsByTagNameDelegate = ArtJs.$DC(this, this.getElementsByTagName);
@@ -47,21 +47,29 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     var items = path.split(' ');
     var au = ArtJs.ArrayUtils;
 
-    this.root = root || document.body;
     this.signatures = au.map(items, ArtJs.$DC(this, this.getSignature));
     
     var signature = au.last(this.signatures);
     var candidates = this.getElementsBySignature(signature);
-    var families = au.map(candidates, this.getFamilyDelegate);
+    
+    this.candidateFamilyMapDelegate.delegate.args = [root];
+    
+    var families = au.map(candidates, this.candidateFamilyMapDelegate);
     var firteredFamilies = au.select(au.compact(families), this.filterFamilyDelegate);
     
     return au.map(firteredFamilies, this.getFamilyDescendantDelegate);
   },
+  
+  candidateFamilyMap: function(i, idx, root) {
+    return this.getFamily(i, root);
+  },
 
-  getFamily: function(node) {
+  getFamily: function(node, root) {
     var result = [node];
     
-    while ((node = node.parentNode) != this.root && node) {
+    root = root || document.body;
+    
+    while ((node = node.parentNode) != root && node) {
       result.push(node);
     }
     
