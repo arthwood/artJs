@@ -5,7 +5,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     this.invertedIncludeDelegate = ArtJs.$DC(this, this.invertedInclude);
     this.nonEmptyDelegate = ArtJs.$DC(this, this.nonEmpty);
     this.notNullDelegate = ArtJs.$DC(this, this.notNull);
-    this.injected = false; 
+    this.injected = false;
   },
   
   ownProperty: function(property) {
@@ -83,7 +83,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   map: function(arr, func) {
     var result = new Array();
-
+    
     for (var i in arr) {
       if (this.ownProperty(i)) {
         result.push(func(arr[i], parseInt(i)));
