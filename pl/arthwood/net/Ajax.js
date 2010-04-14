@@ -21,31 +21,38 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
     this.requestMethod = methods.POST;
   }
   
-  var r = this._request = new XMLHttpRequest();
+  this._request = new XMLHttpRequest();
   
-  r.open(this.requestMethod, this.url, true);  
+  this.requestUrl = this.url;
+  
+  if (this.requestData) {
+      this.requestQueryData = ArtJs.ObjectUtils.toQueryString(this.requestData);
+      
+      if (this.requestMethod == methods.GET) {
+        this.requestUrl += ('?' + this.requestQueryData);
+        this.requestQueryData = null;
+      }
+  }
+  
+  this._request.open(this.requestMethod, this.requestUrl, true);
   
   this.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   this.setRequestHeader('X-ArtJs-Version', ArtJs.VERSION);
   this.setRequestHeader('Accept', 'text/javascript, text/html, application/xml, text/xml, */*');
+
+  if (this.requestMethod == methods.POST) {
+    this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+  }
   
-  r.onreadystatechange = this.onReadyStateChangeDelegate;
-  r.onprogress = this.onProgressDelegate;
-  r.onload = this.onLoadDelegate;
-  r.onerror = this.onErrorDelegate;
+  this._request.onreadystatechange = this.onReadyStateChangeDelegate;
+  this._request.onprogress = this.onProgressDelegate;
+  this._request.onload = this.onLoadDelegate;
+  this._request.onerror = this.onErrorDelegate;
 };
 
 ArtJs.Ajax.prototype = {
   request: function() {
-    var data;
-    
-    if (this.requestMethod == ArtJs.Ajax.Methods.POST) {
-      this.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
-      
-      if (this.requestData) data = ArtJs.ObjectUtils.toQueryString(this.requestData);
-    }
-    
-    this._request.send(data);
+    this._request.send(this.requestQueryData);
   },
 
   abort: function() {
@@ -118,8 +125,8 @@ ArtJs.Ajax.ReadyState = {
   LOADED: 4
 };
 
-ArtJs.Ajax.get = ArtJs.$get = function(url, onSuccess) {
-  return ArtJs.Ajax.request(url, null, Ajax.Methods.GET, onSuccess);
+ArtJs.Ajax.get = ArtJs.$get = function(url, data, onSuccess) {
+  return ArtJs.Ajax.request(url, data, Ajax.Methods.GET, onSuccess);
 };
 
 ArtJs.Ajax.post = ArtJs.$post = function(url, data, onSuccess) {
