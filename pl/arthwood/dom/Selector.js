@@ -46,7 +46,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
   getElements: function(path, root) {
     var items = path.split(' ');
     var au = ArtJs.ArrayUtils;
-
+    
     this.signatures = au.map(items, ArtJs.$DC(this, this.getSignature));
     
     var signature = au.last(this.signatures);
@@ -151,7 +151,9 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
   },
 
   getTag: function(selector) {
-    return selector.match(this.tagRE);
+    var matches = selector.match(this.tagRE);
+    
+    return matches && ArtJs.ArrayUtils.first(matches);
   },
 
   getIds: function(selector) {
@@ -208,5 +210,3 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     this.injected = true;
   }
 };
-
-ArtJs.Selector.init();
