@@ -1,10 +1,14 @@
 ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: 'block',
-        
+  MAIN_OBJ_RE: /^\w+/,
+  SUB_OBJ_RE: /\[\w+\]/g,
+  
   init: function() {
-    this.detectHiddenElementDelegate = ArtJs.$DC(this, this.detectHiddenElement);
-    this.isElementDelegate = ArtJs.$DC(this, this.isElement);
+    this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
+    this.isElementDC = ArtJs.$DC(this, this.isElement);
+    this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
+    this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.injected = false;
   },
   
@@ -42,9 +46,9 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   getHidden: function(e) {
-    this.detectHiddenElementDelegate.delegate.args = [e];
+    this.detectHiddenElementDC.delegate.args = [e];
     
-    return ArtJs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDelegate);
+    return ArtJs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDC);
   },
   
   detectHiddenElement: function(i, e) {
@@ -68,7 +72,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   elements: function(e) {
-    return ArtJs.ArrayUtils.select(e.childNodes, this.isElementDelegate);
+    return ArtJs.ArrayUtils.select(e.childNodes, this.isElementDC);
   },
   
   remove: function(e) {
@@ -119,6 +123,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   
   putBefore: function(e, ref) {
     this.parent(ref).insertBefore(e, ref);
+  },
+  
+  replace: function(e, ref) {
+    this.parent(ref).replaceChild(e, ref);
   },
   
   center: function(e) {
@@ -193,6 +201,47 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     enabled ? this.enable(e) : this.disable(e);
   },
   
+  serialize: function(e) {
+    var textfields = ArtJs.Selector.down(e, 'input[type=text]');
+    var checkboxes = ArtJs.Selector.down(e, 'input[type=checkbox]');
+    var radios = ArtJs.Selector.down(e, 'input[type=radio]');
+    var selects = ArtJs.Selector.down(e, 'select');
+    var textareas = ArtJs.Selector.down(e, 'textarea');
+    
+    var inputs = ArtJs.ArrayUtils.flatten([textfields, checkboxes, radios, selects, textareas]);
+    
+    var result = ArtJs.ArrayUtils.inject(inputs, {}, this.serializeInjectDC);
+    
+    return result;
+  },
+  
+  serializeInject: function(mem, i, idx) {
+    var name = i.name;
+    var value = i.value;
+    var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
+    var props = name.match(this.SUB_OBJ_RE).map(this.mapSubDC);
+    
+    props.unshift(main);
+    
+    var obj = mem;
+    var n = props.length - 1;
+    var k, prop;
+    
+    for (k = 0; k < n; k++) {
+      prop = props[k];
+      (obj[prop] instanceof Object) || (obj[prop] = {});
+      obj = obj[prop];
+    }
+    
+    obj[props[k]] = value;
+    
+    return mem;
+  },
+  
+  mapSub: function(i, idx) {
+    return ArtJs.StringUtils.sub(i, 1, -1);
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -216,6 +265,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.putAtTop = dc(this, this.putAtTop, true);
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
+    proto.replace = dc(this, this.replace, true);
     proto.getPosition = dc(this, this.getPosition, true);
     proto.setPosition = dc(this, this.setPosition, true);
     proto.setX = dc(this, this.setX, true);
@@ -227,6 +277,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.enable = dc(this, this.enable, true);
     proto.disable = dc(this, this.disable, true);
     proto.setEnabled = dc(this, this.setEnabled, true);
+    proto.serialize = dc(this, this.serialize, true);
                                                               
     this.injected = true;
   }
