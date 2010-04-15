@@ -125,6 +125,21 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
   
     return str;
   },
+  
+  sub: function(str, i, j) {
+    var n = str.length;
+    var jZero = (j == 0);
+    
+    str += str;
+    i = i % n;
+    j = j % n;
+    if (i < 0) i += n;
+    if (j < 0) j += n;
+    if (jZero) j = n;
+    if (j < i) j += n;
+    
+    return str.substring(i, j);
+  },
 
   doInjection: function() {
     var proto = String.prototype;
@@ -148,6 +163,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     proto.capitalize = dc(this, this.capitalize, true);
     proto.capitalizeWord = dc(this, this.capitalizeWord, true);
     proto.trim = dc(this, this.trim, true);
+    proto.sub = dc(this, this.sub, true);
     
     this.injected = true;
   }
