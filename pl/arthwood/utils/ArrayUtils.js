@@ -128,7 +128,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     
     for (var i in arr) {
       if (this.ownProperty(i)) {
-        vResult = func(vResult, arr[i]);
+        vResult = func(vResult, arr[i], i);
       }
     }
 
