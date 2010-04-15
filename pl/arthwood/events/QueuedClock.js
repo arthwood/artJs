@@ -6,19 +6,21 @@ ArtJs.QueuedClock = pl.arthwood.events.QueuedClock = function(interval_) {
   this.clock = new ArtJs.Clock(this._startDelegate, this._interval);
 };
 
-ArtJs.QueuedClock.prototype._start = function() {
-  if (this._queue.isEmpty()) {
-    this.clock.stop();
-  }
-  else {
-    this._queue.getItem()();
-  }
-};
-
-ArtJs.QueuedClock.prototype.addCallback = function(i_) {
-  this._queue.addItem(i_);
-
-  if (!this.clock.isRunning()) {
-    this.clock.start(true);
+ArtJs.QueuedClock.prototype = {
+  _start: function() {
+    if (this._queue.isEmpty()) {
+      this.clock.stop();
+    }
+    else {
+      this._queue.getItem()();
+    }
+  },
+  
+  addCallback: function(i_) {
+    this._queue.addItem(i_);
+  
+    if (!this.clock.isRunning()) {
+      this.clock.start(true);
+    }
   }
 };

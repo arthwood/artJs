@@ -4,29 +4,32 @@ ArtJs.Delegate = pl.arthwood.events.Delegate = function(object, method) {
   this.args = ArtJs.$args(arguments, 2);
 };
 
-ArtJs.Delegate.prototype.invoke = function() {
-  var args = ArtJs.$args(arguments).concat(this.args);
+ArtJs.Delegate.prototype = {
+  invoke: function() {
   
-  return this.method.apply(this.object, args);
-};
-
-ArtJs.Delegate.prototype.invokeWithSource = function(src, args) {
-  return this.method.apply(this.object, [src].concat(args).concat(this.args));
-};
-
-ArtJs.Delegate.prototype.callback = function(withSource) {
-  var result = function() {
-    var callee = arguments.callee;
-    var delegate = callee.delegate;
-    var args = ArtJs.$args(arguments);
+    var args = ArtJs.$args(arguments).concat(this.args);
     
-    return callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
-  };
-
-  result.withSource = withSource;
-  result.delegate = this;
-
-  return result;
+    return this.method.apply(this.object, args);
+  },
+  
+  invokeWithSource: function(src, args) {
+    return this.method.apply(this.object, [src].concat(args).concat(this.args));
+  },
+  
+  callback: function(withSource) {
+    var result = function() {
+      var callee = arguments.callee;
+      var delegate = callee.delegate;
+      var args = ArtJs.$args(arguments);
+      
+      return callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
+    };
+  
+    result.withSource = withSource;
+    result.delegate = this;
+  
+    return result;
+  }
 };
 
 ArtJs.$DC = ArtJs.Delegate.callback = function(object, method, withSource) {
