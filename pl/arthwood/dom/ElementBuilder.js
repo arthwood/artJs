@@ -34,6 +34,14 @@ ArtJs.ElementBuilder.attributePairToString = function(arr) {
   return arr[0] + '="' + arr[1] + '"';
 };
 
+ArtJs.$P = ArtJs.ElementBuilder.parse = function(str) {
+  var node = document.createElement('div');
+  
+  node.innerHTML = str;
+  
+  return node.firstChild;
+};
+
 ArtJs.$B = ArtJs.ElementBuilder.create = function(name, attributes, value, empty) {
   return (new ElementBuilder(name, attributes, value, empty)).toString();
 };
