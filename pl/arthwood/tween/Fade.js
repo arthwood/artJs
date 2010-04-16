@@ -11,7 +11,7 @@ ArtJs.Fade = pl.arthwood.tween.Fade = function(e, p1, p2, delta) {
 };
 
 ArtJs.Fade.prototype = {
-  start: function(e) {
+  start: function() {
     this.p = this.p1;
     
     this.clock.start();
