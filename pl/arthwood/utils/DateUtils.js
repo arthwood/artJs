@@ -49,10 +49,17 @@ ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
   },
   
   toDMY: function(date, separator) {
-    var ymd = this.toYMD(date, separator);;
+    var ymd = this.toYMD(date, separator);
     var arr = ymd.split(separator).reverse();
     
     return arr.join(separator);
+  },
+  
+  fromDMY: function(str, separator) {
+    var arr = str.split(separator);
+    var au = ArtJs.ArrayUtils;
+    
+    return new Date(parseInt(au.third(arr)), parseInt(au.second(arr)) - 1, parseInt(au.first(arr)));
   },
   
   minutesToHM: function(minutes, separator) {

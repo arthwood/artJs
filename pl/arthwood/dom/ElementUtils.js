@@ -278,7 +278,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.disable = dc(this, this.disable, true);
     proto.setEnabled = dc(this, this.setEnabled, true);
     proto.serialize = dc(this, this.serialize, true);
-                                                              
+    
     this.injected = true;
   }
 };

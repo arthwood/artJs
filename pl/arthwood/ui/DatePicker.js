@@ -1,8 +1,8 @@
-ArtJs.DatePicker = pl.arthwood.ui.DatePicker = function() {
+ArtJs.DatePicker = pl.arthwood.ui.DatePicker = function(firstDay) {
   this.items = ArtJs.$$('.datepicker');
   this.onImgDC = ArtJs.$DC(this, this.onImg);
   ArtJs.ArrayUtils.each(this.items, ArtJs.$DC(this, this.initField));
-  this.calendar = new ArtJs.Calendar();
+  this.calendar = new ArtJs.Calendar(firstDay);
 };
 
 ArtJs.DatePicker.prototype = {
@@ -30,7 +30,7 @@ ArtJs.DatePicker.prototype = {
   }
 };
 
-ArtJs.Calendar = pl.arthwood.ui.Calendar = function() {
+ArtJs.Calendar = pl.arthwood.ui.Calendar = function(firstDay) {
   this.node = ArtJs.ArrayUtils.first(ArtJs.$$('.datepicker_calendar'));
   
   var arrows = ArtJs.Selector.down(this.node, '.nav a');
@@ -54,18 +54,28 @@ ArtJs.Calendar = pl.arthwood.ui.Calendar = function() {
   this.onItemDC = ArtJs.$DC(this, this.onItem);
   ArtJs.ArrayUtils.each(this.items, ArtJs.$DC(this, this.initItem));
   this.field = null;
-  this.firstDay = 0;
+  this.firstDay = firstDay || 0;
+  this.date = new Date();
   this.update();
 };
 
 ArtJs.Calendar.prototype = {
   DAYS: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'],
+  WEEKEND_DAYS: [6, 0],
+  SEPARATOR: '-',
   VALID_CELL_BACKGROUND : 'none',
+  WEEKEND_CELL_BACKGROUND : '#CFFFDF',
   INVALID_CELL_BACKGROUND : "url(/images/datepicker/backstripes.gif)",
   EMPTY_CELL_VALUE: '&nbsp;',
     
   show: function(field, position) {
     this.field = field;
+    
+    var value = this.field.value;
+    
+    this.date = ArtJs.StringUtils.empty(value) ? new Date() : ArtJs.DateUtils.fromDMY(value, this.SEPARATOR);
+    p(this.date);
+    this.update();
     ArtJs.ElementUtils.setPosition(this.node, position);
     ArtJs.ElementUtils.show(this.node);
   },
@@ -79,11 +89,12 @@ ArtJs.Calendar.prototype = {
     return ArtJs.ElementUtils.isHidden(this.node);
   },
   
-  update: function(date) {
-    this.date = date || new Date();
-    
+  update: function() {
     this.monthsFirstDay = ArtJs.DateUtils.firstDay(this.date);
     this.monthsLastDate = ArtJs.DateUtils.monthDaysNum(this.date);
+    
+    this.monthSelect.value = this.date.getMonth() + 1;
+    this.yearSelect.value = this.date.getFullYear();
     
     ArtJs.ArrayUtils.eachPair(this.headers, this.updateHeaderDC);
     ArtJs.ArrayUtils.eachPair(this.items, this.updateItemDC);
@@ -98,8 +109,10 @@ ArtJs.Calendar.prototype = {
   updateItem: function(idx, item) {
     var value = idx + 1 - this.monthsFirstDay + this.firstDay;
     var valid = value > 0 && value <= this.monthsLastDate;
-    
-    item.style.background = valid ? this.VALID_CELL_BACKGROUND : this.INVALID_CELL_BACKGROUND;
+    var weekend = ArtJs.ArrayUtils.include(this.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
+    //ArtJs.ElementUtils.
+    item.style.background = valid ? (weekend ? this.WEEKEND_CELL_BACKGROUND : this.VALID_CELL_BACKGROUND) : this.INVALID_CELL_BACKGROUND;
+    item.className = (value == this.date.getDate()) ? 'selected' : '';
     item.innerHTML = valid ? value : this.EMPTY_CELL_VALUE;
   },
   
@@ -113,11 +126,9 @@ ArtJs.Calendar.prototype = {
     var valid = !(value == this.EMPTY_CELL_VALUE);
     
     if (valid) {
-      var date = new Date(this.date);
-      
-      date.setDate(parseInt(value));
-      
-      this.field.value = ArtJs.DateUtils.toDMY(date, '-');
+      this.date.setDate(parseInt(value));
+      this.update();
+      this.field.value = ArtJs.DateUtils.toDMY(this.date, this.SEPARATOR);
       this.hide();
     }
     
@@ -133,34 +144,28 @@ ArtJs.Calendar.prototype = {
   },
   
   onMonth: function(v) {
-    var date = new Date(this.date);
+    this.date.setMonth(this.date.getMonth() + v);
     
-    date.setMonth(date.getMonth() + v);
+    this.monthSelect.value = this.date.getMonth() + 1;
+    this.yearSelect.value = this.date.getFullYear();
     
-    this.monthSelect.value = date.getMonth() + 1;
-    this.yearSelect.value = date.getFullYear();
-    
-    this.update(date);
+    this.update();
     
     return false;
   },
   
   onMonthSelect: function(e) {
-    var date = new Date(this.date);
+    this.date.setMonth(parseInt(e.target.value) - 1);
     
-    date.setMonth(parseInt(e.target.value) - 1);
-    
-    this.update(date);
+    this.update();
     
     return false;
   },
   
   onYearSelect: function(e) {
-    var date = new Date(this.date);
+    this.date.setFullYear(parseInt(e.target.value));
     
-    date.setFullYear(parseInt(e.target.value));
-    
-    this.update(date);
+    this.update();
     
     return false;
   }
