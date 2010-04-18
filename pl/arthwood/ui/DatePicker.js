@@ -74,7 +74,6 @@ ArtJs.Calendar.prototype = {
     var value = this.field.value;
     
     this.date = ArtJs.StringUtils.empty(value) ? new Date() : ArtJs.DateUtils.fromDMY(value, this.SEPARATOR);
-    p(this.date);
     this.update();
     ArtJs.ElementUtils.setPosition(this.node, position);
     ArtJs.ElementUtils.show(this.node);
@@ -110,7 +109,7 @@ ArtJs.Calendar.prototype = {
     var value = idx + 1 - this.monthsFirstDay + this.firstDay;
     var valid = value > 0 && value <= this.monthsLastDate;
     var weekend = ArtJs.ArrayUtils.include(this.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
-    //ArtJs.ElementUtils.
+    
     item.style.background = valid ? (weekend ? this.WEEKEND_CELL_BACKGROUND : this.VALID_CELL_BACKGROUND) : this.INVALID_CELL_BACKGROUND;
     item.className = (value == this.date.getDate()) ? 'selected' : '';
     item.innerHTML = valid ? value : this.EMPTY_CELL_VALUE;
