@@ -67,8 +67,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return e.nodeType == 1;
   },
   
-  getSize: function(e) {
-    return this.getLayout(e).getSize(); 
+  getSize: function(e, withScroll) {
+    return this.getLayout(e, withScroll).getSize(); 
   },
   
   elements: function(e) {
@@ -160,8 +160,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.setY(e, p.y);
   },
   
-  getPosition: function(e) {
-    return this.getLayout(e).getLeftTop();
+  getPosition: function(e, withScroll) {
+    return this.getLayout(e, withScroll).getLeftTop();
   },
   
   setX: function(e, v) {
@@ -172,7 +172,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     e.style.top = v + 'px';
   },
   
-  getLayout: function(e) {
+  getLayout: function(e, withScroll) {
     var hidden = this.isHidden(e);
     
     if (hidden) {
@@ -181,6 +181,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     
     var b = e.getBoundingClientRect();
     var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+    
+    if (withScroll) {
+      layout.moveBy(new ArtJs.Point(scrollX, scrollY));
+    }
     
     if (hidden) {
       this.hide(e);
@@ -202,15 +206,16 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   serialize: function(e) {
-    var textfields = ArtJs.Selector.down(e, 'input[type=text]');
-    var checkboxes = ArtJs.Selector.down(e, 'input[type=checkbox]');
-    var radios = ArtJs.Selector.down(e, 'input[type=radio]');
-    var selects = ArtJs.Selector.down(e, 'select');
-    var textareas = ArtJs.Selector.down(e, 'textarea');
-    
-    var inputs = ArtJs.ArrayUtils.flatten([textfields, checkboxes, radios, selects, textareas]);
-    
-    var result = ArtJs.ArrayUtils.inject(inputs, {}, this.serializeInjectDC);
+    var s = ArtJs.Selector;
+    var au = ArtJs.ArrayUtils;
+    var textfields = s.down(e, 'input[type=text]');
+    var checkboxes = s.down(e, 'input[type=checkbox]');
+    var radios = s.down(e, 'input[type=radio]');
+    var selects = s.down(e, 'select');
+    var textareas = s.down(e, 'textarea');
+    var hiddenfields = s.down(e, 'input[type=hidden]');
+    var inputs = au.flatten([textfields, checkboxes, radios, selects, textareas, hiddenfields]);
+    var result = au.inject(inputs, {}, this.serializeInjectDC);
     
     return result;
   },
@@ -219,7 +224,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     var name = i.name;
     var value = i.value;
     var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
-    var props = name.match(this.SUB_OBJ_RE).map(this.mapSubDC);
+    var subobjectMatches = name.match(this.SUB_OBJ_RE);
+    var props = subobjectMatches && subobjectMatches.map(this.mapSubDC) || [];
     
     props.unshift(main);
     
