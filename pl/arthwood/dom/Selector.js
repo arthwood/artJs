@@ -1,19 +1,19 @@
 ArtJs.Selector = pl.arthwood.dom.Selector = {
   tagRE: /^\w+/gi,
   classesRE: /\.\w+/gi,
-  idsRE: /#\w+/gi,
+  idRE: /#\w+/i,
   attrsRE: /\[.*\]/gi,
-
+  
   init: function() {
-    this.filterFamilyDelegate = ArtJs.$DC(this, this.filterFamily);
-    this.candidateFamilyMapDelegate = ArtJs.$DC(this, this.candidateFamilyMap);
-    this.getFamilyDescendantDelegate = ArtJs.$DC(this, this.getFamilyDescendant);
-    this.attrToArrayDelegate = ArtJs.$DC(this, this.attrToArray);
-    this.getElementsByTagNameDelegate = ArtJs.$DC(this, this.getElementsByTagName);
-    this.getElementsByClassNameDelegate = ArtJs.$DC(this, this.getElementsByClassName);
-    this.getElementByIdDelegate = ArtJs.$DC(this, this.getElementById);
-    this.filterByAttributesDelegate = ArtJs.$DC(this, this.filterByAttributes);
-
+    this.filterFamilyDC = ArtJs.$DC(this, this.filterFamily);
+    this.candidateFamilyMapDC = ArtJs.$DC(this, this.candidateFamilyMap);
+    this.getFamilyDescendantDC = ArtJs.$DC(this, this.getFamilyDescendant);
+    this.attrToArrayDC = ArtJs.$DC(this, this.attrToArray);
+    this.getElementsByClassNameDC = ArtJs.$DC(this, this.getElementsByClassName);
+    this.getElementByIdDC = ArtJs.$DC(this, this.getElementById);
+    this.filterByAttributesDC = ArtJs.$DC(this, this.filterByAttributes);
+    this.getSignatureDC = ArtJs.$DC(this, this.getSignature);
+    
     ArtJs.$ = ArtJs.$DC(this, this.getElementById);
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$down = ArtJs.$DC(this, this.down);
@@ -25,7 +25,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
   down: function(element, path) {
     return this.getElements(path, element);
   },
-
+  
   up: function(element, path) {
     if (!path) return element.parentNode;
 
@@ -42,28 +42,29 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
 
     return ok ? family[j - 1] : null;
   },
-
+  
   getElements: function(path, root) {
     var items = path.split(' ');
     var au = ArtJs.ArrayUtils;
-    
-    this.signatures = au.map(items, ArtJs.$DC(this, this.getSignature));
-    
-    var signature = au.last(this.signatures);
+    var signatures = au.map(items, this.getSignatureDC);
+    var signature = au.last(signatures);
     var candidates = this.getElementsBySignature(signature);
     
-    this.candidateFamilyMapDelegate.delegate.args = [root];
+    this.candidateFamilyMapDC.delegate.args = [root];
     
-    var families = au.map(candidates, this.candidateFamilyMapDelegate);
-    var firteredFamilies = au.select(au.compact(families), this.filterFamilyDelegate);
+    var families = au.compact(au.map(candidates, this.candidateFamilyMapDC));
     
-    return au.map(firteredFamilies, this.getFamilyDescendantDelegate);
+    this.filterFamilyDC.delegate.args = [signatures];
+    
+    var filteredFamilies = au.select(au.compact(families), this.filterFamilyDC);
+    
+    return au.map(filteredFamilies, this.getFamilyDescendantDC);
   },
   
   candidateFamilyMap: function(i, idx, root) {
     return this.getFamily(i, root);
   },
-
+  
   getFamily: function(node, root) {
     var result = [node];
     
@@ -75,135 +76,183 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     
     return node && result;
   },
-
-  filterFamily: function(family) {
-    var i = this.signatures.length - 1;
+  
+  filterFamily: function(family, signatures) {
+    var i = signatures.length - 1;
     var j = 1;
     var n = family.length;
     var signature;
     var ok;
-
+    
     if (n == 1) return true;
-
-    this.immediateParent = false;
-
+    
+    var immediateParent = false;
+    
     while (i--) {
-      signature = this.signatures[i];
-
-      var immediateParent = (signature == '>');
-
-      if (!immediateParent) {
+      signature = signatures[i];
+      
+      var immediateParentTag = (signature == '>');
+      
+      if (!immediateParentTag) {
         do {
           ok = this.checkNode(family[j++], signature);
         }
-        while (!ok && !this.immediateParent && j < n);
-
+        while (!ok && !immediateParent && j < n);
+        
         if (!ok) return false;
       }
-
-      this.immediateParent = immediateParent;
+      
+      immediateParent = immediateParentTag;
     }
     
     return true;
   },
-
+  
   checkNode: function(node, signature) {
     var tag = signature.tag;
-    var ids = signature.ids;
+    var id = signature.id;
     var classes = signature.classes;
     var attributes = signature.attributes;
     var au = ArtJs.ArrayUtils;
     var ou = ArtJs.ObjectUtils;
-
+    
     return (!tag || (node.tagName.toLowerCase() == tag))
-      && (au.empty(ids) || au.include(ids, node.id))
+      && (!id || node.id == id)
       && (au.empty(classes) || au.includeAll(node.className.split(' '), classes))
       && (ou.empty(attributes) || ou.includeAll(node.attributes, attributes));
   },
-
+  
   getSignature: function(selector) {
     return (selector == '>')
       ? selector
-      : {tag: this.getTag(selector), ids: this.getIds(selector), classes: this.getClasses(selector),
+      : {tag: this.getTag(selector), id: this.getId(selector), classes: this.getClasses(selector),
         attributes: this.getAttributes(selector)};
   },
-
+  
   getFamilyDescendant: function(i) {
     return ArtJs.ArrayUtils.first(i);
   },
-
+  
   getElementsBySignature: function(signature) {
     var au = ArtJs.ArrayUtils;
-    var elementsOfClasses = au.map(signature.classes, this.getElementsByClassNameDelegate);
-    var elementsByTag = this.getElementsByTagName(signature.tag);
-    var elementsById = au.uniq(au.map(signature.ids, this.getElementByIdDelegate));
-    var elementsByClass = au.uniq(au.flattenHtmlCollections(elementsOfClasses));
-    var nonEmpty = au.selectNonEmpty([elementsByTag, elementsById, elementsByClass]);
-    var commonElements = au.empty(nonEmpty) ? [] : au.commonElement(nonEmpty);
+    var id = signature.id;
+    var tag = signature.tag;
+    var classes = signature.classes;
+    var attributes = signature.attributes;
+    var elements = [];
     
-    this.filterByAttributesDelegate.delegate.args = [signature.attributes];
-
-    /**
-     * TODO: we use compact since in some circumstances (usually when using innerHTML=)
-     * document.getElementsByTagName may contain undefined as last item. Need to investigate this issue.
-     */
-    return au.compact(au.select(commonElements, this.filterByAttributesDelegate));
+    if (id) {
+      var elementById = this.getElementById(id);
+    
+      if (elementById) {
+        elements.push(elementById);
+      }
+      else {
+        return [];
+      }
+    }
+    
+    if (tag) {
+      var elementsByTag = this.getElementsByTagName(tag);
+      
+      if (au.empty(elementsByTag)) {
+        return [];
+      }
+      else {
+        // no id given
+        if (au.empty(elements)) {
+          elements = elementsByTag;
+        }
+        else {
+          elements = au.commonElement([elements, elementsByTag]);
+          
+          if (au.empty(elements)) {
+            return [];
+          }
+        }
+      }
+    }
+    
+    if (!au.empty(classes)) {
+      var elementsByClass = this.getElementsByClassName(classes);
+      
+      if (au.empty(elementsByClass)) {
+        return [];
+      }
+      
+      if (au.empty(elements)) {
+        elements = elementsByClass;
+      }
+      else {
+        elements = au.commonElement([elements, elementsByClass]);
+        
+        if (au.empty(elements)) {
+          return [];
+        }
+      }
+    }
+    
+    this.filterByAttributesDC.delegate.args = [attributes];
+    
+    return au.compact(au.select(elements, this.filterByAttributesDC));
   },
-
+  
   filterByAttributes: function(i, attributes) {
     return ArtJs.ObjectUtils.includeAll(i, attributes);
   },
-
+  
   getTag: function(selector) {
     var matches = selector.match(this.tagRE);
     
     return matches && ArtJs.ArrayUtils.first(matches);
   },
-
-  getIds: function(selector) {
-    return ArtJs.ArrayUtils.map(selector.match(this.idsRE) || [], this.stripIdSelector);
+  
+  getId: function(selector) {
+    var matches = selector.match(this.idRE);
+    
+    return matches && this.stripIdSelector(ArtJs.ArrayUtils.first(matches));
   },
-
+  
   getClasses: function(selector) {
     return ArtJs.ArrayUtils.map(selector.match(this.classesRE) || [], this.stripClassSelector);
   },
-
+  
   getAttributes: function(selector) {
     var au = ArtJs.ArrayUtils;
     var matches = au.map(selector.match(this.attrsRE) || [], this.stripAttributeSelector);
-    var arr = au.map(matches[0] && matches[0].split(',') || [], this.attrToArrayDelegate);
+    var arr = au.map(matches[0] && matches[0].split(',') || [], this.attrToArrayDC);
 
     return ArtJs.ObjectUtils.fromArray(arr);
   },
-
+  
   attrToArray: function(i) {
     return i.split('=');
   },
-
+  
   stripIdSelector: function(selector) {
     return selector.slice(1);
   },
-
+  
   stripClassSelector: function(selector) {
     return selector.slice(1);
   },
-
+  
   stripAttributeSelector: function(selector) {
     return selector.slice(1).slice(0, selector.length - 2);
   },
-
+  
   getElementById: function(id) {
     return document.getElementById(id);
   },
-
+  
   getElementsByClassName: function(selector) {
-    return document.getElementsByClassName(selector);
+    return ArtJs.$A(document.getElementsByClassName(selector));
   },
-
+  
   getElementsByTagName: function(selector) {
-    return document.getElementsByTagName(selector);
+    return ArtJs.$A(document.getElementsByTagName(selector));
   },
-
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
