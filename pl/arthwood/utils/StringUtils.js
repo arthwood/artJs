@@ -1,17 +1,17 @@
 ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
-  INJECTED_PROPS: ['stripSpaces', 'stripTabs', 'strip', 'blank', 'empty', 'nullifyEmpty', 'toS', 'replace',
-      'countPattern', 'addZeros', 'getMultiPattern', 'formatPrice', 'truncate', 'singularOrPlural', 'capitalize',
-      'capitalizeWord', 'trim'
-  ],
-  
   init: function() {
+    this.parseJsonValueDC = ArtJs.$DC(this, this.parseJsonValue);
     this.injected = false;
   },
   
-  ownProperty: function(property) {
-    return !this.injected || !ArtJs.ArrayUtils.include(this.INJECTED_PROPS, property);
+  first: function(str) {
+    return str.substr(0, 1);
   },
-
+  
+  last: function(str) {
+    return str.substr(str.length - 1, 1);
+  },
+  
   stripSpaces: function(str) {
     return this.replace(str, ' ', '');
   },
@@ -140,11 +140,21 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     
     return str.substring(i, j);
   },
-
+  
+  toJson: function(str) {
+    return ArtJs.ObjectUtils.mapValue(eval('(' + str + ')'), this.parseJsonValueDC);
+  },
+  
+  parseJsonValue: function(i) {
+    return (typeof(i) == 'string' && this.first(i) == '{' && this.last(i) == '}') ? this.toJson(i) : i;
+  },
+  
   doInjection: function() {
     var proto = String.prototype;
     var dc = ArtJs.$DC;
     
+    proto.first = dc(this, this.first, true);
+    proto.last = dc(this, this.last, true);
     proto.stripSpaces = dc(this, this.stripSpaces, true);
     proto.stripTabs = dc(this, this.stripTabs, true);
     proto.stripNewLines = dc(this, this.stripNewLines, true);
@@ -164,6 +174,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     proto.capitalizeWord = dc(this, this.capitalizeWord, true);
     proto.trim = dc(this, this.trim, true);
     proto.sub = dc(this, this.sub, true);
+    proto.toJson = dc(this, this.toJson, true);
     
     this.injected = true;
   }
