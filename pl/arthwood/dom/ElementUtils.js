@@ -161,7 +161,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   getPosition: function(e) {
-    return this.getLayout().getLeftTop();
+    return this.getLayout(e).getLeftTop();
   },
   
   setX: function(e, v) {
