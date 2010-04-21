@@ -5,6 +5,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   SUB_OBJ_RE: /\[\w+\]/g,
   
   init: function() {
+    this.getContentDC = ArtJs.$DC(this, this.getContent);
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
     this.isElementDC = ArtJs.$DC(this, this.isElement);
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
@@ -248,11 +249,21 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return ArtJs.StringUtils.sub(i, 1, -1);
   },
   
+  getContent: function(e) {
+    return e.innerHTML;
+  },
+  
+  setContent: function(e, v) {
+    e.innerHTML = v;
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
     var insert = this.insert;
     
+    proto.getContent = dc(this, this.getContent, true);
+    proto.setContent = dc(this, this.setContent, true);
     proto.show = dc(this, this.show, true);
     proto.hide = dc(this, this.hide, true);
     proto.toggle = dc(this, this.toggle, true);
