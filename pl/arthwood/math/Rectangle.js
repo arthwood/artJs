@@ -36,5 +36,12 @@ ArtJs.Rectangle.prototype = {
   
   getSize: function() {
     return new ArtJs.Point(this.getWidth(), this.getHeight());
+  },
+  
+  moveBy: function(p) {
+    this.left += p.x;
+    this.top += p.y;
+    this.right += p.x;
+    this.bottom += p.y;
   }
 }; 
