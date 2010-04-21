@@ -143,7 +143,11 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     
     this.filterByAttributesDelegate.delegate.args = [signature.attributes];
 
-    return au.select(commonElements, this.filterByAttributesDelegate);
+    /**
+     * TODO: we use compact since in some circumstances (usually when using innerHTML=)
+     * document.getElementsByTagName may contain undefined as last item. Need to investigate this issue.
+     */
+    return au.compact(au.select(commonElements, this.filterByAttributesDelegate));
   },
 
   filterByAttributes: function(i, attributes) {
