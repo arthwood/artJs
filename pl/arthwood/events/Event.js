@@ -5,7 +5,7 @@ ArtJs.Event = pl.arthwood.events.Event = function(name) {
 
 ArtJs.Event.prototype = {
   fire: function() {
-    return this.delegateCollection.invoke.apply(this.delegateCollection, ArtJs.$args(arguments));
+    return this.delegateCollection.invoke.apply(this.delegateCollection, ArtJs.$A(arguments));
   },
   
   add: function(delegate) {

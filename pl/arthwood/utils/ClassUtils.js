@@ -8,7 +8,7 @@ ArtJs.ClassUtils = pl.arthwood.utils.ClassUtils = {
   
   extend: function(base, func, instanceMethods, classMethods) {
     var builder = function() {
-      var args = ArtJs.$args(arguments);
+      var args = ArtJs.$A(arguments);
       var callee = arguments.callee;
       var proto = callee.prototype;
       var func = callee.func;

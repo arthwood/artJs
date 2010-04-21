@@ -5,7 +5,7 @@ ArtJs.DelegateCollection = pl.arthwood.events.DelegateCollection = function(dele
 
 ArtJs.DelegateCollection.prototype = {
   invoke: function() {
-    this.delegateToResultCallback.delegate.args = ArtJs.$args(arguments);
+    this.delegateToResultCallback.delegate.args = ArtJs.$A(arguments);
     
     return ArtJs.ArrayUtils.map(this.delegates, this.delegateToResultCallback);
   },
@@ -45,6 +45,6 @@ ArtJs.DelegateCollection.prototype = {
   },
   
   delegateToResult: function(delegate, idx) {
-    return delegate.invoke.apply(delegate, ArtJs.$args(arguments, 2));
+    return delegate.invoke.apply(delegate, ArtJs.$A(arguments, 2));
   }
 };

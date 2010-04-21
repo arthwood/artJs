@@ -1,10 +1,10 @@
 ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   init: function() {
-    this.commonElementSelectDelegate = ArtJs.$DC(this, this.commonElementSelect);
-    this.includeDelegate = ArtJs.$DC(this, this.include);
-    this.invertedIncludeDelegate = ArtJs.$DC(this, this.invertedInclude);
-    this.nonEmptyDelegate = ArtJs.$DC(this, this.nonEmpty);
-    this.notNullDelegate = ArtJs.$DC(this, this.notNull);
+    this.commonElementSelectDC = ArtJs.$DC(this, this.commonElementSelect);
+    this.includeDC = ArtJs.$DC(this, this.include);
+    this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
+    this.nonEmptyDC = ArtJs.$DC(this, this.nonEmpty);
+    this.notNullDC = ArtJs.$DC(this, this.notNull);
     this.injected = false;
   },
   
@@ -45,9 +45,9 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   includeAll: function(arr, subset) {
-    this.invertedIncludeDelegate.delegate.args = [arr];
+    this.invertedIncludeDC.delegate.args = [arr];
     
-    return this.all(subset, this.invertedIncludeDelegate);
+    return this.all(subset, this.invertedIncludeDC);
   },
   
   insertAt: function(arr, at, obj) {
@@ -94,7 +94,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   each: function(arr, func) {
-    var vArgs = ArtJs.$args(arguments, 2);
+    var vArgs = ArtJs.$A(arguments, 2);
     
     for (var i in arr) {
       if (this.ownProperty(i)) {
@@ -104,7 +104,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
 
   eachIndex: function(arr, func) {
-    var vArgs = ArtJs.$args(arguments, 2);
+    var vArgs = ArtJs.$A(arguments, 2);
 
     for (var i in arr) {
       if (this.ownProperty(i)) {
@@ -114,7 +114,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   },
   
   eachPair: function(arr, func) {
-    var vArgs = ArtJs.$args(arguments, 2);
+    var vArgs = ArtJs.$A(arguments, 2);
     
     for (var i in arr) {
       if (this.ownProperty(i)) {
@@ -147,7 +147,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vResult = new Array();
     var collection;
     var n;
-
+    
     for (var i in arr) {
       if (this.ownProperty(i)) {
         collection = arr[i];
@@ -247,21 +247,21 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   commonElement: function(arr) {
     this.commonTestArray = arr.slice(1);
     
-    return this.select(arr[0], this.commonElementSelectDelegate);
+    return this.select(arr[0], this.commonElementSelectDC);
   },
 
   commonElementSelect: function(i) {
-    this.includeDelegate.delegate.args = [i];
+    this.includeDC.delegate.args = [i];
     
-    return this.all(this.commonTestArray, this.includeDelegate);
+    return this.all(this.commonTestArray, this.includeDC);
   },
 
   selectNonEmpty: function(arr) {
-    return this.select(arr, this.nonEmptyDelegate);
+    return this.select(arr, this.nonEmptyDC);
   },
 
   compact: function(arr) {
-    return this.select(arr, this.notNullDelegate);
+    return this.select(arr, this.notNullDC);
   },
 
   notNull: function(i) {
@@ -347,4 +347,4 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
   }
 };
 
-ArtJs.$args = ArtJs.ArrayUtils.arrify;
+ArtJs.$A = ArtJs.ArrayUtils.arrify;
