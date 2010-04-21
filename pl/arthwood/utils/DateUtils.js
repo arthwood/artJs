@@ -71,7 +71,7 @@ ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
   hmToMinutes: function(hm) {
     var arr = hm.split(':');
   
-    return 60*arr[0] + arr[1];
+    return 60*parseInt(arr[0]) + parseInt(arr[1]);
   },
   
   secondsToMS: function(s, separator) {
