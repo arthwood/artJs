@@ -92,38 +92,8 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     return str.charAt(0).toUpperCase() + str.substr(1);
   },
 
-  trim: function(str, excludeStart, excludeEnd) {
-    var n;
-    var i;
-    var code;
-  
-    if (!excludeStart) {
-      n = str.length;
-  
-      for (i = 0; i < n; i++) {
-        code = str.charCodeAt(i);
-        
-        if ((code != 9) && (code != 32) && (code != 10)) {
-          str = str.substring(i);
-          break;
-        }
-      }
-    }
-  
-    if (!excludeEnd) {
-      n = str.length;
-  
-      for (i = n - 1; i >= 0; i--) {
-        code = str.charCodeAt(i);
-        
-        if ((code != 9) && (code != 32) && (code != 10)) {
-          str = str.substring(0, i + 1);
-          break;
-        }
-      }
-    }
-  
-    return str;
+  trim: function(str) {
+    return str.replace(/^\s+/, '').replace(/\s+$/, '');
   },
   
   sub: function(str, i, j) {
