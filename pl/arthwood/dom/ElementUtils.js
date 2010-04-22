@@ -106,8 +106,12 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return result;
   },
   
+  clone: function(e, deep) {
+    return e.cloneNode(deep);
+  },
+  
   putAtBottom: function(e, container) {
-    container.appendChild(e.cloneNode(true));
+    container.appendChild(this.clone(e, true));
   },
     
   putAtTop: function(e, container) {
@@ -316,6 +320,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.parent = dc(this, this.parent, true);
     proto.prev = dc(this, this.prev, true);
     proto.next = dc(this, this.next, true);
+    proto.clone = dc(this, this.clone, true);
     proto.putAtBottom = dc(this, this.putAtBottom, true);
     proto.putAtTop = dc(this, this.putAtTop, true);
     proto.putAfter = dc(this, this.putAfter, true);
