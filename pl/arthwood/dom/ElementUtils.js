@@ -257,6 +257,44 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     e.innerHTML = v;
   },
   
+  getClasses: function(e) {
+    return e.className.split(' ');
+  },
+  
+  addClass: function(e, className) {
+    var classes = this.getClasses(e);
+    var au = ArtJs.ArrayUtils;
+    
+    if (!au.include(classes, className)) {
+      classes.push(className);
+      e.className = classes.join(' ');
+    }
+  },
+  
+  removeClass: function(e, className) {
+    var classes = this.getClasses(e);
+    var au = ArtJs.ArrayUtils;
+    
+    if (au.include(classes, className)) {
+      au.removeItem(classes, className);
+      e.className = classes.join(' ');
+    }
+  },
+  
+  toggleClass: function(e, className) {
+    var classes = this.getClasses(e);
+    var au = ArtJs.ArrayUtils;
+    
+    if (au.include(classes, className)) {
+      au.removeItem(classes, className);
+    }
+    else {
+      classes.push(className);
+    }
+    
+    e.className = classes.join(' ');
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
@@ -295,6 +333,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.disable = dc(this, this.disable, true);
     proto.setEnabled = dc(this, this.setEnabled, true);
     proto.serialize = dc(this, this.serialize, true);
+    proto.getClasses = dc(this, this.getClasses, true);
+    proto.addClass = dc(this, this.addClass, true);
+    proto.removeClass = dc(this, this.removeClass, true);
+    proto.toggleClass = dc(this, this.toggleClass, true);
     
     this.injected = true;
   }
