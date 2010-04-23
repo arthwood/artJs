@@ -28,7 +28,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
   
   up: function(element, path) {
     if (!path) return element.parentNode;
-
+    
     var signature = this.getSignature(path);
     var family = this.getFamily(element);
     var j = 1;
@@ -52,11 +52,11 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     
     this.candidateFamilyMapDC.delegate.args = [root];
     
-    var families = au.compact(au.map(candidates, this.candidateFamilyMapDC));
+    var families = au.selectNonEmpty(au.map(candidates, this.candidateFamilyMapDC));
     
     this.filterFamilyDC.delegate.args = [signatures];
     
-    var filteredFamilies = au.select(au.compact(families), this.filterFamilyDC);
+    var filteredFamilies = au.select(families, this.filterFamilyDC);
     
     return au.map(filteredFamilies, this.getFamilyDescendantDC);
   },
@@ -65,16 +65,21 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     return this.getFamily(i, root);
   },
   
-  getFamily: function(node, root) {
-    var result = [node];
+  getFamily: function(e, root) {
+    var family = [];
     
-    root = root || document.body;
-    
-    while ((node = node.parentNode) != root && node) {
-      result.push(node);
+    while (e) {
+      family.push(e);
+      e = e.parentNode;
     }
     
-    return node && result;
+    return family.slice(0, family.indexOf(root || document.body) + 1);
+  },
+  
+  descendantOf: function(e, root, includeElement) {
+    var family = this.getFamily(e, root);
+    
+    return !ArtJs.ArrayUtils.empty(family) && (includeElement || family.length > 1);
   },
   
   filterFamily: function(family, signatures) {
@@ -259,7 +264,9 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     
     proto.up = dc(this, this.up, true);
     proto.down = dc(this, this.down, true);
-
+    proto.getFamily = dc(this, this.getFamily, true);
+    proto.descendantOf = dc(this, this.descendantOf, true);
+    
     this.injected = true;
   }
 };
