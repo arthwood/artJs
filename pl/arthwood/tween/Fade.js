@@ -7,7 +7,7 @@ ArtJs.Fade = pl.arthwood.tween.Fade = function(e, p1, p2, delta) {
   this.delta = delta * this.dir;
   this.clock = new ArtJs.Clock(50);
   this.clock.onChange.add(ArtJs.$D(this, this.onTick));
-  this.onFinish = new ArtJs.Event('Fade:onFinish');
+  this.onFinish = new ArtJs.CustomEvent('Fade:onFinish');
 };
 
 ArtJs.Fade.prototype = {

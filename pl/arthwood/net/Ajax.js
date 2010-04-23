@@ -3,9 +3,9 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
   this.onProgressDelegate = ArtJs.$DC(this, this.onProgress);
   this.onLoadDelegate = ArtJs.$DC(this, this.onLoad);
   this.onErrorDelegate = ArtJs.$DC(this, this.onError);
-  this.onSuccess = new ArtJs.Event('Ajax:onSuccess');
-  this.onFailure = new ArtJs.Event('Ajax:onFailure');
-  this.onProgress = new ArtJs.Event('Ajax:onProgress');
+  this.onSuccess = new ArtJs.CustomEvent('Ajax:onSuccess');
+  this.onFailure = new ArtJs.CustomEvent('Ajax:onFailure');
+  this.onProgress = new ArtJs.CustomEvent('Ajax:onProgress');
   
   var methods = ArtJs.Ajax.Methods;
   

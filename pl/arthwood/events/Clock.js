@@ -3,7 +3,7 @@ ArtJs.Clock = pl.arthwood.events.Clock = function(interval_, repeat_) {
   this._repeat = repeat_;
   this._intervalId = null;
   this._counter = 0;
-  this.onChange = new ArtJs.Event('Clock:onChange');
+  this.onChange = new ArtJs.CustomEvent('Clock:onChange');
   
   var instances = arguments.callee.instances;
 
