@@ -68,8 +68,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return e.nodeType == 1;
   },
   
-  getSize: function(e, withScroll) {
-    return this.getLayout(e, withScroll).getSize(); 
+  getSize: function(e, withoutScroll) {
+    return this.getLayout(e, withoutScroll).getSize(); 
   },
   
   elements: function(e) {
@@ -165,8 +165,8 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.setY(e, p.y);
   },
   
-  getPosition: function(e, withScroll) {
-    return this.getLayout(e, withScroll).getLeftTop();
+  getPosition: function(e, withoutScroll) {
+    return this.getLayout(e, withoutScroll).getLeftTop();
   },
   
   setX: function(e, v) {
@@ -177,7 +177,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     e.style.top = v + 'px';
   },
   
-  getLayout: function(e, withScroll) {
+  getLayout: function(e, withoutScroll) {
     var hidden = this.isHidden(e);
     
     if (hidden) {
@@ -187,7 +187,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     var b = e.getBoundingClientRect();
     var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
     
-    if (withScroll) {
+    if (!withoutScroll) {
       layout.moveBy(new ArtJs.Point(scrollX, scrollY));
     }
     
