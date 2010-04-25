@@ -9,7 +9,7 @@ ArtJs.ElementBuilder.prototype = {
   toString: function() {
     var attributes = ArtJs.ObjectUtils.empty(this.attributes) ? '' : (' ' + this.attributesString() + ' ');
     var part;
-  
+    
     if (this.value) {
       part = '>' + this.value + '</' + this.name + '>';
     }
