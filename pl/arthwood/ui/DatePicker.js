@@ -95,6 +95,8 @@ ArtJs.Calendar.prototype = {
     this.monthSelect.value = this.date.getMonth() + 1;
     this.yearSelect.value = this.date.getFullYear();
     
+    var rows = Math.ceil((this.monthsFirstDay + this.monthsLastDate - this.firstDay) / 7);
+    p(rows);
     ArtJs.ArrayUtils.eachPair(this.headers, this.updateHeaderDC);
     ArtJs.ArrayUtils.eachPair(this.items, this.updateItemDC);
   },
@@ -106,7 +108,7 @@ ArtJs.Calendar.prototype = {
   },
   
   updateItem: function(idx, item) {
-    var value = idx + 1 - this.monthsFirstDay + this.firstDay;
+    var value = idx + 1 - this.monthsFirstDay + this.firstDay - 7;
     var valid = value > 0 && value <= this.monthsLastDate;
     var weekend = ArtJs.ArrayUtils.include(this.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
     
