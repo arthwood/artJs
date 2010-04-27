@@ -20,12 +20,16 @@ ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
     return d.getDate();
   },
   
-  firstDay: function(date) {
+  firstDate: function(date) {
     var d = new Date(date);
     
     d.setDate(1);
     
-    return d.getDay();
+    return d;
+  },
+  
+  firstDay: function(date) {
+    return this.firstDate(date).getDay();
   },
   
   toHFM: function(date, separator) {
