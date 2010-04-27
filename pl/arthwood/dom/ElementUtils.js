@@ -269,6 +269,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return e.className.split(' ');
   },
   
+  setClass: function(e, className, add) {
+    add ? this.addClass(e, className) : this.removeClass(e, className);
+  },
+  
   addClass: function(e, className) {
     var classes = this.getClasses(e);
     
@@ -288,16 +292,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   toggleClass: function(e, className) {
-    var classes = this.getClasses(e);
-    
-    if (this.hasClass(e, className)) {
-      ArtJs.ArrayUtils.removeItem(classes, className);
-    }
-    else {
-      classes.push(className);
-    }
-    
-    e.className = classes.join(' ');
+    this.hasClass(e, className) ? this.removeClass(e, className) : this.addClass(e, className);
   },
   
   doInjection: function() {
@@ -344,6 +339,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.addClass = dc(this, this.addClass, true);
     proto.removeClass = dc(this, this.removeClass, true);
     proto.toggleClass = dc(this, this.toggleClass, true);
+    proto.setClass = dc(this, this.setClass, true);
     
     this.injected = true;
   }
