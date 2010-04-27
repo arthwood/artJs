@@ -48,10 +48,12 @@ ArtJs.Calendar = pl.arthwood.ui.Calendar = function(firstDay) {
   this.yearSelect.onchange = ArtJs.$DC(this, this.onYearSelect);
   
   this.headers = ArtJs.Selector.down(this.node, 'th');
+  this.rows = ArtJs.Selector.down(this.node, 'tr').slice(1);
   this.items = ArtJs.Selector.down(this.node, 'td');
   this.updateHeaderDC = ArtJs.$DC(this, this.updateHeader);
   this.updateItemDC = ArtJs.$DC(this, this.updateItem);
   this.onItemDC = ArtJs.$DC(this, this.onItem);
+  this.updateRowVisibilityDC = ArtJs.$DC(this, this.updateRowVisibility);
   ArtJs.ArrayUtils.each(this.items, ArtJs.$DC(this, this.initItem));
   this.field = null;
   this.firstDay = firstDay || 0;
@@ -66,8 +68,7 @@ ArtJs.Calendar.prototype = {
   VALID_CELL_BACKGROUND : 'none',
   WEEKEND_CELL_BACKGROUND : '#CFFFDF',
   INVALID_CELL_BACKGROUND : "url(/images/datepicker/backstripes.gif)",
-  EMPTY_CELL_VALUE: '&nbsp;',
-    
+      
   show: function(field, position) {
     this.field = field;
     
@@ -89,32 +90,46 @@ ArtJs.Calendar.prototype = {
   },
   
   update: function() {
-    this.monthsFirstDay = ArtJs.DateUtils.firstDay(this.date);
-    this.monthsLastDate = ArtJs.DateUtils.monthDaysNum(this.date);
+    var au = ArtJs.ArrayUtils;
+    var du = ArtJs.DateUtils;
+    var mu = ArtJs.MathUtils;
+    var monthFirstDate = du.firstDate(this.date);
+    var monthFirstDay = monthFirstDate.getDay();
+    var monthDaysNum = du.monthDaysNum(this.date);
     
+    this.startIndex = mu.periodicLimit(monthFirstDay - this.firstDay, 0, 7);
+    this.rowsNum = mu.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
     this.monthSelect.value = this.date.getMonth() + 1;
     this.yearSelect.value = this.date.getFullYear();
     
-    var rows = Math.ceil((this.monthsFirstDay + this.monthsLastDate - this.firstDay) / 7);
-    p(rows);
-    ArtJs.ArrayUtils.eachPair(this.headers, this.updateHeaderDC);
-    ArtJs.ArrayUtils.eachPair(this.items, this.updateItemDC);
+    au.eachPair(this.rows, this.updateRowVisibilityDC);
+    au.eachPair(this.headers, this.updateHeaderDC);
+    au.eachPair(this.items, this.updateItemDC);
+  },
+  
+  updateRowVisibility: function(idx, row) {
+    ArtJs.ElementUtils.setVisible(row, idx < this.rowsNum);
   },
   
   updateHeader: function(idx, header) {
-    var index = ArtJs.MathUtils.castToSet(this.firstDay + idx, 0, 7);
+    var index = ArtJs.MathUtils.periodicLimit(this.firstDay + idx, 0, 7);
     
-    header.innerHTML = this.DAYS[index];
+    ArtJs.ElementUtils.setContent(header, this.DAYS[index]);
   },
   
   updateItem: function(idx, item) {
-    var value = idx + 1 - this.monthsFirstDay + this.firstDay - 7;
-    var valid = value > 0 && value <= this.monthsLastDate;
+    var day = new Date(this.date);
+    
+    day.setDate(idx - this.startIndex + 1);
+    
+    var value = day.getDate();
+    var valid = (day.getMonth() == this.date.getMonth());
     var weekend = ArtJs.ArrayUtils.include(this.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
     
     item.style.background = valid ? (weekend ? this.WEEKEND_CELL_BACKGROUND : this.VALID_CELL_BACKGROUND) : this.INVALID_CELL_BACKGROUND;
     item.className = (value == this.date.getDate()) ? 'selected' : '';
-    item.innerHTML = valid ? value : this.EMPTY_CELL_VALUE;
+    ArtJs.ElementUtils.setClass(item, 'invalid', !valid);
+    ArtJs.ElementUtils.setContent(item, value);
   },
   
   initItem: function(item) {
@@ -123,8 +138,8 @@ ArtJs.Calendar.prototype = {
   
   onItem: function(e) {
     var item = e.target;
-    var value = item.innerHTML;
-    var valid = !(value == this.EMPTY_CELL_VALUE);
+    var value = ArtJs.ElementUtils.getContent(item);
+    var valid = !ArtJs.ElementUtils.hasClass(item, 'invalid');
     
     if (valid) {
       this.date.setDate(parseInt(value));
