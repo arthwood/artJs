@@ -1,6 +1,6 @@
 ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   HIDDEN_ELEMENTS: [],
-  DEFAULT_DISPLAY: 'block',
+  DEFAULT_DISPLAY: '',
   MAIN_OBJ_RE: /^\w+/,
   SUB_OBJ_RE: /\[\w+\]/g,
   
