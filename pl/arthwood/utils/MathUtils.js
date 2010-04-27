@@ -3,11 +3,15 @@ ArtJs.MathUtils = pl.arthwood.utils.MathUtils = {
     return x == 0 ? 0 : Math.abs(x) / x;
   },
   
-  castToSet: function(x, a, b) {
+  limit: function(x, a, b) {
+    return Math.min(Math.max(x, a), b);
+  },
+  
+  periodicLimit: function(x, a, b) {
     return x - this.stairs(x, a, b) * (b - a);
   },
-
+  
   stairs: function(x, a, b) {
-    return Math.floor((x - a)/(b - a));
+    return Math.floor((x - a) / (b - a));
   }
 };
