@@ -1,6 +1,7 @@
 ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-  INJECTED_PROPS: ['copy', 'copyProps', 'extend', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 'each', 'eachPair', 
-    'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll', 'toQueryString', 'inspect'
+  INJECTED_PROPS: ['copy', 'copyProps', 'extend', 'merge', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 
+    'each', 'eachPair', 'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll', 
+    'toQueryString', 'inspect'
   ],
   
   QUERY_DELIMITER: '&',
@@ -34,6 +35,12 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   
   extend: function(obj, withObj) {
     this.copyProps(withObj, obj)
+  },
+  
+  merge: function(obj, withObj) {
+    this.extend(obj, withObj);
+    
+    return obj;
   },
 
   removeValue: function(obj, val) {
@@ -209,7 +216,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   pairToQueryString: function(key, value, prefix) {
     var result;
     
-    prefix = ArtJs.StringUtils.empty(prefix) ? key : prefix + '[' + key + ']';
+    prefix = ArtJs.StringUtils.blank(prefix) ? key : prefix + '[' + key + ']';
     
     if (typeof value == 'object') {
       if (isNaN(value.length)) {
@@ -218,7 +225,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
       else {
         var delegate = ArtJs.$DC(this, this.parseArrayValue, false, prefix + '[]');
         
-        result = ArtJs.ArrayUtils.map(value, delegate).join(this.QUERY_DELIMITER)
+        result = ArtJs.ArrayUtils.map(value, delegate).join(this.QUERY_DELIMITER);
       }
     }
     else {
@@ -229,7 +236,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
   
   parseArrayValue: function(value, idx, prefix) {
-    return this.toQueryStringWithPrefix(value, prefix);
+    return this.pairToQueryString(prefix, value);
   },
   
   primitiveToQueryString: function(obj) {
@@ -268,6 +275,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.copy = dc(this, this.copy, true);
     proto.copyProps = dc(this, this.copyProps, true);
     proto.extend = dc(this, this.extend, true);
+    proto.merge = dc(this, this.merge, true);
     proto.removeValue = dc(this, this.removeValue, true);
     proto.removeValues = dc(this, this.removeValues, true);
     proto.map = dc(this, this.map, true);

@@ -26,12 +26,12 @@ ArtJs.Ajax = pl.arthwood.net.Ajax = function(url, data, method) {
   this.requestUrl = this.url;
   
   if (this.requestData) {
-      this.requestQueryData = ArtJs.ObjectUtils.toQueryString(this.requestData);
-      
-      if (this.requestMethod == methods.GET) {
-        this.requestUrl += ('?' + this.requestQueryData);
-        this.requestQueryData = null;
-      }
+    this.requestQueryData = ArtJs.ObjectUtils.toQueryString(this.requestData);
+    
+    if (this.requestMethod == methods.GET) {
+      this.requestUrl += ('?' + this.requestQueryData);
+      this.requestQueryData = null;
+    }
   }
   
   this._request.open(this.requestMethod, this.requestUrl, true);
