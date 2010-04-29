@@ -10,6 +10,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.isElementDC = ArtJs.$DC(this, this.isElement);
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
+    this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
     this.injected = false;
   },
   
@@ -213,9 +214,9 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   serialize: function(e) {
     var s = ArtJs.Selector;
     var au = ArtJs.ArrayUtils;
-    var textfields = s.down(e, 'input[type=text]');
-    var checkboxes = s.down(e, 'input[type=checkbox]');
-    var radios = s.down(e, 'input[type=radio]');
+    var textfields = s.down(e, 'input[type=text]')
+    var checkboxes = au.select(s.down(e, 'input[type=checkbox]'), this.selectCheckedDC);
+    var radios = au.select(s.down(e, 'input[type=radio]'), this.selectCheckedDC);
     var selects = s.down(e, 'select');
     var textareas = s.down(e, 'textarea');
     var hiddenfields = s.down(e, 'input[type=hidden]');
@@ -223,6 +224,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     var result = au.inject(inputs, {}, this.serializeInjectDC);
     
     return result;
+  },
+  
+  selectChecked: function(i) {
+    return i.checked;
   },
   
   serializeInject: function(mem, i, idx) {
