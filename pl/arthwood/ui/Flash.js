@@ -1,4 +1,4 @@
-ArtJs.Flash = pl.arthwood.ui.Flash = function() {
+ArtJs.Flash = pl.arthwood.ui.Flash = function(delay) {
   this.flash = ArtJs.$('flash');
   this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.flash, 'img'));
   this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.flash, 'span'));
@@ -6,6 +6,7 @@ ArtJs.Flash = pl.arthwood.ui.Flash = function() {
   this.fade = new ArtJs.Fade(this.flash, 1, 0, 0.05);
   this.fade.onFinish.add($D(this, this.onFadeFinish));
   this.flash.onclick = ArtJs.$DC(this, this.onFlashClick);
+  this.delay = (delay || 10) * 1000;
   
   var visible = !ArtJs.StringUtils.empty(this.span.innerHTML);
   var instances = arguments.callee.instances;
@@ -47,7 +48,7 @@ ArtJs.Flash.prototype = {
     
     var code = 'Flash.findById(' + this._id + ').hide()';
     
-    this._intervalId = setInterval(code, 5000);
+    this._intervalId = setInterval(code, this.delay);
   },
   
   hide: function() {
