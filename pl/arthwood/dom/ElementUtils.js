@@ -85,6 +85,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return e.parentNode;
   },
   
+  firstElement: function(e) {
+    return this.elements(e).first();
+  },
+  
   prev: function(e) {
     var result = e;
     
@@ -112,23 +116,23 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   putAtBottom: function(e, container) {
-    container.appendChild(this.clone(e, true));
+    return container.appendChild(this.clone(e, true));
   },
     
   putAtTop: function(e, container) {
     var first = ArtJs.ArrayUtils.first(this.children(container));
     
-    first ? this.putBefore(e, first) : this.putAtBottom(e, container);
+    return first ? this.putBefore(e, first) : this.putAtBottom(e, container);
   },
   
   putAfter: function(e, ref) {
     var next = this.next(ref);
     
-    next ? this.putBefore(e, next) : this.putAtBottom(e, this.parent(ref));
+    return next ? this.putBefore(e, next) : this.putAtBottom(e, this.parent(ref));
   },
   
   putBefore: function(e, ref) {
-    this.parent(ref).insertBefore(e, ref);
+    return this.parent(ref).insertBefore(e, ref);
   },
   
   replace: function(e, ref) {
@@ -319,6 +323,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.elements = dc(this, this.elements, true);
     proto.remove = dc(this, this.remove, true);
     proto.parent = dc(this, this.parent, true);
+    proto.firstElement = dc(this, this.firstElement, true);
     proto.prev = dc(this, this.prev, true);
     proto.next = dc(this, this.next, true);
     proto.clone = dc(this, this.clone, true);
