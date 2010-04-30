@@ -115,14 +115,14 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return e.cloneNode(deep);
   },
   
-  putAtBottom: function(e, container) {
-    return container.appendChild(this.clone(e, true));
+  putAtBottom: function(e, ref) {
+    return ref.appendChild(this.clone(e, true));
   },
     
-  putAtTop: function(e, container) {
-    var first = ArtJs.ArrayUtils.first(this.children(container));
+  putAtTop: function(e, ref) {
+    var first = ArtJs.ArrayUtils.first(this.children(ref));
     
-    return first ? this.putBefore(e, first) : this.putAtBottom(e, container);
+    return first ? this.putBefore(e, first) : this.putAtBottom(e, ref);
   },
   
   putAfter: function(e, ref) {
@@ -136,7 +136,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   replace: function(e, ref) {
-    this.parent(ref).replaceChild(e, ref);
+    return this.parent(ref).replaceChild(e, ref);
   },
   
   center: function(e) {
