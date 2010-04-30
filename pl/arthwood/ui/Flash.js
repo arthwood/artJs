@@ -6,7 +6,7 @@ ArtJs.Flash = pl.arthwood.ui.Flash = function(delay) {
   this.fade = new ArtJs.Fade(this.flash, 1, 0, 0.05);
   this.fade.onFinish.add($D(this, this.onFadeFinish));
   this.flash.onclick = ArtJs.$DC(this, this.onFlashClick);
-  this.delay = (delay || 10) * 1000;
+  this.delay = (delay || 6) * 1000;
   
   var visible = !ArtJs.StringUtils.empty(this.span.innerHTML);
   var instances = arguments.callee.instances;
