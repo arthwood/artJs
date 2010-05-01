@@ -86,7 +86,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   firstElement: function(e) {
-    return this.elements(e).first();
+    return ArtJs.ArrayUtils.first(this.elements(e));
   },
   
   prev: function(e) {
@@ -136,7 +136,12 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   replace: function(e, ref) {
-    return this.parent(ref).replaceChild(e, ref);
+    var parent = this.parent(ref);
+    var idx = this.elements(parent).indexOf(ref);
+    
+    parent.replaceChild(e, ref);
+    
+    return this.elements(parent)[idx];
   },
   
   center: function(e) {
