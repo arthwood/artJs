@@ -43,7 +43,7 @@ ArtJs.Flash.prototype = {
     this.fade.stop();
     this.clearDelay();
     ArtJs.ElementUtils.show(this.flash);
-    ArtJs.ElementUtils.centerH(this.flash);
+    ArtJs.ElementUtils.center(this.flash);
     ArtJs.ElementUtils.setAlpha(this.flash, 1);
     
     var code = 'Flash.findById(' + this._id + ').hide()';

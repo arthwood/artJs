@@ -201,7 +201,7 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
   },
   
   filterByAttributes: function(i, attributes) {
-    return ArtJs.ObjectUtils.includeAll(i, attributes);
+    return ArtJs.ObjectUtils.includeAll(ArtJs.ElementUtils.getAttributes(i), attributes);
   },
   
   getTag: function(selector) {

@@ -11,6 +11,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
+    this.mapAttributeDC = ArtJs.$DC(this, this.mapAttribute);
   },
   
   show: function(e) {
@@ -309,6 +310,14 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   toggleClass: function(e, className) {
     this.hasClass(e, className) ? this.removeClass(e, className) : this.addClass(e, className);
   },
+
+  getAttributes: function(e) {
+    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(e.attributes, this.mapAttributeDC));
+  },
+  
+  mapAttribute: function(i) {
+    return [i.name, i.value];
+  },
   
   doInjection: function() {
     var proto = Element.prototype;
@@ -356,5 +365,6 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.removeClass = dc(this, this.removeClass, true);
     proto.toggleClass = dc(this, this.toggleClass, true);
     proto.setClass = dc(this, this.setClass, true);
+    proto.getAttributes = dc(this, this.getAttributes, true);
   }
 };
