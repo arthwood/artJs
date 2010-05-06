@@ -147,7 +147,7 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   center: function(e) {
-    this.setPosition(e, this.getCenteredPosition(this.getSize(e)));
+    this.setPosition(e, this.getCenteredPosition(e));
   },
   
   centerH: function(e) {
@@ -163,13 +163,17 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   },
   
   getCenteredPosition: function(e) {
-    return this.getDocumentSize().sub(this.getSize(e)).times(0.5);
+    return this.getWindowSize().sub(this.getSize(e)).times(0.5).add(this.getScrollPosition());
   },
   
   getDocumentSize: function() {
     var doc = window.document;
     
     return new ArtJs.Point(doc.width, doc.height);
+  },
+  
+  getWindowSize: function() {
+    return new ArtJs.Point(window.innerWidth, window.innerHeight);
   },
   
   setPosition: function(e, p) {
@@ -179,6 +183,10 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
   
   getPosition: function(e, withoutScroll) {
     return this.getLayout(e, withoutScroll).getLeftTop();
+  },
+  
+  getScrollPosition: function() {
+    return new ArtJs.Point(window.scrollX, window.scrollY);
   },
   
   setX: function(e, v) {
