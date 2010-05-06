@@ -11,18 +11,18 @@ ArtJs.ClassUtils = pl.arthwood.utils.ClassUtils = {
       var args = ArtJs.$A(arguments);
       var callee = arguments.callee;
       var proto = callee.prototype;
-      var func = callee.func;
+      var child = callee.child;
       var base = callee.base;
       
-      func.super = ArtJs.$DC(proto, base);
-      func.apply(proto, args);
+      child.super = ArtJs.$DC(proto, base);
+      child.apply(proto, args);
     };
     
     builder.prototype = new base();
-    builder.func = func;
+    builder.prototype.constructor = builder;
     builder.base = base;
-    
-    this.base = base;
+    builder.child = func;
+
     this.builder = builder;
     
     ArtJs.ObjectUtils.extend(builder.prototype, instanceMethods);
@@ -35,16 +35,16 @@ ArtJs.ClassUtils = pl.arthwood.utils.ClassUtils = {
   },
   
   eachInstanceMethod: function(k, v) {
-    var baseProto = this.base.prototype;
     var builderProto = this.builder.prototype;
+    var baseProto = this.builder.base.prototype;
     var origin = baseProto[k];
     
     origin && (v.super = ArtJs.$DC(builderProto, origin));
   },
   
   eachClassMethod: function(k, v) {
-    var base = this.base;
     var builder = this.builder;
+    var base = builder.base;
     var origin = base[k];
     
     origin && (v.super = ArtJs.$DC(builder, origin));
