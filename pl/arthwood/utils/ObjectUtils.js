@@ -246,18 +246,6 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     return result;
   },
   
-  inspect: function(obj, indent, prop) {
-    var str = (this.getMultiPattern('|   ', indent) + (prop || (obj ? 'Object' : 'Null')));
-  
-    for (var i in obj) {
-      str += (typeof(obj[i]) == 'object')
-        ? arguments.callee(obj[i], indent + 1, i)
-        : (this.getMultiPattern('|   ', indent + 1) + i + ' = ' + obj[i]);
-    }
-  
-    return str;
-  },
-  
   doInjection: function() {
     var proto = Object.prototype;
     var dc = ArtJs.$DC;
@@ -281,6 +269,5 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.toArray = dc(this, this.toArray, true);
     proto.includeAll = dc(this, this.includeAll, true);
     proto.toQueryString = dc(this, this.toQueryString, true);
-    proto.inspect = dc(this, this.objectToString, true);
   }
 };
