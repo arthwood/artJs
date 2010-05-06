@@ -1,7 +1,6 @@
 ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
   init: function() {
     this.parseJsonValueDC = ArtJs.$DC(this, this.parseJsonValue);
-    this.injected = false;
   },
   
   first: function(str) {
@@ -145,7 +144,5 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     proto.trim = dc(this, this.trim, true);
     proto.sub = dc(this, this.sub, true);
     proto.toJson = dc(this, this.toJson, true);
-    
-    this.injected = true;
   }
 };

@@ -5,13 +5,8 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
     this.nonEmptyDC = ArtJs.$DC(this, this.nonEmpty);
     this.notNullDC = ArtJs.$DC(this, this.notNull);
-    this.injected = false;
   },
   
-  ownProperty: function(property) {
-    return !isNaN(parseInt(property));
-  },
-
   first: function(arr) {
     return this.getItem(arr, 0);
   },
@@ -85,7 +80,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var result = new Array();
     
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         result.push(func(arr[i], parseInt(i)));
       }
     }
@@ -97,7 +92,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vArgs = ArtJs.$A(arguments, 2);
     
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         func.apply(null, [arr[i]].concat(vArgs));
       }
     }
@@ -107,7 +102,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vArgs = ArtJs.$A(arguments, 2);
 
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         func.apply(null, [parseInt(i)].concat(vArgs));
       }
     }
@@ -117,7 +112,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vArgs = ArtJs.$A(arguments, 2);
     
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         func.apply(null, [parseInt(i), arr[i]].concat(vArgs));
       }
     }
@@ -127,7 +122,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var vResult = init;
     
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         vResult = func(vResult, arr[i], i);
       }
     }
@@ -149,7 +144,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     var n;
     
     for (var i in arr) {
-      if (this.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         collection = arr[i];
         n = collection.length;
         
@@ -192,7 +187,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   detect: function(arr, func) {
     for (var i in arr) {
-      if (this.ownProperty(i) && func(arr[i])) {
+      if (arr.hasOwnProperty(i) && func(arr[i])) {
         return arr[i];
       }
     }
@@ -202,7 +197,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   all: function(arr, func) {
     for (var i in arr) {
-      if (this.ownProperty(i) && !func(arr[i])) {
+      if (arr.hasOwnProperty(i) && !func(arr[i])) {
         return false;
       }
     }
@@ -212,7 +207,7 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
 
   any: function (arr, func) {
     for (var i in arr) {
-      if (this.ownProperty(i) && func(arr[i])) {
+      if (arr.hasOwnProperty(i) && func(arr[i])) {
         return true;
       }
     }
@@ -342,8 +337,6 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     proto.sum = dc(this, this.sum, true);
     proto.stringify = dc(this, this.stringify, true);
     proto.print = dc(this, this.print, true);
-    
-    this.injected = true;
   }
 };
 

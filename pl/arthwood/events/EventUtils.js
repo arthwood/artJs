@@ -1,8 +1,4 @@
 ArtJs.EventUtils = pl.arthwood.net.EventUtils = {
-  init: function() {
-    this.injected = false;
-  },
-  
   edge: function(e) {
     var t = e.target;
     var ct = e.currentTarget;
@@ -22,7 +18,5 @@ ArtJs.EventUtils = pl.arthwood.net.EventUtils = {
     
     proto.edge = dc(this, this.edge, true);
     proto.inner = dc(this, this.inner, true);
-    
-    this.injected = true;
   }
 };

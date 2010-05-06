@@ -18,8 +18,6 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$down = ArtJs.$DC(this, this.down);
     ArtJs.$up = ArtJs.$DC(this, this.up);
-    
-    this.injected = false;
   },
 
   down: function(element, path) {
@@ -266,7 +264,5 @@ ArtJs.Selector = pl.arthwood.dom.Selector = {
     proto.down = dc(this, this.down, true);
     proto.getFamily = dc(this, this.getFamily, true);
     proto.descendantOf = dc(this, this.descendantOf, true);
-    
-    this.injected = true;
   }
 };

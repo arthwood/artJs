@@ -1,16 +1,4 @@
 ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
-  INJECTED_PROPS: ['monthDaysNum', 'firstDay', 'toHFM', 'toYMD', 'toDMY', 'minutesToHM', 'hmToMinutes', 'secondsToMS',
-    'secondsToHMS', 'copy', 'getDateShifted', 'stripDayTime'
-  ],
-  
-  init: function() {
-    this.injected = false;
-  },
-  
-  ownProperty: function(property) {
-    return !this.injected || !ArtJs.DateUtils.include(this.INJECTED_PROPS, property);
-  },
-  
   monthDaysNum: function(date) {
     var d = new Date(date);
     
@@ -115,7 +103,7 @@ ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   },
-
+  
   doInjection: function() {
     var proto = Date.prototype;
     var dc = ArtJs.$DC;
@@ -131,7 +119,5 @@ ArtJs.DateUtils = pl.arthwood.utils.DateUtils = {
     proto.copy = dc(this, this.copy, true);
     proto.getDateShifted = dc(this, this.getDateShifted, true);
     proto.stripDayTime = dc(this, this.stripDayTime, true);
-    
-    this.injected = true;
   }
 };

@@ -11,7 +11,6 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
-    this.injected = false;
   },
   
   show: function(e) {
@@ -357,7 +356,5 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     proto.removeClass = dc(this, this.removeClass, true);
     proto.toggleClass = dc(this, this.toggleClass, true);
     proto.setClass = dc(this, this.setClass, true);
-    
-    this.injected = true;
   }
 };
