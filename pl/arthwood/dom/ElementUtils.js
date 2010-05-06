@@ -135,9 +135,11 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     return this.parent(ref).insertBefore(e, ref);
   },
   
-  replace: function(e, ref) {
+  replace: function(e, ref, clone) {
     var parent = this.parent(ref);
     var idx = this.elements(parent).indexOf(ref);
+    
+    clone && (e = this.clone(e, true));
     
     parent.replaceChild(e, ref);
     
