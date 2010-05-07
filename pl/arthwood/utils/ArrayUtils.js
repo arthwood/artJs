@@ -156,17 +156,17 @@ ArtJs.ArrayUtils = pl.arthwood.utils.ArrayUtils = {
     
     return vResult;
   },
-
+  
   select: function(arr, func) {
     var vResult = new Array();
-
+    
     this.each(arr, function(i) {
       if (func(i)) vResult.push(i);
     });
     
     return vResult;
   },
-
+  
   reject: function(arr, func) {
     var vResult = new Array();
 

@@ -12,6 +12,9 @@ ArtJs.ElementUtils = pl.arthwood.net.ElementUtils = {
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
     this.mapAttributeDC = ArtJs.$DC(this, this.mapAttribute);
+    this.showDC = ArtJs.$DC(this, this.show);
+    this.hideDC = ArtJs.$DC(this, this.hide);
+    this.isHiddenDC = ArtJs.$DC(this, this.isHidden);
   },
   
   show: function(e) {
