@@ -20,7 +20,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     return this.firstDate(date).getDay();
   },
   
-  toHFM: function(date, separator) {
+  toHMS: function(date, separator) {
     var su = ArtJs.StringUtils;
     
     separator = separator || ':';
@@ -110,7 +110,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     proto.monthDaysNum = dc(this, this.monthDaysNum, true);
     proto.firstDay = dc(this, this.firstDay, true);
-    proto.toHFM = dc(this, this.toHFM, true);
+    proto.toHMS = dc(this, this.toHMS, true);
     proto.toYMD = dc(this, this.toYMD, true);
     proto.toDMY = dc(this, this.toDMY, true);
     proto.minutesToHM = dc(this, this.minutesToHM, false);

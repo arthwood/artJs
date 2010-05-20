@@ -1,11 +1,11 @@
 ArtJs.Flash = com.arthwood.ui.Flash = function(delay) {
-  this.flash = ArtJs.$('flash');
-  this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.flash, 'img'));
-  this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.flash, 'span'));
+  this.node = ArtJs.$('flash');
+  this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.node, 'img'));
+  this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.node, 'span'));
   
-  this.fade = new ArtJs.Fade(this.flash, 1, 0, 0.05);
+  this.fade = new ArtJs.Fade(this.node, 1, 0);
   this.fade.onFinish.add($D(this, this.onFadeFinish));
-  this.flash.onclick = ArtJs.$DC(this, this.onFlashClick);
+  this.node.onclick = ArtJs.$DC(this, this.onFlashClick);
   this.delay = (delay || 6) * 1000;
   
   var visible = !ArtJs.StringUtils.empty(this.span.innerHTML);
@@ -42,9 +42,10 @@ ArtJs.Flash.prototype = {
   display: function() {
     this.fade.stop();
     this.clearDelay();
-    ArtJs.ElementUtils.show(this.flash);
-    ArtJs.ElementUtils.center(this.flash);
-    ArtJs.ElementUtils.setAlpha(this.flash, 1);
+    ArtJs.ElementUtils.show(this.node);
+    ArtJs.ElementUtils.centerH(this.node);
+    ArtJs.ElementUtils.setY(this.node, 0.2 * ArtJs.ElementUtils.getWindowSize().y);
+    ArtJs.ElementUtils.setAlpha(this.node, 1);
     
     var code = 'Flash.findById(' + this._id + ').hide()';
     
@@ -67,7 +68,7 @@ ArtJs.Flash.prototype = {
   },
   
   onFadeFinish: function(arg) {
-    ArtJs.ElementUtils.hide(this.flash);
+    ArtJs.ElementUtils.hide(this.node);
     this.span.innerHTML = null;
     this.image.src = '/images/flash/blank.png';
   },

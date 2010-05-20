@@ -1,8 +1,5 @@
 ArtJs.EventUtils = com.arthwood.net.EventUtils = {
-  edge: function(e) {
-    var t = e.target;
-    var ct = e.currentTarget;
-    var rt = e.relatedTarget;
+  edge: function(ct, t, rt) {
     var s = ArtJs.Selector;
     
     return (t == ct) && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !s.descendantOf(rt, ct, true);

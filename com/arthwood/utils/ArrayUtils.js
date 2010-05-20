@@ -1,6 +1,6 @@
 ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   init: function() {
-    this.commonElementSelectDC = ArtJs.$DC(this, this.commonElementSelect);
+    this.intersectionSelectDC = ArtJs.$DC(this, this.intersectionSelect);
     this.includeDC = ArtJs.$DC(this, this.include);
     this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
     this.nonEmptyDC = ArtJs.$DC(this, this.nonEmpty);
@@ -10,47 +10,47 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   first: function(arr) {
     return this.getItem(arr, 0);
   },
-
+  
   second: function(arr) {
     return this.getItem(arr, 1);
   },
-
+  
   third: function(arr) {
     return this.getItem(arr, 2);
   },
-
+  
   last: function(arr) {
     return this.getItem(arr, arr.length - 1);
   },
-
+  
   beforeLast: function(arr) {
     return this.getItem(arr, arr.length - 2);
   },
-
+  
   getItem: function(arr, i) {
     return arr[i];
   },
-
+  
   invertedInclude: function(item, arr) {
     return this.include(arr, item);
   },
 
   include: function(arr, item) {
-    return Boolean(arr.indexOf(item) + 1);
+    return Boolean(this.indexOf(arr, item) + 1);
   },
-
+  
   includeAll: function(arr, subset) {
     this.invertedIncludeDC.delegate.args = [arr];
     
     return this.all(subset, this.invertedIncludeDC);
   },
   
-  insertAt: function(arr, at, obj) {
-    return arr.slice(0, at).concat(obj).concat(arr.slice(at));
+  insertAt: function(arr, idx, insertion) {
+    return arr.slice(0, idx).concat(insertion).concat(arr.slice(idx));
   },
   
-  removeAt: function(arr, at) {
-    return arr.splice(at, 1);
+  removeAt: function(arr, idx) {
+    return arr.splice(idx, 1);
   },
 
   removeItem: function(arr, item, onlyFirst) {
@@ -66,7 +66,6 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
 
   arrify: function(v, idx) {
     var args = new Array();
-
     var n = v.length;
 
     for (var i = idx || 0; i < n; i++) {
@@ -75,7 +74,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
 
     return args;
   },
-
+  
   map: function(arr, func) {
     var result = new Array();
     
@@ -87,7 +86,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
 
     return result;
   },
-
+  
   each: function(arr, func) {
     var vArgs = ArtJs.$A(arguments, 2);
     
@@ -97,10 +96,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
       }
     }
   },
-
+  
   eachIndex: function(arr, func) {
     var vArgs = ArtJs.$A(arguments, 2);
-
+    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         func.apply(null, [parseInt(i)].concat(vArgs));
@@ -117,7 +116,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
       }
     }
   },
-
+  
   inject: function(arr, init, func) {
     var vResult = init;
     
@@ -126,35 +125,16 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
         vResult = func(vResult, arr[i], i);
       }
     }
-
+    
     return vResult;
   },
-
+  
   flatten: function(arr) {
     return this.inject(arr, [], this.flattenCallback);
   },
   
   flattenCallback: function(mem, i) {
     return mem.concat(i);
-  },
-
-  flattenHtmlCollections: function(arr) {
-    var vResult = new Array();
-    var collection;
-    var n;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        collection = arr[i];
-        n = collection.length;
-        
-        for (var j = 0; j < n; j++) {
-          vResult.push(collection[j]);
-        }
-      }
-    }
-    
-    return vResult;
   },
   
   select: function(arr, func) {
@@ -239,13 +219,13 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     return i === j;
   },
 
-  commonElement: function(arr) {
+  intersection: function(arr) {
     this.commonTestArray = arr.slice(1);
     
-    return this.select(arr[0], this.commonElementSelectDC);
+    return this.select(arr[0], this.intersectionSelectDC);
   },
 
-  commonElementSelect: function(i) {
+  intersectionSelect: function(i) {
     this.includeDC.delegate.args = [i];
     
     return this.all(this.commonTestArray, this.includeDC);
@@ -258,11 +238,11 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   compact: function(arr) {
     return this.select(arr, this.notNullDC);
   },
-
+  
   notNull: function(i) {
-    return Boolean(i);
+    return !isNaN(i) || Boolean(i);
   },
-
+  
   empty: function(arr) {
     return arr.length == 0;
   },
@@ -320,7 +300,6 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.eachPair = dc(this, this.eachPair, true);
     proto.inject = dc(this, this.inject, true);
     proto.flatten = dc(this, this.flatten, true);
-    proto.flattenHtmlCollections = dc(this, this.flattenHtmlCollections, true);
     proto.select = dc(this, this.select, true);
     proto.reject = dc(this, this.reject, true);
     proto.$reject = dc(this, this.$reject, true);
@@ -328,7 +307,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.all = dc(this, this.all, true);
     proto.any = dc(this, this.any, true);
     proto.uniq = dc(this, this.uniq, true);
-    proto.commonElement = dc(this, this.commonElement, true);
+    proto.intersection = dc(this, this.intersection, true);
     proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
     proto.compact = dc(this, this.compact, true);
     proto.empty = dc(this, this.empty, true);

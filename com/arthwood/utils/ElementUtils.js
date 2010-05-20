@@ -1,4 +1,4 @@
-ArtJs.ElementUtils = com.arthwood.net.ElementUtils = {
+ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: '',
   MAIN_OBJ_RE: /^\w+/,
@@ -68,16 +68,20 @@ ArtJs.ElementUtils = com.arthwood.net.ElementUtils = {
     return e.style.opacity;
   },
   
-  isElement: function(e) {
-    return e.nodeType == 1;
-  },
-  
   getSize: function(e, withoutScroll) {
     return this.getLayout(e, withoutScroll).getSize(); 
   },
   
   elements: function(e) {
-    return ArtJs.ArrayUtils.select(e.childNodes, this.isElementDC);
+    return this.filterElements(ArtJs.$A(e.childNodes));
+  },
+  
+  filterElements: function(items) {
+    return ArtJs.ArrayUtils.select(items, this.isElementDC);
+  },
+  
+  isElement: function(e) {
+    return e.nodeType == 1;
   },
   
   remove: function(e) {
@@ -211,7 +215,7 @@ ArtJs.ElementUtils = com.arthwood.net.ElementUtils = {
     var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
     
     if (!withoutScroll) {
-      layout.moveBy(new ArtJs.Point(scrollX, scrollY));
+      layout.moveBy(this.getScrollPosition());
     }
     
     if (hidden) {
@@ -323,7 +327,7 @@ ArtJs.ElementUtils = com.arthwood.net.ElementUtils = {
   },
 
   getAttributes: function(e) {
-    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(e.attributes, this.mapAttributeDC));
+    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttributeDC));
   },
   
   mapAttribute: function(i) {

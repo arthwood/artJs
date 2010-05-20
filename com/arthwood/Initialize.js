@@ -16,11 +16,13 @@ var com = {
 var ArtJs = {
   VERSION: '1.0',
   globalize: function() {
-    this.ObjectUtils.copyProps(this, window);
+    var copy = this.ObjectUtils.copy(this);
     
-    delete window.globalize;
-    delete window.doInjection;
-    delete window.VERSION;
+    delete copy.globalize;
+    delete copy.doInjection;
+    delete copy.VERSION;
+    
+    this.ObjectUtils.copyProps(copy, window);
   },
   doInjection: function() {
     this.ArrayUtils.doInjection();

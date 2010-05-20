@@ -1,11 +1,12 @@
-ArtJs.Fade = com.arthwood.tween.Fade = function(e, p1, p2, delta) {
+ArtJs.Fade = com.arthwood.tween.Fade = function(e, p1, p2, delta, interval) {
   this.element = e;
   this.p1 = p1;
   this.p2 = p2;
   this.p = null;
   this.dir = ArtJs.MathUtils.sgn(this.p2 - this.p1);
-  this.delta = delta * this.dir;
-  this.clock = new ArtJs.Clock(50);
+  this.delta = (delta || 0.05) * this.dir;
+  this.interval = interval || 20;
+  this.clock = new ArtJs.Clock(this.interval);
   this.clock.onChange.add(ArtJs.$D(this, this.onTick));
   this.onFinish = new ArtJs.CustomEvent('Fade:onFinish');
 };
@@ -32,7 +33,7 @@ ArtJs.Fade.prototype = {
       this.onFinish.fire(this);
     }
     
-    this.element.style.opacity = this.p; 
+    ArtJs.ElementUtils.setAlpha(this.element, this.p); 
   },
   
   isRunning: function() {

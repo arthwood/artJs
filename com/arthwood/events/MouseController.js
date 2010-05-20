@@ -15,14 +15,14 @@ ArtJs.MouseController = com.arthwood.events.MouseController = function(e) {
 
 ArtJs.MouseController.prototype = {
   _onOver: function(e) {
-    if (ArtJs.EventUtils.edge(e) && !this.over) {
+    if (ArtJs.EventUtils.edge(e.currentTarget, e.target, e.relatedTarget) && !this.over) {
       this.over = true;
       this.onOver.fire(e, this);
     }
   },
   
   _onOut: function(e) {
-    if (ArtJs.EventUtils.edge(e) && this.over) {
+    if (ArtJs.EventUtils.edge(e.currentTarget, e.target, e.relatedTarget) && this.over) {
       this.over = false;
       this.onOut.fire(e, this);
     }

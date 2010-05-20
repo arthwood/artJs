@@ -9,8 +9,6 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     this.candidateFamilyMapDC = ArtJs.$DC(this, this.candidateFamilyMap);
     this.getFamilyDescendantDC = ArtJs.$DC(this, this.getFamilyDescendant);
     this.attrToArrayDC = ArtJs.$DC(this, this.attrToArray);
-    this.getElementsByClassNameDC = ArtJs.$DC(this, this.getElementsByClassName);
-    this.getElementByIdDC = ArtJs.$DC(this, this.getElementById);
     this.filterByAttributesDC = ArtJs.$DC(this, this.filterByAttributes);
     this.getSignatureDC = ArtJs.$DC(this, this.getSignature);
     
@@ -167,7 +165,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
           elements = elementsByTag;
         }
         else {
-          elements = au.commonElement([elements, elementsByTag]);
+          elements = au.intersection([elements, elementsByTag]);
           
           if (au.empty(elements)) {
             return [];
@@ -187,7 +185,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
         elements = elementsByClass;
       }
       else {
-        elements = au.commonElement([elements, elementsByClass]);
+        elements = au.intersection([elements, elementsByClass]);
         
         if (au.empty(elements)) {
           return [];
@@ -211,21 +209,27 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   
   getId: function(selector) {
-    var matches = selector.match(this.idRE);
+    var match = ArtJs.ArrayUtils.first(this.match(selector, this.idRE));
     
-    return matches && this.stripIdSelector(ArtJs.ArrayUtils.first(matches));
+    return match && this.stripIdSelector(match);
   },
   
   getClasses: function(selector) {
-    return ArtJs.ArrayUtils.map(selector.match(this.classesRE) || [], this.stripClassSelector);
+    return ArtJs.ArrayUtils.map(this.match(selector, this.classesRE), this.stripClassSelector);
   },
   
   getAttributes: function(selector) {
     var au = ArtJs.ArrayUtils;
-    var matches = au.map(selector.match(this.attrsRE) || [], this.stripAttributeSelector);
+    var matches = au.map(this.match(selector, this.attrsRE), this.stripAttributeSelector);
     var arr = au.map(matches[0] && matches[0].split(',') || [], this.attrToArrayDC);
 
     return ArtJs.ObjectUtils.fromArray(arr);
+  },
+  
+  match: function(str, re) {
+    var matches = str.match(re);
+    
+    return matches && ArtJs.$A(matches) || [];
   },
   
   attrToArray: function(i) {

@@ -14,7 +14,7 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
       var child = callee.child;
       var base = callee.base;
       
-      child.super = ArtJs.$DC(proto, base);
+      child.$super = ArtJs.$DC(proto, base);
       child.apply(proto, args);
     };
     
@@ -39,7 +39,7 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
     var baseProto = this.builder.base.prototype;
     var origin = baseProto[k];
     
-    origin && (v.super = ArtJs.$DC(builderProto, origin));
+    origin && (v.$super = ArtJs.$DC(builderProto, origin));
   },
   
   eachClassMethod: function(k, v) {
@@ -47,6 +47,6 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
     var base = builder.base;
     var origin = base[k];
     
-    origin && (v.super = ArtJs.$DC(builder, origin));
+    origin && (v.$super = ArtJs.$DC(builder, origin));
   }
 };

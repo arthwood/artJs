@@ -7,6 +7,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     this.keyValueArrayDelegate = ArtJs.$DC(this, this.keyValueArray);
     this.pairToQueryStringDelegate = ArtJs.$DC(this, this.pairToQueryString);
     this.parseArrayValueDelegate = ArtJs.$DC(this, this.parseArrayValue);
+    this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
   },
   
   copy: function(obj) {
@@ -35,7 +36,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
 
   removeValue: function(obj, val) {
     this.eachPairDeleteValueDelegate.delegate.args = [obj, val];
-
+    
     this.eachPair(obj, this.eachPairDeleteValueDelegate);
   },
 
@@ -44,11 +45,11 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
       delete obj[i];
     }
   },
-
+  
   invertedRemoveValue: function(val, obj) {
     this.removeValue(obj, val);
   },
-
+  
   removeValues: function(obj, values) {
     this.invertedRemoveValueDelegate.delegate.args = [obj];
 
@@ -117,13 +118,13 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
 
   select: function(obj, func) {
     var result = new Object();
-
+    
     this.eachPair(obj, function(i, j) {
       if (func(j)) {
         result[i] = j;
       }
     });
-
+    
     return result;
   },
 
@@ -164,7 +165,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   fromArray: function(arr) {
     var result = new Object();
     var item;
-
+    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
@@ -183,14 +184,24 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     return [key, value];
   },
   
-  includeAll: function(obj, subset) {
-    for (var i in subset) {
-      if (obj.hasOwnProperty(i) && subset[i] != obj[i]) {
-        return false;
+  invertedInclude: function(item, obj) {
+    return this.include(obj, item);
+  },
+  
+  include: function(obj, item) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && obj[i] === item) {
+        return true;
       }
     }
-
-    return true;
+    
+    return false;
+  },
+  
+  includeAll: function(obj, subset) {
+    this.invertedIncludeDC.delegate.args = [obj];
+    
+    return this.all(subset, this.invertedIncludeDC);
   },
   
   toQueryString: function(obj) {
