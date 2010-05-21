@@ -25,9 +25,29 @@ ArtJs.ElementBuilder.prototype = {
     return '<' + this.name + attributes + part;
   },
   
+  getElement: function() {
+    var e = document.createElement(this.name);
+    var sa = ArtJs.ElementBuilder.setAttribute;
+    
+    sa.e = e;
+    
+    ArtJs.ObjectUtils.eachPair(this.attributes, sa);
+    
+    !this.empty && (e.innerHTML = this.value);
+    
+    return e;
+  },
+  
   attributesString: function() {
-    return ArtJs.ArrayUtils.map(ArtJs.ObjectUtils.toArray(this.attributes), ArtJs.ElementBuilder.attributePairToString).join(' ');
+    return ArtJs.ArrayUtils.map(
+      ArtJs.ObjectUtils.toArray(this.attributes), 
+      ArtJs.ElementBuilder.attributePairToString
+    ).join(' ');
   }
+};
+
+ArtJs.ElementBuilder.setAttribute = function(k, v) {
+  arguments.callee.e.setAttribute(k, v);
 };
 
 ArtJs.ElementBuilder.attributePairToString = function(arr) {
@@ -40,8 +60,4 @@ ArtJs.$P = ArtJs.ElementBuilder.parse = function(str) {
   node.innerHTML = str;
   
   return node.firstChild;
-};
-
-ArtJs.$B = ArtJs.ElementBuilder.create = function(name, attributes, value, empty) {
-  return (new ElementBuilder(name, attributes, value, empty)).toString();
 };
