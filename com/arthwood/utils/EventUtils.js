@@ -5,7 +5,7 @@ ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
     var rt = targets.related;
     var s = ArtJs.Selector;
     
-    return (t == ct) && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !s.descendantOf(rt, ct, true);
+    return (t == ct) && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !(rt == ct || s.descendantOf(rt, ct));
   },
   
   inner: function(e) {
