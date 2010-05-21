@@ -1,7 +1,7 @@
 ArtJs.List = com.arthwood.data.List = function(items) {
   this._items = items || new Array();
   this._i = 0;
-  this.onChange = new ArtJs.CustomEvent('change');
+  this.onChange = new ArtJs.CustomEvent('List::onChange');
   this.allowDuplicates = true;
   this.loop = false;
 };
