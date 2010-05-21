@@ -96,6 +96,10 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return ArtJs.ArrayUtils.first(this.elements(e));
   },
   
+  lastElement: function(e) {
+    return ArtJs.ArrayUtils.last(this.elements(e));
+  },
+  
   prev: function(e) {
     var result = e;
     
@@ -354,6 +358,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.remove = dc(this, this.remove, true);
     proto.parent = dc(this, this.parent, true);
     proto.firstElement = dc(this, this.firstElement, true);
+    proto.lastElement = dc(this, this.lastElement, true);
     proto.prev = dc(this, this.prev, true);
     proto.next = dc(this, this.next, true);
     proto.clone = dc(this, this.clone, true);
