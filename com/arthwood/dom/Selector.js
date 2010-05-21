@@ -78,6 +78,10 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return !ArtJs.ArrayUtils.empty(family) && family.length > 1;
   },
   
+  selfOrDescendant: function(e, root) {
+    return e == root || this.descendantOf(e, root);
+  },
+  
   filterFamily: function(family, signatures) {
     var i = signatures.length - 1;
     var j = 1;
@@ -268,5 +272,6 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     proto.down = dc(this, this.down, true);
     proto.getFamily = dc(this, this.getFamily, true);
     proto.descendantOf = dc(this, this.descendantOf, true);
+    proto.selfOrDescendant = dc(this, this.selfOrDescendant, true);
   }
 };
