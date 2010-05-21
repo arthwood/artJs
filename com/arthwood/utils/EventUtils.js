@@ -8,10 +8,6 @@ ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
     return (t == ct) && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !s.descendantOf(rt, ct, true);
   },
   
-  inner: function(e) {
-    return !this.edge(e);
-  },
-  
   doInjection: function() {
     var proto = Event.prototype;
     var dc = ArtJs.$DC;
