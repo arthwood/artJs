@@ -73,7 +73,9 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   
   descendantOf: function(e, root) {
-    return this.getFamily(e, root).length > 1;
+    var family = this.getFamily(e, root);
+    
+    return !ArtJs.ArrayUtils.empty(family) && family.length > 1;
   },
   
   filterFamily: function(family, signatures) {
