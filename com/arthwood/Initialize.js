@@ -15,6 +15,7 @@ var com = {
 
 var ArtJs = {
   VERSION: '1.0',
+  CLIENT: 'Mozilla',
   globalize: function() {
     var copy = this.ObjectUtils.copy(this);
     
