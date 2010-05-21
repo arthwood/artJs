@@ -204,6 +204,16 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     return this.all(subset, this.invertedIncludeDC);
   },
   
+  all: function(obj, func) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && !func(obj[i])) {
+        return false;
+      }
+    }
+    
+    return true;
+  },
+  
   toQueryString: function(obj) {
     return this.toQueryStringWithPrefix(obj, '');
   },

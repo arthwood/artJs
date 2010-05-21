@@ -36,7 +36,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
 
   include: function(arr, item) {
-    return Boolean(this.indexOf(arr, item) + 1);
+    return Boolean(arr.indexOf(item) + 1);
   },
   
   includeAll: function(arr, subset) {
