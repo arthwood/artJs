@@ -51,10 +51,10 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     return str.split(pattern).length - 1;
   },
   
-  addZeros: function(str, length, right) {
-    var zeros = this.getMultiPattern('0', length - str.length);
+  align: function(str, n, char, left) {
+    var zeros = this.getMultiPattern(char, n - str.length);
     
-    return right ? str + zeros : zeros + str;
+    return left ? str + zeros : zeros + str;
   },
   
   getMultiPattern: function (pattern, n) {
@@ -73,6 +73,10 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     var decimal = parts[1];
   
     return integer + '.' + (decimal ? this.addZeros(decimal, 2, true) : '00');
+  },
+  
+  addZeros: function(str, n, left) {
+    return this.align(str, n, '0', left);
   },
   
   truncate: function(text, length, end) {
@@ -134,7 +138,7 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     proto.toS = dc(this, this.toS, true);
     proto.replace = dc(this, this.replace, true);
     proto.countPattern = dc(this, this.countPattern, true);
-    proto.addZeros = dc(this, this.addZeros, true);
+    proto.align = dc(this, this.align, true);
     proto.getMultiPattern = dc(this, this.getMultiPattern, true);
     proto.formatPrice = dc(this, this.formatPrice, true);
     proto.truncate = dc(this, this.truncate, true);

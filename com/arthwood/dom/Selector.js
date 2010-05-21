@@ -72,10 +72,8 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return family.slice(0, family.indexOf(root || document.body) + 1);
   },
   
-  descendantOf: function(e, root, includeElement) {
-    var family = this.getFamily(e, root);
-    
-    return !ArtJs.ArrayUtils.empty(family) && (includeElement || family.length > 1);
+  descendantOf: function(e, root) {
+    return this.getFamily(e, root).length > 1;
   },
   
   filterFamily: function(family, signatures) {
