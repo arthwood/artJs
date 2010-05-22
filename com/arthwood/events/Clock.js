@@ -1,30 +1,31 @@
-ArtJs.Clock = com.arthwood.events.Clock = function(interval_, repeat_) {
-  this._interval = interval_;
-  this._repeat = repeat_;
-  this._intervalId = null;
-  this._counter = 0;
+ArtJs.Clock = com.arthwood.events.Clock = function(interval, repeat) {
+  this.interval = interval;
+  this.repeat = repeat;
+  this.intervalId = null;
+  this.counter = 0;
   this.onChange = new ArtJs.CustomEvent('Clock:onChange');
+  this.onFinish = new ArtJs.CustomEvent('Clock:onFinish');
   
   var instances = arguments.callee.instances;
-
-  this._id = instances.length;
+  
+  this.id = instances.length;
   
   instances.push(this);
 };
 
 ArtJs.ObjectUtils.extend(ArtJs.Clock, {
-  findById: function(id_) {
-    this.found.id = id_;
-  
+  findById: function(id) {
+    this.found.id = id;
+    
     return ArtJs.ArrayUtils.detect(this.instances, this.found);
   },
-
+  
   found: function(i) {
-    return arguments.callee.id == i.getId();
+    return arguments.callee.id == i.id();
   },
 
-  fire: function(delegate_, delay_, repeat_) {
-    var clock = new ArtJs.Clock(delegate_, delay_, repeat_);
+  fire: function(delegate, delay, repeat) {
+    var clock = new ArtJs.Clock(delegate, delay, repeat);
   
     clock.trigger();
   
@@ -33,54 +34,40 @@ ArtJs.ObjectUtils.extend(ArtJs.Clock, {
 });
 
 ArtJs.Clock.prototype = {
-  start: function(now_) {
-    var code = 'Clock.findById(' + this._id + ').tick()';
+  start: function(now) {
+    var code = 'Clock.findById(' + this.id + ').tick()';
     
     this.stop();
-    this._intervalId = setInterval(code, this._interval);
-  
-    if (now_) {
+    this.intervalId = setInterval(code, this.interval);
+    
+    if (now) {
       this.tick();
     }
   },
-
+  
   tick: function() {
-    this._counter++;
+    this.counter++;
     this.onChange.fire(this);
   
-    if (this._counter == this._repeat) {
+    if (this.counter == this.repeat) {
       this.stop();
+      this.onFinish.fire(this);
     }
   },
-
+  
   stop: function() {
-    clearInterval(this._intervalId);
-    this._intervalId = null;
-    this._counter = 0;
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    this.counter = 0;
   },
-
+  
+  pause: function() {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+  },
+  
   isRunning: function() {
-    return !(this._intervalId == null);
-  },
-
-  getCounter: function() {
-    return this._counter;
-  },
-
-  setRepeat: function(repeat_) {
-    this._repeat = repeat_;
-  },
-
-  setInterval: function(interval_) {
-    this._interval = interval_;
-  },
-
-  getId: function() {
-    return this._id;
-  },
-
-  toString: function() {
-    return "Clock#" + this._id;
+    return !(this.intervalId == null);
   }
 };
 
