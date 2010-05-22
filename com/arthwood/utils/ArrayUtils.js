@@ -149,14 +149,14 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   
   reject: function(arr, func) {
     var vResult = new Array();
-
+    
     this.each(arr, function(i) {
       if (!func(i)) vResult.push(i);
     });
     
     return vResult;
   },
-
+  
   $reject: function(arr, func) {
     var n = arr.length - 1;
 
@@ -164,17 +164,17 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
       if (func(arr[i])) arr.splice(i, 1);
     }
   },
-
+  
   detect: function(arr, func) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i) && func(arr[i])) {
         return arr[i];
       }
     }
-
+    
     return null;
   },
-
+  
   all: function(arr, func) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i) && !func(arr[i])) {
@@ -184,17 +184,28 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     
     return true;
   },
-
+  
   any: function (arr, func) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i) && func(arr[i])) {
         return true;
       }
     }
-
+    
     return false;
   },
-
+  
+  partition: function(arr, func) {
+    var point = new ArtJs.Point([], []);
+    var item;
+    
+    for (var i in arr) {
+      arr.hasOwnProperty(i) && (item = arr[i]) && (func(item, i) ? point.x : point.y).push(item);
+    }
+    
+    return point;
+  },
+  
   uniq: function(arr, func) {
     var comparison = func || this.uniqDefault;
     var copy = arr.concat();
@@ -306,6 +317,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.detect = dc(this, this.detect, true);
     proto.all = dc(this, this.all, true);
     proto.any = dc(this, this.any, true);
+    proto.partition = dc(this, this.partition, true);
     proto.uniq = dc(this, this.uniq, true);
     proto.intersection = dc(this, this.intersection, true);
     proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
