@@ -21,7 +21,7 @@ ArtJs.ObjectUtils.extend(ArtJs.Clock, {
   },
   
   found: function(i) {
-    return arguments.callee.id == i.id();
+    return arguments.callee.id == i.id;
   },
 
   fire: function(delegate, delay, repeat) {
