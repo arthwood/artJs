@@ -20,7 +20,7 @@ ArtJs.CustomEvent.prototype = {
     this.collection.clear();
   },
   
-  length: function() {
-    return this.collection.length();
+  getLength: function() {
+    return this.collection.getLength();
   }
 };
