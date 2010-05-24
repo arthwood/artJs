@@ -8,9 +8,10 @@ ArtJs.ModalBox = com.arthwood.ui.containers.ModalBox = function(element, size, d
   this.content = ArtJs.ArrayUtils.first(ArtJs.$down(this.element, '.content'));
   this.header = ArtJs.ArrayUtils.first(ArtJs.$down(this.element, '.header'));
   this.onDataLoadD = ArtJs.$D(this, this.onDataLoad);
-  this.onHeaderMouseDownCallback = ArtJs.$DC(this, this.onHeaderMouseDown);
-  this.onHeaderMouseUpCallback = ArtJs.$DC(this, this.onHeaderMouseUp);
-  this.onMouseMoveCallback = ArtJs.$DC(this, this.onMouseMove);
+  this.onHeaderMouseDownDC = ArtJs.$DC(this, this.onHeaderMouseDown);
+  this.onHeaderMouseDownDC = ArtJs.$DC(this, this.onHeaderMouseDown);
+  this.onHeaderMouseUpDC = ArtJs.$DC(this, this.onHeaderMouseUp);
+  this.onMouseMoveDC = ArtJs.$DC(this, this.onMouseMove);
   
   window.addEventListener('resize', ArtJs.$DC(this, this.onResize), false);
   
@@ -41,23 +42,23 @@ ArtJs.ModalBox.prototype = {
     this.draggable = Boolean(draggable);
     
     if (this.draggable) {
-      this.header.addEventListener('mousedown', this.onHeaderMouseDownCallback);
-      this.header.addEventListener('mouseup', this.onHeaderMouseUpCallback);
+      this.header.addEventListener('mousedown', this.onHeaderMouseDownDC);
+      this.header.addEventListener('mouseup', this.onHeaderMouseUpDC);
     }
     else {
-      this.header.removeEventListener('mousedown', this.onHeaderMouseDownCallback);
-      this.header.removeEventListener('mouseup', this.onHeaderMouseUpCallback);
+      this.header.removeEventListener('mousedown', this.onHeaderMouseDownDC);
+      this.header.removeEventListener('mouseup', this.onHeaderMouseUpDC);
     }
   },
 
   onHeaderMouseDown: function(event) {
     this.shift = new ArtJs.Point();
     
-    window.addEventListener('mousemove', this.onMouseMoveCallback);
+    window.addEventListener('mousemove', this.onMouseMoveDC);
   },
 
   onHeaderMouseUp: function(event) {
-    window.removeEventListener('mousemove', this.onMouseMoveCallback);
+    window.removeEventListener('mousemove', this.onMouseMoveDC);
   },
 
   onMouseMove: function(event) {
