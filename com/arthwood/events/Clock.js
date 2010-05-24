@@ -26,9 +26,9 @@ ArtJs.ObjectUtils.extend(ArtJs.Clock, {
 
   fire: function(delegate, delay, repeat) {
     var clock = new ArtJs.Clock(delegate, delay, repeat);
-  
-    clock.trigger();
-  
+    
+    clock.start();
+    
     return clock;
   }
 });
