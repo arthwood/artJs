@@ -22,9 +22,5 @@ ArtJs.CustomEvent.prototype = {
   
   length: function() {
     return this.collection.length();
-  },
-  
-  toString: function() {
-    return 'CustomEvent "' + this.name + '", listeners: ' + this.length();
   }
 };
