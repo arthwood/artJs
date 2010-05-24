@@ -1,13 +1,13 @@
-ArtJs.ModalBox = com.arthwood.ui.containers.ModalBox = function(size, draggable) {
-  this.node = ArtJs.$('modalbox');
+ArtJs.ModalBox = com.arthwood.ui.containers.ModalBox = function(element, size, draggable) {
+  this.element = element;
   this.size = size;
-  this.nodeStyle = this.node.style;
-  this.nodeStyle.width = this.size.x + 'px';
-  this.nodeStyle.height = this.size.y + 'px';
+  this.elementStyle = this.element.style;
+  this.elementStyle.width = this.size.x + 'px';
+  this.elementStyle.height = this.size.y + 'px';
   
-  this.content = ArtJs.ArrayUtils.first(ArtJs.$down(this.node, '.content'));
-  this.header = ArtJs.ArrayUtils.first(ArtJs.$down(this.node, '.header'));
-  this.onDataLoadDelegate = ArtJs.$D(this, this.onDataLoad);
+  this.content = ArtJs.ArrayUtils.first(ArtJs.$down(this.element, '.content'));
+  this.header = ArtJs.ArrayUtils.first(ArtJs.$down(this.element, '.header'));
+  this.onDataLoadD = ArtJs.$D(this, this.onDataLoad);
   this.onHeaderMouseDownCallback = ArtJs.$DC(this, this.onHeaderMouseDown);
   this.onHeaderMouseUpCallback = ArtJs.$DC(this, this.onHeaderMouseUp);
   this.onMouseMoveCallback = ArtJs.$DC(this, this.onMouseMove);
@@ -25,16 +25,16 @@ ArtJs.ModalBox.prototype = {
   },
 
   show: function(url) {
-    this.nodeStyle.display = 'block';
-    ArtJs.Ajax.get(url, this.onDataLoadDelegate);
+    this.elementStyle.display = 'block';
+    ArtJs.Ajax.get(url, null, this.onDataLoadD);
   },
 
   onDataLoad: function(ajax) {
-    this.content.innerHTML = ajax.getResponseText();
+    ArtJs.ElementUtils.setContent(this.content, ajax.getResponseText());
   },
 
   onResize: function() {
-    ArtJs.ElementUtils.center(this.node, this.size);
+    ArtJs.ElementUtils.center(this.element, this.size);
   },
 
   setDraggable: function(draggable) {
