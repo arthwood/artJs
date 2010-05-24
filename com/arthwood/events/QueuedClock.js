@@ -1,26 +1,30 @@
-ArtJs.QueuedClock = com.arthwood.events.QueuedClock = function(interval_) {
-  this._busy = false;
-  this._interval = interval_;
-  this._queue = new ArtJs.Queue();
-  this._startDelegate = ArtJs.$DC(this, this._start);
-  this.clock = new ArtJs.Clock(this._startDelegate, this._interval);
+ArtJs.QueuedClock = com.arthwood.events.QueuedClock = function(interval) {
+  this.busy = false;
+  this.interval = interval;
+  this.queue = new ArtJs.Queue();
+  this.clock = new ArtJs.Clock(this.interval);
+  this.clock.onChange.add(ArtJs.$DC(this, this.start));
 };
 
 ArtJs.QueuedClock.prototype = {
-  _start: function() {
-    if (this._queue.isEmpty()) {
+  start: function() {
+    if (this.queue.empty()) {
       this.clock.stop();
     }
     else {
-      this._queue.getItem()();
+      this.queue.getItem().invoke();
     }
   },
   
-  addCallback: function(i_) {
-    this._queue.addItem(i_);
+  addItem: function(i) {
+    this.queue.addItem(i);
   
     if (!this.clock.isRunning()) {
       this.clock.start(true);
     }
+  },
+  
+  getLength: function() {
+    return this.queue.getLength();
   }
 };
