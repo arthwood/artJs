@@ -24,16 +24,19 @@ ArtJs.Fade.prototype = {
   
   onTick: function(clock) {
     var opacity;
+    var eu = ArtJs.ElementUtils;
     
     this.p += this.delta;
     
     if ((this.p2 - this.p) * this.dir < 0) {
       this.clock.stop();
       this.p = this.p2;
+      eu.setAlpha(this.element, this.p);
       this.onFinish.fire(this);
     }
-    
-    ArtJs.ElementUtils.setAlpha(this.element, this.p); 
+    else {
+      eu.setAlpha(this.element, this.p);
+    }
   },
   
   isRunning: function() {
