@@ -1,8 +1,4 @@
-ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
-  INJECTED_PROPS: ['copy', 'copyProps', 'removeValue', 'removeValues', 'map', 'mapKey', 'mapValue', 'each', 'eachPair', 
-    'select', 'selectWithKey', 'reject', 'empty', 'fromArray', 'toArray', 'includeAll', 'toQueryString', 'inspect'
-  ],
-  
+ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   QUERY_DELIMITER: '&',
   
   init: function() {
@@ -11,13 +7,9 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     this.keyValueArrayDelegate = ArtJs.$DC(this, this.keyValueArray);
     this.pairToQueryStringDelegate = ArtJs.$DC(this, this.pairToQueryString);
     this.parseArrayValueDelegate = ArtJs.$DC(this, this.parseArrayValue);
-    this.injected = false;
+    this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
   },
   
-  ownProperty: function(property) {
-    return !this.injected || !ArtJs.ArrayUtils.include(this.INJECTED_PROPS, property);
-  },
-
   copy: function(obj) {
     var copy = new Object();
 
@@ -25,16 +17,26 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
     return copy;
   },
-
+  
   copyProps: function(from, to) {
     for (var i in from) {
       to[i] = from[i];
     }
   },
+  
+  extend: function(obj, withObj) {
+    this.copyProps(withObj, obj)
+  },
+  
+  merge: function(obj, withObj) {
+    this.extend(obj, withObj);
+    
+    return obj;
+  },
 
   removeValue: function(obj, val) {
     this.eachPairDeleteValueDelegate.delegate.args = [obj, val];
-
+    
     this.eachPair(obj, this.eachPairDeleteValueDelegate);
   },
 
@@ -43,11 +45,11 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
       delete obj[i];
     }
   },
-
+  
   invertedRemoveValue: function(val, obj) {
     this.removeValue(obj, val);
   },
-
+  
   removeValues: function(obj, values) {
     this.invertedRemoveValueDelegate.delegate.args = [obj];
 
@@ -58,7 +60,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     var result = new Array();
     
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         result.push(func(i, obj[i]));
       }
     }
@@ -70,7 +72,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     var result = new Object();
 
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         result[i] = func(obj[i]);
       }
     }
@@ -82,7 +84,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     var result = new Object();
 
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         result[func(i)] = obj[i];
       }
     }
@@ -92,7 +94,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
   each: function(obj, func) {
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         func(obj[i]);
       }
     }
@@ -100,7 +102,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
   eachKey: function(obj, func) {
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         func(i);
       }
     }
@@ -108,7 +110,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
   eachPair: function(obj, func) {
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         func(i, obj[i]);
       }
     }
@@ -116,13 +118,13 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
   select: function(obj, func) {
     var result = new Object();
-
+    
     this.eachPair(obj, function(i, j) {
       if (func(j)) {
         result[i] = j;
       }
     });
-
+    
     return result;
   },
 
@@ -152,7 +154,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
 
   empty: function(obj) {
     for (var i in obj) {
-      if (this.ownProperty(i)) {
+      if (obj.hasOwnProperty(i)) {
         return false;
       }
     }
@@ -163,9 +165,9 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   fromArray: function(arr) {
     var result = new Object();
     var item;
-
+    
     for (var i in arr) {
-      if (ArtJs.ArrayUtils.ownProperty(i)) {
+      if (arr.hasOwnProperty(i)) {
         item = arr[i];
         result[item[0]] = item[1];
       }
@@ -182,13 +184,33 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     return [key, value];
   },
   
+  invertedInclude: function(item, obj) {
+    return this.include(obj, item);
+  },
+  
+  include: function(obj, item) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && obj[i] === item) {
+        return true;
+      }
+    }
+    
+    return false;
+  },
+  
   includeAll: function(obj, subset) {
-    for (var i in subset) {
-      if (this.ownProperty(i) && subset[i] != obj[i]) {
+    this.invertedIncludeDC.delegate.args = [obj];
+    
+    return this.all(subset, this.invertedIncludeDC);
+  },
+  
+  all: function(obj, func) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i) && !func(obj[i])) {
         return false;
       }
     }
-
+    
     return true;
   },
   
@@ -205,7 +227,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   pairToQueryString: function(key, value, prefix) {
     var result;
     
-    prefix = ArtJs.StringUtils.empty(prefix) ? key : prefix + '[' + key + ']';
+    prefix = ArtJs.StringUtils.blank(prefix) ? key : prefix + '[' + key + ']';
     
     if (typeof value == 'object') {
       if (isNaN(value.length)) {
@@ -214,7 +236,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
       else {
         var delegate = ArtJs.$DC(this, this.parseArrayValue, false, prefix + '[]');
         
-        result = ArtJs.ArrayUtils.map(value, delegate).join(this.QUERY_DELIMITER)
+        result = ArtJs.ArrayUtils.map(value, delegate).join(this.QUERY_DELIMITER);
       }
     }
     else {
@@ -225,7 +247,7 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
   },
   
   parseArrayValue: function(value, idx, prefix) {
-    return this.toQueryStringWithPrefix(value, prefix);
+    return this.pairToQueryString(prefix, value);
   },
   
   primitiveToQueryString: function(obj) {
@@ -245,24 +267,14 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     return result;
   },
   
-  inspect: function(obj, indent, prop) {
-    var str = (this.getMultiPattern('|   ', indent) + (prop || (obj ? 'Object' : 'Null')));
-  
-    for (var i in obj) {
-      str += (typeof(obj[i]) == 'object')
-        ? arguments.callee(obj[i], indent + 1, i)
-        : (this.getMultiPattern('|   ', indent + 1) + i + ' = ' + obj[i]);
-    }
-  
-    return str;
-  },
-  
   doInjection: function() {
     var proto = Object.prototype;
     var dc = ArtJs.$DC;
     
     proto.copy = dc(this, this.copy, true);
     proto.copyProps = dc(this, this.copyProps, true);
+    proto.extend = dc(this, this.extend, true);
+    proto.merge = dc(this, this.merge, true);
     proto.removeValue = dc(this, this.removeValue, true);
     proto.removeValues = dc(this, this.removeValues, true);
     proto.map = dc(this, this.map, true);
@@ -278,8 +290,5 @@ ArtJs.ObjectUtils = pl.arthwood.utils.ObjectUtils = {
     proto.toArray = dc(this, this.toArray, true);
     proto.includeAll = dc(this, this.includeAll, true);
     proto.toQueryString = dc(this, this.toQueryString, true);
-    proto.inspect = dc(this, this.objectToString, true);
-    
-    this.injected = true;
   }
 };

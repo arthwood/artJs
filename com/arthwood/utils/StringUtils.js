@@ -1,19 +1,22 @@
-ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
-  INJECTED_PROPS: ['stripSpaces', 'stripTabs', 'strip', 'blank', 'empty', 'nullifyEmpty', 'toS', 'replace',
-      'countPattern', 'addZeros', 'getMultiPattern', 'formatPrice', 'truncate', 'singularOrPlural', 'capitalize',
-      'capitalizeWord', 'trim'
-  ],
-  
+ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   init: function() {
-    this.injected = false;
+    this.parseJsonValueDC = ArtJs.$DC(this, this.parseJsonValue);
   },
   
-  ownProperty: function(property) {
-    return !this.injected || !ArtJs.ArrayUtils.include(this.INJECTED_PROPS, property);
+  first: function(str) {
+    return str.substr(0, 1);
   },
-
+  
+  last: function(str) {
+    return str.substr(str.length - 1, 1);
+  },
+  
   stripSpaces: function(str) {
     return this.replace(str, ' ', '');
+  },
+  
+  stripNewLines: function(str) {
+    return this.replace(str, "\n", '');
   },
   
   stripTabs: function(str) {
@@ -21,7 +24,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
   },
   
   strip: function(str) {
-    return this.stripSpaces(this.stripTabs(str));
+    return this.stripSpaces(this.stripTabs(this.stripNewLines(str)));
   },
   
   blank: function(str) {
@@ -48,15 +51,15 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     return str.split(pattern).length - 1;
   },
   
-  addZeros: function(str, length, right) {
-    var zeros = this.getMultiPattern('0', length - str.length);
-  
-    return right ? str + zeros : zeros + str;
+  align: function(str, n, char, left) {
+    var zeros = this.getMultiPattern(char, n - str.length);
+    
+    return left ? str + zeros : zeros + str;
   },
   
   getMultiPattern: function (pattern, n) {
     var str = '';
-  
+    
     while (n-- > 0) {
       str += pattern;
     }
@@ -70,6 +73,10 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     var decimal = parts[1];
   
     return integer + '.' + (decimal ? this.addZeros(decimal, 2, true) : '00');
+  },
+  
+  addZeros: function(str, n, left) {
+    return this.align(str, n, '0', left);
   },
   
   truncate: function(text, length, end) {
@@ -88,46 +95,42 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     return str.charAt(0).toUpperCase() + str.substr(1);
   },
 
-  trim: function(str, excludeStart, excludeEnd) {
-    var n;
-    var i;
-    var code;
-  
-    if (!excludeStart) {
-      n = str.length;
-  
-      for (i = 0; i < n; i++) {
-        code = str.charCodeAt(i);
-        
-        if ((code != 9) && (code != 32) && (code != 10)) {
-          str = str.substring(i);
-          break;
-        }
-      }
-    }
-  
-    if (!excludeEnd) {
-      n = str.length;
-  
-      for (i = n - 1; i >= 0; i--) {
-        code = str.charCodeAt(i);
-        
-        if ((code != 9) && (code != 32) && (code != 10)) {
-          str = str.substring(0, i + 1);
-          break;
-        }
-      }
-    }
-  
-    return str;
+  trim: function(str) {
+    return str.replace(/^\s+/, '').replace(/\s+$/, '');
   },
-
+  
+  sub: function(str, i, j) {
+    var n = str.length;
+    var jZero = (j == 0);
+    
+    str += str;
+    i = i % n;
+    j = j % n;
+    if (i < 0) i += n;
+    if (j < 0) j += n;
+    if (jZero) j = n;
+    if (j < i) j += n;
+    
+    return str.substring(i, j);
+  },
+  
+  toJson: function(str) {
+    return ArtJs.ObjectUtils.mapValue(eval('(' + str + ')'), this.parseJsonValueDC);
+  },
+  
+  parseJsonValue: function(i) {
+    return (typeof(i) == 'string' && this.first(i) == '{' && this.last(i) == '}') ? this.toJson(i) : i;
+  },
+  
   doInjection: function() {
     var proto = String.prototype;
     var dc = ArtJs.$DC;
     
+    proto.first = dc(this, this.first, true);
+    proto.last = dc(this, this.last, true);
     proto.stripSpaces = dc(this, this.stripSpaces, true);
     proto.stripTabs = dc(this, this.stripTabs, true);
+    proto.stripNewLines = dc(this, this.stripNewLines, true);
     proto.strip = dc(this, this.strip, true);
     proto.blank = dc(this, this.blank, true);
     proto.empty = dc(this, this.empty, true);
@@ -135,7 +138,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     proto.toS = dc(this, this.toS, true);
     proto.replace = dc(this, this.replace, true);
     proto.countPattern = dc(this, this.countPattern, true);
-    proto.addZeros = dc(this, this.addZeros, true);
+    proto.align = dc(this, this.align, true);
     proto.getMultiPattern = dc(this, this.getMultiPattern, true);
     proto.formatPrice = dc(this, this.formatPrice, true);
     proto.truncate = dc(this, this.truncate, true);
@@ -143,7 +146,7 @@ ArtJs.StringUtils = pl.arthwood.utils.StringUtils = {
     proto.capitalize = dc(this, this.capitalize, true);
     proto.capitalizeWord = dc(this, this.capitalizeWord, true);
     proto.trim = dc(this, this.trim, true);
-    
-    this.injected = true;
+    proto.sub = dc(this, this.sub, true);
+    proto.toJson = dc(this, this.toJson, true);
   }
 };
