@@ -7,41 +7,46 @@ ArtJs.List = com.arthwood.data.List = function(items) {
 };
 
 ArtJs.List.prototype = {
-  addItem: function(item) {
-    return this.addItemAt(item, this.getLength());
+  addItem: function(item, noEvent) {
+    if (this.allowDuplicates || !this.hasItem(item)) {
+      this.items.push(item);
+      
+      !noEvent && this.onChange.fire(this);
+    }
+    
+    return this.getLength();
   },
   
   addItemAt: function(item, position, noEvent) {
     if (this.allowDuplicates || !this.hasItem(item)) {
       this.items = ArtJs.ArrayUtils.insertAt(this.items, position, item);
-  
-      if (!noEvent) {
-        this.onChange.fire(this);
-      }
+      
+      !noEvent && this.onChange.fire(this);
     }
     
-    return this.items.length;
+    return this.getLength();
   },
   
   removeItem: function(item, onlyFirst, noEvent) {
     ArtJs.ArrayUtils.removeItem(this.items, item, onlyFirst);
-  
-    if (!noEvent) {
-      this.onChange.fire(this);
-    }
+    
+    !noEvent && this.onChange.fire(this);
+    
+    return this.getLength();
   },
   
   removeItemAt: function(position, noEvent) {
     ArtJs.ArrayUtils.removeAt(this.items, position);
-  
-    if (!noEvent) {
-      this.onChange.fire(this);
-    }
+    
+    !noEvent && this.onChange.fire(this);
+    
+    return this.getLength();
   },
   
-  removeAll: function() {
+  removeAll: function(noEvent) {
     this.items.splice(0);
-    this.onChange.fire(this);
+    
+    !noEvent && this.onChange.fire(this);
   },
   
   getItemAt: function(position) {
@@ -54,9 +59,11 @@ ArtJs.List.prototype = {
     return this.items.indexOf(item);
   },
   
-  moveItem: function(item, idx) {
-    this.removeItem(item, false, true);
-    this.addItemAt(item, idx);
+  moveItem: function(fromIndex, toIndex) {
+    var item = this.getItemAt(fromIndex);
+    
+    this.removeItemAt(fromIndex, true);
+    this.addItemAt(item, toIndex);
   },
   
   getLength: function() {
@@ -77,7 +84,7 @@ ArtJs.List.prototype = {
     return ArtJs.ArrayUtils.include(this.items, item);
   },
   
-  setItem: function(item) {
+  setPointerAtItem: function(item) {
     if (!this.hasItem(item)) {
       ArtJs.p("{List} There is no item " + item + " in List!");
       return;
@@ -132,5 +139,9 @@ ArtJs.List.prototype = {
   
   isLast: function() {
     return this.i == (this.getLength() - 1);
+  },
+  
+  toString: function() {
+    return this.items.toString();
   }
 };
