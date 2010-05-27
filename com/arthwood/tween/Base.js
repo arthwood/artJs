@@ -43,6 +43,10 @@ com.arthwood.tween.Base.prototype = {
     this.on = Boolean(ArtJs.MathUtils.sgn(this.delta) + 1);
   },
   
+  getDelta: function() {
+    return this.delta;
+  },
+  
   update: function() {
   },
   
@@ -55,6 +59,14 @@ com.arthwood.tween.Base.prototype = {
   },
   
   afterFinish: function() {
+  },
+  
+  setInitialState: function() {
+    return this.p = 0;
+  },
+  
+  setFinalState: function() {
+    return this.p = 1;
   },
   
   inInitialState: function() {
