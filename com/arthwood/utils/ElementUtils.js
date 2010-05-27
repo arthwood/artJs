@@ -3,6 +3,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   DEFAULT_DISPLAY: '',
   MAIN_OBJ_RE: /^\w+/,
   SUB_OBJ_RE: /\[\w+\]/g,
+  SIZE_STYLE_RE: /^(\d+)px$/,
   
   init: function() {
     this.getContentDC = ArtJs.$DC(this, this.getContent);
@@ -70,6 +71,53 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   
   getSize: function(e, withoutScroll) {
     return this.getLayout(e, withoutScroll).getSize(); 
+  },
+  
+  getStyleSize: function(e) {
+    var hidden = this.isHidden(e);
+    
+    if (hidden) {
+      this.show(e);
+    }
+
+    var size = new ArtJs.Point(this.getSizeStyle(e, 'width'), this.getSizeStyle(e, 'height'));
+
+    if (hidden) {
+      this.hide(e);
+    }
+    
+    return size; 
+  },
+  
+  setWidth: function(e, w) {
+    e.style.width = w + 'px';
+  },
+  
+  setHeight: function(e, h) {
+    e.style.height = h + 'px';
+  },
+  
+  getStyle: function(e, prop) {
+    return getComputedStyle(e, null).getPropertyValue(prop);
+  },
+  
+  getSizeStyle: function(e, prop) {
+    return this.getSizeStyleValue(this.getStyle(e, prop));
+  },
+  
+  getSizeStyleValue: function(value) {
+    var v = value.match(this.SIZE_STYLE_RE);
+    
+    return v && Number(v[1]) || 0;
+  },
+  
+  getPadding: function(e) {
+    return new ArtJs.Rectangle(
+      this.getSizeStyle(e, 'padding-left'), 
+      this.getSizeStyle(e, 'padding-top'), 
+      this.getSizeStyle(e, 'padding-right'), 
+      this.getSizeStyle(e, 'padding-bottom')
+    )
   },
   
   elements: function(e) {
@@ -354,6 +402,10 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.getAlpha = dc(this, this.getAlpha, true);
     proto.isElement = dc(this, this.isElement, true);
     proto.getSize = dc(this, this.getSize, true);
+    proto.getStyleSize = dc(this, this.getStyleSize, true);
+    proto.setWidth = dc(this, this.setWidth, true);
+    proto.setHeight = dc(this, this.setHeight, true);
+    proto.getPadding = dc(this, this.getPadding, true);
     proto.elements = dc(this, this.elements, true);
     proto.remove = dc(this, this.remove, true);
     proto.parent = dc(this, this.parent, true);

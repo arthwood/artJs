@@ -6,27 +6,26 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
     ArtJs.$E = ArtJs.$DC(this, this.extend);
   },
   
-  extend: function(base, func, instanceMethods, classMethods) {
+  extend: function(base, constr, instanceMethods, classMethods) {
     var builder = function() {
-      var args = ArtJs.$A(arguments);
       var callee = arguments.callee;
-      var proto = callee.prototype;
-      var child = callee.child;
-      var base = callee.base;
+      var c = callee.constr;
+      var b = callee.base;
+      var args = ArtJs.$A(arguments);
       
-      child.$super = ArtJs.$DC(proto, base);
-      child.apply(proto, args);
+      callee.self = this;
+      
+      c.$super = ArtJs.$DC(callee.self, b);
+      
+      c.apply(this, args);
     };
     
     builder.prototype = new base();
     builder.prototype.constructor = builder;
     builder.base = base;
-    builder.child = func;
-
-    this.builder = builder;
+    builder.constr = constr;
     
-    ArtJs.ObjectUtils.extend(builder.prototype, instanceMethods);
-    ArtJs.ObjectUtils.extend(builder, classMethods);
+    this.builder = builder;
     
     ArtJs.ObjectUtils.eachPair(instanceMethods, this.eachInstanceMethodDC);
     ArtJs.ObjectUtils.eachPair(classMethods, this.eachClassMethodDC);
@@ -35,18 +34,36 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
   },
   
   eachInstanceMethod: function(k, v) {
-    var builderProto = this.builder.prototype;
-    var baseProto = this.builder.base.prototype;
-    var origin = baseProto[k];
+    var b = this.builder;
     
-    origin && (v.$super = ArtJs.$DC(builderProto, origin));
+    this.defineOverride(k, v, b.prototype, b.base.prototype[k])
   },
   
   eachClassMethod: function(k, v) {
-    var builder = this.builder;
-    var base = builder.base;
-    var origin = base[k];
+    var b = this.builder;
+    var base = b.base;
     
-    origin && (v.$super = ArtJs.$DC(builder, origin));
+    this.defineOverride(k, v, b, base[k])
+  },
+  
+  defineOverride: function(k, v, proto, overriden) {
+    if (overriden) {
+      var wrapper = function() {
+        var callee = arguments.callee;
+        
+        callee.override.$super = ArtJs.$DC(this, callee.overriden);
+        callee.override.apply(this, ArtJs.$A(arguments));
+      };
+      
+      wrapper.overriden = overriden;
+      wrapper.override = v;
+      wrapper.name = k;
+      proto[k] = wrapper;
+    }
+    else {
+      proto[k] = v;
+    }
   }
 };
+
+ArtJs.ClassUtils.init();

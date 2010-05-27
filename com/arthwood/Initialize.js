@@ -34,5 +34,6 @@ var ArtJs = {
     this.ElementUtils.doInjection();
     this.EventUtils.doInjection();
     this.Delegate.doInjection();
+    com.arthwood.tween.Reveal.doInjection();
   }
 };
