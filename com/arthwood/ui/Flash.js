@@ -3,8 +3,8 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay) {
   this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.element, 'img'));
   this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.element, 'span'));
   this.path = path;
-  this.fade = new ArtJs.Fade(this.element, 1, 0);
-  this.fade.onFinish.add($D(this, this.onFadeFinish));
+  this.fade = new ArtJs.Fade(this.element, - 0.05);
+  this.fade.onFinish.add(ArtJs.$D(this, this.onFadeFinish));
   this.element.onclick = ArtJs.$DC(this, this.onFlashClick);
   this.delay = (delay || 6) * 1000;
   
@@ -54,6 +54,7 @@ ArtJs.Flash.prototype = {
   
   hide: function() {
     this.clearDelay();
+    this.fade.setFinalState();
     this.fade.start();
   },
   
