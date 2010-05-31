@@ -6,14 +6,9 @@ ArtJs.Delegate = com.arthwood.events.Delegate = function(object, method) {
 
 ArtJs.Delegate.prototype = {
   invoke: function() {
-  
     var args = ArtJs.$A(arguments).concat(this.args);
     
     return this.method.apply(this.object, args);
-  },
-  
-  invokeWithSource: function(src, args) {
-    return this.method.apply(this.object, [src].concat(args).concat(this.args));
   },
   
   callback: function(withSource) {
@@ -22,7 +17,9 @@ ArtJs.Delegate.prototype = {
       var delegate = callee.delegate;
       var args = ArtJs.$A(arguments);
       
-      return callee.withSource ? delegate.invokeWithSource(this, args) : delegate.invoke.apply(delegate, args);
+      callee.withSource && args.unshift(this);
+      
+      return delegate.invoke.apply(delegate, args);
     };
   
     result.withSource = withSource;
