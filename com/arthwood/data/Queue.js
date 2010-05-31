@@ -1,7 +1,7 @@
 ArtJs.Queue = com.arthwood.data.Queue = function(data) {
   this.onChange = new ArtJs.CustomEvent('Queue::onChange');
-  this._list = new ArtJs.List(data);
-  this._list.onChange.add(ArtJs.$D(this, this._onChange));
+  this.list = new ArtJs.List(data);
+  this.list.onChange.add(ArtJs.$D(this, this._onChange));
 };
 
 ArtJs.Queue.prototype = {
@@ -10,26 +10,30 @@ ArtJs.Queue.prototype = {
   },
 
   addItem: function(item) {
-    this._list.addItem(item);
+    return this.list.addItem(item);
   },
   
   getItem: function() {
-    var item = this._list.getItemAt(0);
+    var item = this.list.getItemAt(0);
     
-    this._list.removeItemAt(0);
+    this.list.removeItemAt(0);
     
     return item;
   },
   
   setData: function(data) {
-    this._list = new ArtJs.List(data);
+    this.list = new ArtJs.List(data);
   },
   
   getLength: function() {
-    return this._list.getLength();
+    return this.list.getLength();
   },
   
   empty: function() {
-    return this._list.empty();
+    return this.list.empty();
+  },
+  
+  toString: function() {
+    return this.list.toString();
   }
 };
