@@ -4,7 +4,7 @@ ArtJs.Clock = com.arthwood.events.Clock = function(interval, repeat) {
   this.intervalId = null;
   this.counter = 0;
   this.onChange = new ArtJs.CustomEvent('Clock:onChange');
-  this.onFinish = new ArtJs.CustomEvent('Clock:onFinish');
+  this.onComplete = new ArtJs.CustomEvent('Clock:onComplete');
   
   var instances = arguments.callee.instances;
   
@@ -13,36 +13,10 @@ ArtJs.Clock = com.arthwood.events.Clock = function(interval, repeat) {
   instances.push(this);
 };
 
-ArtJs.ObjectUtils.extend(ArtJs.Clock, {
-  findById: function(id) {
-    this.found.id = id;
-    
-    return ArtJs.ArrayUtils.detect(this.instances, this.found);
-  },
-  
-  found: function(i) {
-    return arguments.callee.id == i.id;
-  },
-
-  fire: function(delegate, delay, repeat) {
-    var clock = new ArtJs.Clock(delegate, delay, repeat);
-    
-    clock.start();
-    
-    return clock;
-  }
-});
-
 ArtJs.Clock.prototype = {
   start: function(now) {
-    var code = 'Clock.findById(' + this.id + ').tick()';
-    
     this.stop();
-    this.intervalId = setInterval(code, this.interval);
-    
-    if (now) {
-      this.tick();
-    }
+    this.resume(now);
   },
   
   tick: function() {
@@ -51,7 +25,7 @@ ArtJs.Clock.prototype = {
   
     if (this.counter == this.repeat) {
       this.stop();
-      this.onFinish.fire(this);
+      this.onComplete.fire(this);
     }
   },
   
@@ -66,9 +40,33 @@ ArtJs.Clock.prototype = {
     this.intervalId = null;
   },
   
+  resume: function(now) {
+    var code = 'Clock.find(' + this.id + ').tick()';
+    
+    this.intervalId = setInterval(code, this.interval);
+    
+    if (now) {
+      this.tick();
+    }
+  },
+  
   isRunning: function() {
     return !(this.intervalId == null);
+  },
+  
+  getIdentifier: function() {
+    return this.id;
   }
 };
 
-ArtJs.Clock.instances = new Array();
+ArtJs.Locator.init(ArtJs.Clock);
+
+ArtJs.ObjectUtils.extend(ArtJs.Clock, {
+  fire: function(delegate, delay, repeat) {
+    var clock = new ArtJs.Clock(delegate, delay, repeat);
+    
+    clock.start();
+    
+    return clock;
+  }
+});

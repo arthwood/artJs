@@ -8,9 +8,7 @@ ArtJs.MouseController = com.arthwood.events.MouseController = function(e) {
   this.element = e;
   this.over = false;
   
-  var instances = arguments.callee.instances;
-  
-  instances.push(this);
+  arguments.callee.instances.push(this);
 };
 
 ArtJs.MouseController.prototype = {
@@ -28,21 +26,13 @@ ArtJs.MouseController.prototype = {
     }
   },
   
-  targets: function(e, over) {
+  getTargets: function(e, over) {
     return {origin: e.target, current: e.currentTarget, related: e.relatedTarget};
+  },
+  
+  getIdentifier: function() {
+    return this.element;
   }
 };
 
-ArtJs.MouseController.instances = new Array();
-
-ArtJs.ObjectUtils.extend(ArtJs.MouseController, {
-  find: function(e) {
-    this.found.element = e;
-  
-    return ArtJs.ArrayUtils.detect(this.instances, this.found);
-  },
-
-  found: function(i) {
-    return arguments.callee.element == i.element;
-  }
-});
+ArtJs.Locator.init(ArtJs.MouseController);

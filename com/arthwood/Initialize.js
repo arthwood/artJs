@@ -4,6 +4,7 @@ var com = {
     dom: {},
     events: {},
     math: {},
+    modules: {},
     net: {},
     tween: {},
     ui: {
@@ -35,5 +36,6 @@ var ArtJs = {
     this.EventUtils.doInjection();
     this.Delegate.doInjection();
     com.arthwood.tween.Reveal.doInjection();
+    com.arthwood.tween.Fade.doInjection();
   }
 };

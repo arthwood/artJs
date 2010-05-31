@@ -40,17 +40,9 @@ ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, fun
   }
 });
 
+ArtJs.Locator.init(ArtJs.Reveal);
+
 ArtJs.ObjectUtils.extend(ArtJs.Reveal, {
-  findByElement: function(e) {
-    this.found.element = e;
-    
-    return ArtJs.ArrayUtils.detect(this.instances, this.found);
-  },
-  
-  found: function(i) {
-    return i.element == arguments.callee.element;
-  },
-  
   doInjection: function() {
     var proto = Element.prototype;
     
@@ -59,5 +51,3 @@ ArtJs.ObjectUtils.extend(ArtJs.Reveal, {
     };
   }
 });
-
-ArtJs.Reveal.instances = new Array();

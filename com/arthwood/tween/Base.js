@@ -75,5 +75,9 @@ com.arthwood.tween.Base.prototype = {
   
   inFinalState: function() {
     return this.p == 1;
+  },
+  
+  getIdentifier: function() {
+    return this.element;
   }
 };
