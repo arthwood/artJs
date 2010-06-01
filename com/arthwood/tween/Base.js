@@ -6,7 +6,7 @@ com.arthwood.tween.Base = function(e, delta, interval, eventName) {
   this.interval = interval;
   this.clock = new ArtJs.Clock(this.interval);
   this.clock.onChange.add(ArtJs.$D(this, this.onTick));
-  this.onFinish = new ArtJs.CustomEvent(eventName);
+  this.onComplete = new ArtJs.CustomEvent(eventName);
 };
 
 com.arthwood.tween.Base.prototype = {
@@ -30,7 +30,7 @@ com.arthwood.tween.Base.prototype = {
       this.p = Number(this.on);
       this.update();
       this.afterFinish();
-      this.onFinish.fire(this);
+      this.onComplete.fire(this);
     }
   },
   

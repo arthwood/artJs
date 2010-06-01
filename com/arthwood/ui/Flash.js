@@ -4,7 +4,7 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay) {
   this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.element, 'span'));
   this.path = path;
   this.fade = new ArtJs.Fade(this.element, - 0.05);
-  this.fade.onFinish.add(ArtJs.$D(this, this.onFadeFinish));
+  this.fade.onComplete.add(ArtJs.$D(this, this.onFadeComplete));
   this.element.onclick = ArtJs.$DC(this, this.onFlashClick);
   this.delay = (delay || 6) * 1000;
   
@@ -17,18 +17,6 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay) {
   
   visible && this.display();
 };
-
-ArtJs.ObjectUtils.extend(ArtJs.Flash, {
-  findById: function(id) {
-    this.found.id = id;
-    
-    return ArtJs.ArrayUtils.detect(this.instances, this.found);
-  },
-  
-  found: function(i) {
-    return arguments.callee.id == i.id;
-  }
-});
 
 ArtJs.Flash.prototype = {
   show: function(type, message) {
@@ -47,7 +35,7 @@ ArtJs.Flash.prototype = {
     eu.setY(this.element, 0.2 * ArtJs.ElementUtils.getWindowSize().y);
     eu.setAlpha(this.element, 1);
     
-    var code = 'Flash.findById(' + this.id + ').hide()';
+    var code = 'Flash.find(' + this.id + ').hide()';
     
     this.intervalId = setInterval(code, this.delay);
   },
@@ -64,7 +52,7 @@ ArtJs.Flash.prototype = {
     this.intervalId = null;
   },
   
-  onFadeFinish: function() {
+  onFadeComplete: function() {
     ArtJs.ElementUtils.hide(this.element);
     this.span.innerHTML = null;
     this.image.src = this.path + '/blank.png';
@@ -76,7 +64,11 @@ ArtJs.Flash.prototype = {
     }
     
     return false;
+  },
+  
+  getIdentifier: function() {
+    return this.id;
   }
 };
 
-ArtJs.Flash.instances = new Array();
+ArtJs.Locator.init(ArtJs.Flash);
