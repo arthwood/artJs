@@ -75,6 +75,7 @@ ArtJs.Ajax.prototype = {
   onError: function(event) {
     p('onError');
     p(event);
+    this.onFailure.fire(this);
   },
 
   getReadyState: function() {
