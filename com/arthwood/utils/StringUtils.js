@@ -11,20 +11,8 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     return str.substr(str.length - 1, 1);
   },
   
-  stripSpaces: function(str) {
-    return str.replace(' ', '');
-  },
-  
-  stripNewLines: function(str) {
-    return str.replace("\n", '');
-  },
-  
-  stripTabs: function(str) {
-    return str.replace("	", '');
-  },
-  
   strip: function(str) {
-    return this.stripSpaces(this.stripTabs(this.stripNewLines(str)));
+    return str.replace(/\s/g, '');
   },
   
   blank: function(str) {

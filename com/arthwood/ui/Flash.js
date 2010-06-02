@@ -8,7 +8,7 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay) {
   this.element.onclick = ArtJs.$DC(this, this.onFlashClick);
   this.delay = (delay || 6) * 1000;
   
-  var visible = !ArtJs.StringUtils.empty(this.span.innerHTML);
+  var visible = !ArtJs.StringUtils.empty(ArtJs.ElementUtils.getContent(this.span));
   var instances = arguments.callee.instances;
   
   this.id = instances.length;
