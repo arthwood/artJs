@@ -260,8 +260,8 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return ArtJs.$A(document.getElementsByClassName(selector));
   },
   
-  getElementsByTagName: function(selector) {
-    return ArtJs.$A(document.getElementsByTagName(selector));
+  getElementsByTagName: function(tagName) {
+    return ArtJs.$A(document.getElementsByTagName(tagName));
   },
   
   doInjection: function() {

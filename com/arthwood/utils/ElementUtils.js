@@ -12,7 +12,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
-    this.mapAttributeDC = ArtJs.$DC(this, this.mapAttribute);
     this.showDC = ArtJs.$DC(this, this.show);
     this.hideDC = ArtJs.$DC(this, this.hide);
     this.isHiddenDC = ArtJs.$DC(this, this.isHidden);
@@ -313,7 +312,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var value = i.value;
     var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && subobjectMatches.map(this.mapSubDC) || [];
+    var props = subobjectMatches && ArtJs.ObjectUtils.map(subobjectMatches, this.mapSubDC) || [];
     
     props.unshift(main);
     
@@ -332,8 +331,8 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return mem;
   },
   
-  mapSub: function(i, idx) {
-    return ArtJs.StringUtils.sub(i, 1, -1);
+  mapSub: function(k, v) {
+    return ArtJs.StringUtils.sub(v, 1, -1);
   },
   
   getContent: function(e) {
@@ -375,15 +374,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   toggleClass: function(e, className) {
-    this.hasClass(e, className) ? this.removeClass(e, className) : this.addClass(e, className);
+    this.setClass(e, className, !this.hasClass(e, className));
   },
 
   getAttributes: function(e) {
-    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttributeDC));
-  },
-  
-  mapAttribute: function(i) {
-    return [i.name, i.value];
+    return e.attributes;
   },
   
   doInjection: function() {
