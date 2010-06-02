@@ -54,7 +54,7 @@ ArtJs.Ajax.prototype = {
   request: function() {
     this._request.send(this.requestQueryData);
   },
-
+  
   abort: function() {
     this._request.abort();
   },
@@ -67,29 +67,27 @@ ArtJs.Ajax.prototype = {
     
     this.onProgress.fire(this, r);
   },
-
+  
   onLoad: function(event) {
     this.onSuccess.fire(this);
   },
-
+  
   onError: function(event) {
-    p('onError');
-    p(event);
     this.onFailure.fire(this);
   },
-
+  
   getReadyState: function() {
     return this._request.readyState;
   },
-
+  
   getStatus: function() {
     return this._request.status;
   },
-
+  
   getStatusText: function() {
     return this._request.statusText;
   },
-
+  
   getResponseText: function() {
     return this._request.responseText;
   },
@@ -97,11 +95,11 @@ ArtJs.Ajax.prototype = {
   getResponseXML: function() {
     return this._request.responseXML;
   },
-
+  
   setRequestHeader: function(header, value) {
     return this._request.setRequestHeader(header, value);
   },
-
+  
   getResponseHeader: function(header) {
     return this._request.getResponseHeader(header);
   },
