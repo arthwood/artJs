@@ -23,6 +23,7 @@ var ArtJs = {
     delete copy.globalize;
     delete copy.doInjection;
     delete copy.VERSION;
+    delete copy.CLIENT;
     
     this.ObjectUtils.copyProps(copy, window);
   },

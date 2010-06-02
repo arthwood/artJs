@@ -209,37 +209,37 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     while (n = copy.length) {
       item = copy[0];
       result.push(item);
-
+      
       while (n-- > 0) {
         if (comparison(copy[n], item)) {
           copy.splice(n, 1);
         }
       }
     }
-
+    
     return result;
   },
-
+  
   uniqDefault: function(i, j) {
     return i === j;
   },
-
+  
   intersection: function(arr) {
     this.commonTestArray = arr.slice(1);
     
     return this.select(arr[0], this.intersectionSelectDC);
   },
-
+  
   intersectionSelect: function(i) {
     this.includeDC.delegate.args = [i];
     
     return this.all(this.commonTestArray, this.includeDC);
   },
-
+  
   selectNonEmpty: function(arr) {
     return this.select(arr, this.nonEmptyDC);
   },
-
+  
   compact: function(arr) {
     return this.select(arr, this.notNullDC);
   },
@@ -251,43 +251,43 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   empty: function(arr) {
     return arr.length == 0;
   },
-
+  
   nonEmpty: function(arr) {
     return !this.empty(arr);
   },
-
+  
   numerize: function(arr) {
     return this.map(arr, this.numerizeCallback);
   },
-
+  
   numerizeCallback: function (i) {
     return Number(i);
   },
-
+  
   sum: function(arr) {
     return Number(this.inject(arr, 0, this.sumCallback));
   },
-
+  
   sumCallback: function(sum, i) {
     return sum + i;
   },
-
+  
   stringify: function(arr) {
     return this.map(arr, this.stringifyCallback);
   },
-
+  
   stringifyCallback: function(i) {
     return i.toString();
   },
-
+  
   print: function(arr) {
     this.each(arr, p);
   },
-
+  
   doInjection: function() {
     var proto = Array.prototype;
     var dc = ArtJs.$DC;
-
+    
     proto.first = dc(this, this.first, true);
     proto.second = dc(this, this.second, true);
     proto.third = dc(this, this.third, true);

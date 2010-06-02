@@ -15,7 +15,7 @@ ArtJs.DatePicker.prototype = {
   },
   
   onImg: function(e) {
-    var img = e.target;
+    var img = e.currentTarget;
     var imgRT = ArtJs.ElementUtils.getLayout(img).getRightTop();
     var position = imgRT.add(new ArtJs.Point(1, 1));
     
@@ -137,7 +137,7 @@ ArtJs.Calendar.prototype = {
   },
   
   onItem: function(e) {
-    var item = e.target;
+    var item = e.currentTarget;
     var value = ArtJs.ElementUtils.getContent(item);
     var valid = !ArtJs.ElementUtils.hasClass(item, 'invalid');
     
@@ -171,7 +171,7 @@ ArtJs.Calendar.prototype = {
   },
   
   onMonthSelect: function(e) {
-    this.date.setMonth(parseInt(e.target.value) - 1);
+    this.date.setMonth(parseInt(e.currentTarget.value) - 1);
     
     this.update();
     
@@ -179,7 +179,7 @@ ArtJs.Calendar.prototype = {
   },
   
   onYearSelect: function(e) {
-    this.date.setFullYear(parseInt(e.target.value));
+    this.date.setFullYear(parseInt(e.currentTarget.value));
     
     this.update();
     

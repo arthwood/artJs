@@ -52,7 +52,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   
   removeValues: function(obj, values) {
     this.invertedRemoveValueDelegate.delegate.args = [obj];
-
+    
     ArtJs.ArrayUtils.each(values, this.invertedRemoveValueDelegate);
   },
 
@@ -64,34 +64,34 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
         result.push(func(i, obj[i]));
       }
     }
-
+    
     return result;
   },
   
   mapValue: function(obj, func) {
     var result = new Object();
-
+    
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
         result[i] = func(obj[i]);
       }
     }
-
+    
     return result;
   },
-
+  
   mapKey: function(obj, func) {
     var result = new Object();
-
+    
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
         result[func(i)] = obj[i];
       }
     }
-
+    
     return result;
   },
-
+  
   each: function(obj, func) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -99,7 +99,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
       }
     }
   },
-
+  
   eachKey: function(obj, func) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -107,7 +107,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
       }
     }
   },
-
+  
   eachPair: function(obj, func) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -115,7 +115,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
       }
     }
   },
-
+  
   select: function(obj, func) {
     var result = new Object();
     
@@ -127,7 +127,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     
     return result;
   },
-
+  
   selectWithKey: function(obj, func) {
     var result = new Object();
 
@@ -139,7 +139,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
 
     return result;
   },
-
+  
   reject: function(obj, func) {
     var result = new Object();
 
@@ -148,17 +148,17 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
         result[i] = j;
       }
     });
-
+    
     return result;
   },
-
+  
   empty: function(obj) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
         return false;
       }
     }
-
+    
     return true;
   },
 
@@ -172,10 +172,10 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
         result[item[0]] = item[1];
       }
     }
-
+    
     return result;
   },
-
+  
   toArray: function(obj) {
     return this.map(obj, this.keyValueArrayDelegate);
   },
