@@ -88,31 +88,25 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   each: function(arr, func) {
-    var vArgs = ArtJs.$A(arguments, 2);
-    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func.apply(null, [arr[i]].concat(vArgs));
+        func(arr[i]);
       }
     }
   },
   
   eachIndex: function(arr, func) {
-    var vArgs = ArtJs.$A(arguments, 2);
-    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func.apply(null, [parseInt(i)].concat(vArgs));
+        func(parseInt(i));
       }
     }
   },
   
   eachPair: function(arr, func) {
-    var vArgs = ArtJs.$A(arguments, 2);
-    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func.apply(null, [parseInt(i), arr[i]].concat(vArgs));
+        func(parseInt(i), arr[i]);
       }
     }
   },

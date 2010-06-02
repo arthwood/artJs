@@ -52,7 +52,8 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
         var callee = arguments.callee;
         
         callee.override.$super = ArtJs.$DC(this, callee.overriden);
-        callee.override.apply(this, ArtJs.$A(arguments));
+        
+        return callee.override.apply(this, ArtJs.$A(arguments));
       };
       
       wrapper.overriden = overriden;

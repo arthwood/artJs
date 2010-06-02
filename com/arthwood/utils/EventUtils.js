@@ -13,6 +13,5 @@ ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
     var dc = ArtJs.$DC;
     
     proto.edge = dc(this, this.edge, true);
-    proto.inner = dc(this, this.inner, true);
   }
 };

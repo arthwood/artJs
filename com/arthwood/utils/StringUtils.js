@@ -12,15 +12,15 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   stripSpaces: function(str) {
-    return this.replace(str, ' ', '');
+    return str.replace(' ', '');
   },
   
   stripNewLines: function(str) {
-    return this.replace(str, "\n", '');
+    return str.replace("\n", '');
   },
   
   stripTabs: function(str) {
-    return this.replace(str, '	', '');
+    return str.replace("	", '');
   },
   
   strip: function(str) {
@@ -43,12 +43,8 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     return str || '';
   },
   
-  replace: function(str, pattern, substitute) {
-    return str.split(pattern).join(substitute);
-  },
-  
   countPattern: function(str, pattern) {
-    return str.split(pattern).length - 1;
+    return str.match(pattern, 'g').length;
   },
   
   align: function(str, n, char, left) {
@@ -88,11 +84,15 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   capitalize: function(str) {
-    return ArtJs.ArrayUtils.map(str.split(' '), this.capitalizeWord).join();
+    return ArtJs.ArrayUtils.map(str.split(' '), this.capitalizeWord).join(' ');
   },
   
   capitalizeWord: function(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
+  },
+  
+  capitalizeUnderscored: function(str) {
+    return this.stripSpaces(this.capitalize(str.replace('_', ' ')));
   },
 
   trim: function(str) {
@@ -136,15 +136,14 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     proto.empty = dc(this, this.empty, true);
     proto.nullifyEmpty = dc(this, this.nullifyEmpty, true);
     proto.toS = dc(this, this.toS, true);
-    proto.replace = dc(this, this.replace, true);
     proto.countPattern = dc(this, this.countPattern, true);
     proto.align = dc(this, this.align, true);
     proto.getMultiPattern = dc(this, this.getMultiPattern, true);
-    proto.formatPrice = dc(this, this.formatPrice, true);
     proto.truncate = dc(this, this.truncate, true);
     proto.singularOrPlural = dc(this, this.singularOrPlural, false);
     proto.capitalize = dc(this, this.capitalize, true);
     proto.capitalizeWord = dc(this, this.capitalizeWord, true);
+    proto.capitalizeUnderscored = dc(this, this.capitalizeUnderscored, true);
     proto.trim = dc(this, this.trim, true);
     proto.sub = dc(this, this.sub, true);
     proto.toJson = dc(this, this.toJson, true);

@@ -41,13 +41,19 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   },
   
   toDMY: function(date, separator) {
+    separator = separator || '/';
+    
     var ymd = this.toYMD(date, separator);
-    var arr = ymd.split(separator).reverse();
+    var arr = ymd.split(separator);
+    
+    arr.reverse();
     
     return arr.join(separator);
   },
   
   fromDMY: function(str, separator) {
+    separator = separator || '/';
+    
     var arr = str.split(separator);
     var au = ArtJs.ArrayUtils;
     
@@ -60,8 +66,10 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     return Math.floor(minutes / 60) + separator + ArtJs.StringUtils.addZeros((minutes % 60).toString(), 2);
   },
   
-  hmToMinutes: function(hm) {
-    var arr = hm.split(':');
+  hmToMinutes: function(hm, separator) {
+    separator = separator || ':';
+    
+    var arr = hm.split(separator);
   
     return 60*parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
@@ -74,6 +82,14 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     separator = separator || ':';
     
     return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
+  },
+  
+  msToSeconds: function(ms, separator) {
+    separator = separator || ':';
+    
+    var arr = ms.split(separator);
+    
+    return 60*parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
   
   secondsToHMS: function(s, separator) {

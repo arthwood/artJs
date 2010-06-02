@@ -286,9 +286,10 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     proto.selectWithKey = dc(this, this.selectWithKey, true);
     proto.reject = dc(this, this.reject, true);
     proto.empty = dc(this, this.empty, true);
-    proto.fromArray = dc(this, this.toArray, false);
     proto.toArray = dc(this, this.toArray, true);
+    proto.include = dc(this, this.include, true);
     proto.includeAll = dc(this, this.includeAll, true);
+    proto.all = dc(this, this.all, true);
     proto.toQueryString = dc(this, this.toQueryString, true);
   }
 };
