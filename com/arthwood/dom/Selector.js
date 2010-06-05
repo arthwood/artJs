@@ -164,7 +164,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
         return [];
       }
       else {
-        // no id given
+        /* no id given */
         if (au.empty(elements)) {
           elements = elementsByTag;
         }

@@ -17,7 +17,7 @@ ArtJs.ModalBox = com.arthwood.ui.containers.ModalBox = function(element, size, d
   
   this.onResize();
   
-  //this.setDraggable(draggable);
+  /* this.setDraggable(draggable); */
 };
 
 ArtJs.ModalBox.prototype = {

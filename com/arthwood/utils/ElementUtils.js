@@ -291,7 +291,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   serialize: function(e) {
     var s = ArtJs.Selector;
     var au = ArtJs.ArrayUtils;
-    var textfields = s.down(e, 'input[type=text]')
+    var textfields = s.down(e, 'input[type=text]');
     var checkboxes = au.select(s.down(e, 'input[type=checkbox]'), this.selectCheckedDC);
     var radios = au.select(s.down(e, 'input[type=radio]'), this.selectCheckedDC);
     var selects = s.down(e, 'select');
