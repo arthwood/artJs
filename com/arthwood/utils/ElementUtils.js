@@ -376,7 +376,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   toggleClass: function(e, className) {
     this.setClass(e, className, !this.hasClass(e, className));
   },
-
+  
   getAttributes: function(e) {
     return e.attributes;
   },

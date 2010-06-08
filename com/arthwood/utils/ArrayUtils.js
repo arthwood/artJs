@@ -7,6 +7,16 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     this.notNullDC = ArtJs.$DC(this, this.notNull);
   },
   
+  build: function(n, func) {
+    var arr = new Array(n);
+    
+    for (var i = 0; i < n; i++) {
+      arr[i] = func(i);
+    }
+    
+    return arr;
+  },
+  
   first: function(arr) {
     return this.getItem(arr, 0);
   },
