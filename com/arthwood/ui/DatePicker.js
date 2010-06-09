@@ -8,7 +8,9 @@ ArtJs.DatePicker = com.arthwood.ui.DatePicker = function(container, firstDay, ye
 ArtJs.DatePicker.prototype = {
   initField: function(item) {
     var input = ArtJs.ArrayUtils.first(ArtJs.Selector.down(item, 'input'));
-    var img = ArtJs.ArrayUtils.first(ArtJs.Selector.down(item, 'img'));
+    var img = ArtJs.ElementUtils.putAfter(
+      ArtJs.$C('img', {src: '/images/datepicker/cal.gif', alt: 'calendar_icon', class: 'datepicker'}), input
+    );
     
     input.editable = false;
     img.onclick = this.onImgDC;
