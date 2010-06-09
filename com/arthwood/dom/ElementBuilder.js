@@ -50,6 +50,7 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   init: function() {
     ArtJs.$B = ArtJs.$DC(this, this.build);
     ArtJs.$P = ArtJs.$DC(this, this.parse);
+    ArtJs.$C = ArtJs.$DC(this, this.create);
   },
   
   getElement: function(i) {
@@ -80,6 +81,10 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
     node.innerHTML = str;
     
     return node.firstChild;
+  },
+  
+  create: function(name, attributes, value, empty) {
+    return this.parse(this.build(name, attributes, value, empty));
   }
 });
 
