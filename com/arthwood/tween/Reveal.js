@@ -1,5 +1,5 @@
 ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, function(e, delta, interval) {
-  arguments.callee.$super(e, delta || 0.05, interval || 20, 'Reveal:onComplete');
+  arguments.callee.$super(e, delta, interval, 'Reveal:onComplete');
   
   var eu = ArtJs.ElementUtils;
   

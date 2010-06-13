@@ -1,14 +1,18 @@
 com.arthwood.tween.Base = function(e, delta, interval, eventName) {
+  var defaults = arguments.callee.DEFAULTS;
+  
   this.element = e;
   this.on = true;
   this.p = 0;
-  this.setDelta(delta);
+  this.setDelta(delta || defaults.delta);
   this.interval = interval;
-  this.clock = new ArtJs.Clock(this.interval);
+  this.clock = new ArtJs.Clock(this.interval || defaults.interval);
   this.clock.onChange.add(ArtJs.$D(this, this.onTick));
   this.onComplete = new ArtJs.CustomEvent(eventName);
 };
-
+ArtJs.ObjectUtils.extend(com.arthwood.tween.Base, {
+  DEFAULTS: {delta: 0.05, interval: 20}
+});
 com.arthwood.tween.Base.prototype = {
   start: function() {
     this.beforeStart();
@@ -62,11 +66,11 @@ com.arthwood.tween.Base.prototype = {
   },
   
   setInitialState: function() {
-    return this.p = 0;
+    this.p = 0;
   },
   
   setFinalState: function() {
-    return this.p = 1;
+    this.p = 1;
   },
   
   inInitialState: function() {
