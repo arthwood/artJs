@@ -46,18 +46,46 @@ ArtJs.ElementBuilder.prototype = {
   }
 };
 
-ArtJs.ElementBuilder.setAttribute = function(k, v) {
-  arguments.callee.e.setAttribute(k, v);
-};
-
-ArtJs.ElementBuilder.attributePairToString = function(arr) {
-  return arr[0] + '="' + arr[1] + '"';
-};
-
-ArtJs.$P = ArtJs.ElementBuilder.parse = function(str) {
-  var node = document.createElement('div');
+ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
+  init: function() {
+    ArtJs.$B = ArtJs.$DC(this, this.build);
+    ArtJs.$P = ArtJs.$DC(this, this.parse);
+    ArtJs.$C = ArtJs.$DC(this, this.create);
+  },
   
-  node.innerHTML = str;
+  getElement: function(i) {
+    return arguments.callee.element;
+  },
   
-  return node.firstChild;
-};
+  getCollection: function(n, element) {
+    this.getElement.element = element;
+    
+    return ArtJs.ArrayUtils.build(n, this.getElement).join('');
+  },
+  
+  setAttribute: function(k, v) {
+    arguments.callee.e.setAttribute(k, v);
+  },
+
+  attributePairToString: function(arr) {
+    return arr[0] + '="' + arr[1] + '"';
+  },
+  
+  build: function(name, attributes, value, empty) {
+    return new this(name, attributes, value, empty);
+  },
+  
+  parse: function(str) {
+    var node = document.createElement('div');
+    
+    node.innerHTML = str;
+    
+    return node.firstChild;
+  },
+  
+  create: function(name, attributes, value, empty) {
+    return this.parse(this.build(name, attributes, value, empty));
+  }
+});
+
+ArtJs.ElementBuilder.init();

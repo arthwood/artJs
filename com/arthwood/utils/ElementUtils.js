@@ -12,6 +12,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
     this.mapSubDC = ArtJs.$DC(this, this.mapSub);
     this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
+    this.mapAttributeDC = ArtJs.$DC(this, this.mapAttribute);
     this.showDC = ArtJs.$DC(this, this.show);
     this.hideDC = ArtJs.$DC(this, this.hide);
     this.isHiddenDC = ArtJs.$DC(this, this.isHidden);
@@ -376,9 +377,13 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   toggleClass: function(e, className) {
     this.setClass(e, className, !this.hasClass(e, className));
   },
-
+  
   getAttributes: function(e) {
-    return e.attributes;
+    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttributeDC));
+  },
+  
+  mapAttribute: function(i) {
+    return [i.name, i.value];
   },
   
   doInjection: function() {
