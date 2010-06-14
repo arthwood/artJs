@@ -313,7 +313,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var value = i.value;
     var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && ArtJs.ArrayUtils.map(subobjectMatches, this.mapSubDC) || [];
+    var props = subobjectMatches && ArtJs.ArrayUtils.map(ArtJs.$A(subobjectMatches), this.mapSubDC) || [];
     
     props.unshift(main);
     

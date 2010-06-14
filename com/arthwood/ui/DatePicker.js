@@ -211,7 +211,9 @@ ArtJs.Calendar.prototype = {
   },
   
   onMonthSelect: function(e) {
-    this.date.setMonth(parseInt(e.currentTarget.value) - 1);
+    var select = e.currentTarget;
+    
+    this.date.setMonth(parseInt(select.value) - 1);
     
     this.update();
     
@@ -219,7 +221,9 @@ ArtJs.Calendar.prototype = {
   },
   
   onYearSelect: function(e) {
-    this.date.setFullYear(parseInt(e.currentTarget.value));
+    var select = e.currentTarget;
+    
+    this.date.setFullYear(parseInt(select.value));
     
     this.update();
     
