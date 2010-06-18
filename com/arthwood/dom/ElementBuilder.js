@@ -41,7 +41,7 @@ ArtJs.ElementBuilder.prototype = {
   attributesString: function() {
     return ArtJs.ArrayUtils.map(
       ArtJs.ObjectUtils.toArray(this.attributes), 
-      ArtJs.ElementBuilder.attributePairToString
+      ArtJs.ElementBuilder.attributePairToStringDC
     ).join(' ');
   }
 };
@@ -51,6 +51,7 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
     ArtJs.$B = ArtJs.$DC(this, this.build);
     ArtJs.$P = ArtJs.$DC(this, this.parse);
     ArtJs.$C = ArtJs.$DC(this, this.create);
+    this.attributePairToStringDC = ArtJs.$DC(this, this.attributePairToString);
   },
   
   getElement: function(i) {
@@ -68,7 +69,24 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   },
 
   attributePairToString: function(arr) {
-    return arr[0] + '="' + arr[1] + '"';
+    var key = this.translateKey(arr[0]);
+    var value = arr[1];
+    
+    return key + '="' + value + '"';
+  },
+  
+  translateKey: function(k) {
+    var result;
+    
+    switch (k) {
+      case 'className':
+        result = 'class';
+        break;
+      default:
+        result = k;
+    }
+    
+    return result;
   },
   
   build: function(name, attributes, value, empty) {

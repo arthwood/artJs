@@ -9,7 +9,7 @@ ArtJs.DatePicker.prototype = {
   initField: function(item) {
     var input = ArtJs.ArrayUtils.first(ArtJs.Selector.down(item, 'input'));
     var img = ArtJs.ElementUtils.putAfter(
-      ArtJs.$C('img', {src: '/images/datepicker/cal.gif', alt: 'calendar_icon', class: 'datepicker'}), input
+      ArtJs.$C('img', {src: '/images/datepicker/cal.gif', alt: 'calendar_icon', className: 'datepicker'}), input
     );
     
     input.editable = false;
@@ -48,14 +48,14 @@ ArtJs.Calendar = com.arthwood.ui.Calendar = function(container, firstDay, yearSp
   var selectYear = ArtJs.$B('select', {id: 'date_year', name: 'date[year]'}, selectYearOptions);
   var selectMonthOptions = au.map(ArtJs.Calendar.MONTHS, arguments.callee.monthToOption).join('');
   var selectMonth = ArtJs.$B('select', {id: 'date_month', name: 'date[month]'}, selectMonthOptions);
-  var nav = ArtJs.$B('div', {class: 'nav'}, aPrev + selectMonth + selectYear + aNext);
+  var nav = ArtJs.$B('div', {className: 'nav'}, aPrev + selectMonth + selectYear + aNext);
   var headElement = ArtJs.$B('th', null, '&nbsp;');
   var headRow = ArtJs.$B('tr', null, eb.getCollection(7, headElement));
   var cellElement = ArtJs.$B('td', null, '&nbsp;');
   var row = ArtJs.$B('tr', null, eb.getCollection(7, cellElement));
   var rows = eb.getCollection(5, row);
   var table = ArtJs.$B('table', null, headRow + rows);
-  var element = ArtJs.$B('div', {class: 'datepicker_calendar', style: 'display: none'}, nav + table);
+  var element = ArtJs.$B('div', {className: 'datepicker_calendar', style: 'display: none'}, nav + table);
   
   ArtJs.ElementUtils.putAtBottom(ArtJs.$P(element), container);
   
