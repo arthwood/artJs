@@ -73,20 +73,34 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return this.getLayout(e, withoutScroll).getSize(); 
   },
   
-  getStyleSize: function(e) {
-    var hidden = this.isHidden(e);
+  getSize: function(e, real) {
+    var toggle = real && this.isHidden(e);
+    var overflow = this.getStyle(e, 'overflow');
     
-    if (hidden) {
-      this.show(e);
-    }
+    toggle && this.show(e);
+    real && this.setStyle(e, 'overflow', '');
+    
+    var size = new ArtJs.Point(e.width, e.height);
 
-    var size = new ArtJs.Point(this.getSizeStyle(e, 'width'), this.getSizeStyle(e, 'height'));
-
-    if (hidden) {
-      this.hide(e);
-    }
+    toggle && this.hide(e);
+    real && this.setStyle(e, 'overflow', overflow);
     
     return size; 
+  },
+  
+  getBounds: function(e, real, withoutScroll) {
+    var toggle = real && this.isHidden(e);
+    
+    toggle && this.show(e);
+    
+    var b = e.getBoundingClientRect();
+    var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
+    
+    !withoutScroll && layout.moveBy(this.getScrollPosition());
+    
+    toggle && this.hide(e);
+    
+    return layout;
   },
   
   setWidth: function(e, w) {
@@ -99,6 +113,10 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   
   getStyle: function(e, prop) {
     return getComputedStyle(e, null).getPropertyValue(prop);
+  },
+  
+  setStyle: function(e, prop, v) {
+    e.style[prop] = v;
   },
   
   getSizeStyle: function(e, prop) {
@@ -241,7 +259,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   getPosition: function(e, withoutScroll) {
-    return this.getLayout(e, withoutScroll).getLeftTop();
+    return this.getBounds(e, false, withoutScroll).getLeftTop();
   },
   
   getScrollPosition: function() {
@@ -254,27 +272,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   
   setY: function(e, v) {
     e.style.top = v + 'px';
-  },
-  
-  getLayout: function(e, withoutScroll) {
-    var hidden = this.isHidden(e);
-    
-    if (hidden) {
-      this.show(e);
-    }
-    
-    var b = e.getBoundingClientRect();
-    var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
-    
-    if (!withoutScroll) {
-      layout.moveBy(this.getScrollPosition());
-    }
-    
-    if (hidden) {
-      this.hide(e);
-    }
-    
-    return layout;
   },
   
   enable: function(e) {

@@ -3,9 +3,9 @@ ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, fun
   
   var eu = ArtJs.ElementUtils;
   
-  this.size = eu.getSize(e);
-  this.styleSize = eu.getStyleSize(e);
+  this.heightWithPadding = eu.getSize(e, true).y;
   this.padding = eu.getPadding(e);
+  this.height = this.heightWithPadding - (this.padding.top + this.padding.bottom);
   
   ArtJs.Reveal.instances.push(this);
 }, {
@@ -13,8 +13,8 @@ ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, fun
     arguments.callee.$super();
     
     var mu = ArtJs.MathUtils;
-    var height = this.styleSize.y;
-    var h = this.p * this.size.y;
+    var height = this.height;
+    var h = this.p * this.heightWithPadding;
     var pt = this.padding.top;
     var pb = this.padding.bottom;
     var s = this.element.style;

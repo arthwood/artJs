@@ -18,7 +18,7 @@ ArtJs.DatePicker.prototype = {
   
   onImg: function(e) {
     var img = e.currentTarget;
-    var imgRT = ArtJs.ElementUtils.getLayout(img).getRightTop();
+    var imgRT = ArtJs.ElementUtils.getBounds(img).getRightTop();
     var position = imgRT.add(new ArtJs.Point(1, 1));
     
     if (this.calendar.isHidden()) {
