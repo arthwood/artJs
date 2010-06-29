@@ -69,23 +69,8 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return e.style.opacity;
   },
   
-  getSize: function(e, withoutScroll) {
-    return this.getLayout(e, withoutScroll).getSize(); 
-  },
-  
   getSize: function(e, real) {
-    var toggle = real && this.isHidden(e);
-    var overflow = this.getStyle(e, 'overflow');
-    
-    toggle && this.show(e);
-    real && this.setStyle(e, 'overflow', '');
-    
-    var size = new ArtJs.Point(e.width, e.height);
-
-    toggle && this.hide(e);
-    real && this.setStyle(e, 'overflow', overflow);
-    
-    return size; 
+    return this.getBounds(e, real).getSize(); 
   },
   
   getBounds: function(e, real, withoutScroll) {
@@ -399,7 +384,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.getAlpha = dc(this, this.getAlpha, true);
     proto.isElement = dc(this, this.isElement, true);
     proto.getSize = dc(this, this.getSize, true);
-    proto.getStyleSize = dc(this, this.getStyleSize, true);
+    proto.getStyle = dc(this, this.getStyle, true);
     proto.setWidth = dc(this, this.setWidth, true);
     proto.setHeight = dc(this, this.setHeight, true);
     proto.getPadding = dc(this, this.getPadding, true);
