@@ -382,13 +382,15 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.isHidden = dc(this, this.isHidden, true);
     proto.setAlpha = dc(this, this.setAlpha, true);
     proto.getAlpha = dc(this, this.getAlpha, true);
-    proto.isElement = dc(this, this.isElement, true);
     proto.getSize = dc(this, this.getSize, true);
-    proto.getStyle = dc(this, this.getStyle, true);
+    proto.getBounds = dc(this, this.getBounds, true);
     proto.setWidth = dc(this, this.setWidth, true);
     proto.setHeight = dc(this, this.setHeight, true);
+    proto.getStyle = dc(this, this.getStyle, true);
+    proto.setStyle = dc(this, this.setStyle, true);
     proto.getPadding = dc(this, this.getPadding, true);
     proto.elements = dc(this, this.elements, true);
+    proto.isElement = dc(this, this.isElement, true);
     proto.remove = dc(this, this.remove, true);
     proto.parent = dc(this, this.parent, true);
     proto.firstElement = dc(this, this.firstElement, true);
@@ -408,7 +410,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.center = dc(this, this.center, true);
     proto.centerH = dc(this, this.centerH, true);
     proto.centerV = dc(this, this.centerV, true);
-    proto.getLayout = dc(this, this.getLayout, true);
     proto.enable = dc(this, this.enable, true);
     proto.disable = dc(this, this.disable, true);
     proto.setEnabled = dc(this, this.setEnabled, true);
