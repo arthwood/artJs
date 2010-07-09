@@ -1,50 +1,20 @@
-ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements,
-perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
+ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements, perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
 
-For now there is no one package of ArtJs library classes. Just include files in specific order:
+Currently it supports FF, Chrome, Safari and IE8.
 
-- Initialize
-- utils/Log
-- events/Delegate
-- utils/MathUtils
-- utils/ObjectUtils
-- utils/ArrayUtils
-- utils/ClassUtils
-- utils/StringUtils
-- utils/DateUtils
-- events/DelegateCollection
-- events/CustomEvent
-- events/EventUtils
-- events/MouseController
-- math/Point
-- math/Rectangle
-- dom/ElementBuilder
-- dom/ElementUtils
-- dom/Selector
-- events/Clock
-- ui/DatePicker
-- ui/Flash
-- data/List
-- data/Queue
-- events/QueuedClock
-- net/Ajax
-- ui/containers/ModalBox
-- tween/Fade
-- Finalize
+Zip package contains art.js file that loads appropriate library depending on the browser.
+You only need to inlude that file in your head section.
+Default load location is set to "javascripts/" but you can change it by setting your own path like this:
+<script type="text/javascript">
+  window.ArtJs_path = '../javascripts/';
+</script>
+<script src="../javascripts/art.js" type="text/javascript"></script>
 
-Some of the classes are optional (DatePicker), other are core classes on which other might depend (Delegate),
-but until there is no clean distinction between those two groups I recommend to include all above classes.
+Just after library is loaded there are two methods that you may want to use: ArtJs.globalize() and ArtJs.doInjection()
 
-There are two methods that you may want to use:
+ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like: $, $$, $P, $B, $D, $DC, $E.
 
-- ArtJs.globalize()
-- ArtJs.doInjection()
-
-ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like:
-$, $$, $P, $B, $D, $DC, $E.
-
-ArtJs.doInjection() makes an extensions on native classes like Object, Array, Date, Element etc.
-so that you can use:
+ArtJs.doInjection() makes an extensions on native classes like Object, Array, Date, Element etc. so that you can use:
 
 arr.first();
 
