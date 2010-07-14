@@ -1,5 +1,5 @@
-ArtJs.DelegateCollection = com.arthwood.events.DelegateCollection = function(delegates) {
-  this.delegates = delegates || new Array();
+ArtJs.DelegateCollection = com.arthwood.events.DelegateCollection = function() {
+  this.delegates = [];
   this.delegateToResultDC = ArtJs.$DC(this, this.delegateToResult, false);
 };
 

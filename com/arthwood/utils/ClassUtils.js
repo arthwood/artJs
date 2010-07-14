@@ -36,14 +36,14 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
   eachInstanceMethod: function(k, v) {
     var b = this.builder;
     
-    this.defineOverride(k, v, b.prototype, b.base.prototype[k])
+    this.defineOverride(k, v, b.prototype, b.base.prototype[k]);
   },
   
   eachClassMethod: function(k, v) {
     var b = this.builder;
     var base = b.base;
     
-    this.defineOverride(k, v, b, base[k])
+    this.defineOverride(k, v, b, base[k]);
   },
   
   defineOverride: function(k, v, proto, overriden) {

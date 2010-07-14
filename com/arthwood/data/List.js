@@ -1,5 +1,5 @@
 ArtJs.List = com.arthwood.data.List = function(items) {
-  this.items = items || new Array();
+  this.items = items || {};
   this.i = 0;
   this.onChange = new ArtJs.CustomEvent('List::onChange');
   this.allowDuplicates = true;
@@ -11,7 +11,7 @@ ArtJs.List.prototype = {
     if (this.allowDuplicates || !this.hasItem(item)) {
       this.items.push(item);
       
-      !noEvent && this.onChange.fire(this);
+      if (!noEvent) { this.onChange.fire(this); }
     }
     
     return this.getLength();
@@ -21,7 +21,7 @@ ArtJs.List.prototype = {
     if (this.allowDuplicates || !this.hasItem(item)) {
       this.items = ArtJs.ArrayUtils.insertAt(this.items, position, item);
       
-      !noEvent && this.onChange.fire(this);
+      if (!noEvent) { this.onChange.fire(this); }
     }
     
     return this.getLength();
@@ -30,7 +30,7 @@ ArtJs.List.prototype = {
   removeItem: function(item, onlyFirst, noEvent) {
     ArtJs.ArrayUtils.removeItem(this.items, item, onlyFirst);
     
-    !noEvent && this.onChange.fire(this);
+    if (!noEvent) { this.onChange.fire(this); }
     
     return this.getLength();
   },
@@ -38,7 +38,7 @@ ArtJs.List.prototype = {
   removeItemAt: function(position, noEvent) {
     ArtJs.ArrayUtils.removeAt(this.items, position);
     
-    !noEvent && this.onChange.fire(this);
+    if (!noEvent) { this.onChange.fire(this); }
     
     return this.getLength();
   },
@@ -46,7 +46,7 @@ ArtJs.List.prototype = {
   removeAll: function(noEvent) {
     this.items.splice(0);
     
-    !noEvent && this.onChange.fire(this);
+    if (!noEvent) { this.onChange.fire(this); }
   },
   
   getItemAt: function(position) {

@@ -42,7 +42,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   setVisible: function(e, v) {
-    v ? this.show(e) : this.hide(e);
+    if (v) { 
+      this.show(e);
+    } else {
+      this.hide(e);
+    }
   },
   
   isHidden: function(e) {
@@ -76,14 +80,14 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   getBounds: function(e, real, withoutScroll) {
     var toggle = real && this.isHidden(e);
     
-    toggle && this.show(e);
+    if (toggle) { this.show(e); }
     
     var b = e.getBoundingClientRect();
     var layout = new ArtJs.Rectangle(b.left, b.top, b.right, b.bottom);
     
-    !withoutScroll && layout.moveBy(this.getScrollPosition());
+    if (!withoutScroll) { layout.moveBy(this.getScrollPosition()); }
     
-    toggle && this.hide(e);
+    if (toggle) { this.hide(e); }
     
     return layout;
   },
@@ -97,7 +101,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   getStyle: function(e, prop) {
-    return getComputedStyle(e, null).getPropertyValue(prop);
+    return window.getComputedStyle(e, null).getPropertyValue(prop);
   },
   
   setStyle: function(e, prop, v) {
@@ -120,7 +124,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
       this.getSizeStyle(e, 'padding-top'), 
       this.getSizeStyle(e, 'padding-right'), 
       this.getSizeStyle(e, 'padding-bottom')
-    )
+    );
   },
   
   elements: function(e) {
@@ -201,7 +205,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var parent = this.parent(ref);
     var idx = this.elements(parent).indexOf(ref);
     
-    clone && (e = this.clone(e, true));
+    if (clone) { e = this.clone(e, true); }
     
     parent.replaceChild(e, ref);
     
@@ -268,7 +272,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   setEnabled: function(e, enabled) {
-    enabled ? this.enable(e) : this.disable(e);
+    if (enabled) {
+      this.enable(e);
+    } else {
+      this.disable(e);
+    }
   },
   
   serialize: function(e) {
@@ -305,7 +313,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     
     for (k = 0; k < n; k++) {
       prop = props[k];
-      (obj[prop] instanceof Object) || (obj[prop] = {});
+      if (!(obj[prop] instanceof Object)) { obj[prop] = {}; }
       obj = obj[prop];
     }
     
@@ -335,7 +343,12 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   setClass: function(e, className, add) {
-    add ? this.addClass(e, className) : this.removeClass(e, className);
+    if (add) {
+      this.addClass(e, className);
+    }
+    else {
+      this.removeClass(e, className);
+    }
   },
   
   addClass: function(e, className) {
@@ -371,7 +384,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
-    var insert = this.insert;
     
     proto.getContent = dc(this, this.getContent, true);
     proto.setContent = dc(this, this.setContent, true);

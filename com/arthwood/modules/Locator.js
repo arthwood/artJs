@@ -1,6 +1,6 @@
 ArtJs.Locator = com.arthwood.modules.Locator = {
   init: function(object) {
-    object.instances = new Array();
+    object.instances = [];
     ArtJs.ObjectUtils.extend(object, this.extensions);
   },
   

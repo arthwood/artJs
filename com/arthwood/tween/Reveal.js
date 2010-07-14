@@ -30,13 +30,17 @@ ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, fun
   beforeStart: function() {
     arguments.callee.$super();
     
-    this.inInitialState() && this.on && ArtJs.ElementUtils.show(this.element);
+    if (this.inInitialState() && this.on) {
+      ArtJs.ElementUtils.show(this.element);
+    }
   },
   
   afterFinish: function() {
     arguments.callee.$super();
     
-    this.inInitialState() && !this.on && ArtJs.ElementUtils.hide(this.element);
+    if (this.inInitialState() && !this.on) {
+      ArtJs.ElementUtils.hide(this.element);
+    }
   }
 });
 

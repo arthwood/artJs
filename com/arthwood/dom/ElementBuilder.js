@@ -33,7 +33,7 @@ ArtJs.ElementBuilder.prototype = {
     
     ArtJs.ObjectUtils.eachPair(this.attributes, sa);
     
-    !this.empty && (e.innerHTML = this.value);
+    if (!this.empty) { e.innerHTML = this.value; }
     
     return e;
   },
@@ -76,17 +76,7 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   },
   
   translateKey: function(k) {
-    var result;
-    
-    switch (k) {
-      case 'className':
-        result = 'class';
-        break;
-      default:
-        result = k;
-    }
-    
-    return result;
+    return (k == 'className') ? 'class' : k;
   },
   
   build: function(name, attributes, value, empty) {

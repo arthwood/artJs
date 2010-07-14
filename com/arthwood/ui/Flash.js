@@ -15,7 +15,7 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay) {
   
   instances.push(this);
   
-  visible && this.display();
+  if (visible) { this.display(); }
 };
 
 ArtJs.Flash.prototype = {

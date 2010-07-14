@@ -125,25 +125,25 @@ ArtJs.Ajax.ReadyState = {
 };
 
 ArtJs.Ajax.get = ArtJs.$get = function(url, data, onSuccess) {
-  return ArtJs.Ajax.request(url, data, Ajax.Methods.GET, onSuccess);
+  return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.GET, onSuccess);
 };
 
 ArtJs.Ajax.post = ArtJs.$post = function(url, data, onSuccess) {
-  return ArtJs.Ajax.request(url, data, Ajax.Methods.POST, onSuccess);
+  return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.POST, onSuccess);
 };
 
 ArtJs.Ajax.put = ArtJs.$put = function(url, data, onSuccess) {
-  return ArtJs.Ajax.request(url, data, Ajax.Methods.PUT, onSuccess);
+  return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.PUT, onSuccess);
 };
 
 ArtJs.Ajax.del = ArtJs.$del = function(url, data, onSuccess) {
-  return ArtJs.Ajax.request(url, data, Ajax.Methods.DELETE, onSuccess);
+  return ArtJs.Ajax.request(url, data, ArtJs.Ajax.Methods.DELETE, onSuccess);
 };
 
 ArtJs.Ajax.request = function(url, data, method, onSuccess) {
-  var ajax = new Ajax(url, data, method);
+  var ajax = new ArtJs.Ajax(url, data, method);
   
-  onSuccess && ajax.onSuccess.add(onSuccess);
+  if (onSuccess) { ajax.onSuccess.add(onSuccess); }
   
   ajax.request();
   

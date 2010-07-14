@@ -51,7 +51,7 @@ ArtJs.Clock.prototype = {
   },
   
   isRunning: function() {
-    return !(this.intervalId == null);
+    return (this.intervalId !== null);
   },
   
   getIdentifier: function() {

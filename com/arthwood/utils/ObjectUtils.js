@@ -11,7 +11,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   copy: function(obj) {
-    var copy = new Object();
+    var copy = {};
 
     this.copyProps(obj, copy);
 
@@ -20,12 +20,14 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   
   copyProps: function(from, to) {
     for (var i in from) {
-      to[i] = from[i];
+      if (from.hasOwnProperty(i)) {
+        to[i] = from[i];
+      }
     }
   },
   
   extend: function(obj, withObj) {
-    this.copyProps(withObj, obj)
+    this.copyProps(withObj, obj);
   },
   
   merge: function(obj, withObj) {
@@ -57,7 +59,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
 
   map: function(obj, func) {
-    var result = new Array();
+    var result = [];
     
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -69,7 +71,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   mapValue: function(obj, func) {
-    var result = new Object();
+    var result = {};
     
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -81,7 +83,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   mapKey: function(obj, func) {
-    var result = new Object();
+    var result = {};
     
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
@@ -117,7 +119,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   select: function(obj, func) {
-    var result = new Object();
+    var result = {};
     
     this.eachPair(obj, function(i, j) {
       if (func(j)) {
@@ -129,7 +131,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   selectWithKey: function(obj, func) {
-    var result = new Object();
+    var result = {};
 
     this.eachPair(obj, function(i, j) {
       if (func(i, j)) {
@@ -141,7 +143,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
   
   reject: function(obj, func) {
-    var result = new Object();
+    var result = {};
 
     this.eachPair(obj, function(i, j) {
       if (!func(j)) {
@@ -163,7 +165,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   },
 
   fromArray: function(arr) {
-    var result = new Object();
+    var result = {};
     var item;
     
     for (var i in arr) {
@@ -231,7 +233,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     
     if (typeof value == 'object') {
       if (isNaN(value.length)) {
-        result = this.toQueryStringWithPrefix(value, prefix)
+        result = this.toQueryStringWithPrefix(value, prefix);
       }
       else {
         var delegate = ArtJs.$DC(this, this.parseArrayValue, false, prefix + '[]');

@@ -16,7 +16,7 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   blank: function(str) {
-    return (str == null) || this.empty(str);
+    return (str === null) || this.empty(str);
   },
   
   empty: function(str) {
@@ -89,15 +89,15 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   
   sub: function(str, i, j) {
     var n = str.length;
-    var jZero = (j == 0);
+    var jZero = (j === 0);
     
     str += str;
     i = i % n;
     j = j % n;
-    if (i < 0) i += n;
-    if (j < 0) j += n;
-    if (jZero) j = n;
-    if (j < i) j += n;
+    if (i < 0) { i += n; }
+    if (j < 0) { j += n; }
+    if (jZero) { j = n; }
+    if (j < i) { j += n; }
     
     return str.substring(i, j);
   },

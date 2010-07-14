@@ -17,7 +17,7 @@ ArtJs.Delegate.prototype = {
       var delegate = callee.delegate;
       var args = ArtJs.$A(arguments);
       
-      callee.withSource && args.unshift(this);
+      if (callee.withSource) { args.unshift(this); }
       
       return delegate.invoke.apply(delegate, args);
     };

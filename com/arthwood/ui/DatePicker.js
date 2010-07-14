@@ -163,10 +163,16 @@ ArtJs.Calendar.prototype = {
     var value = day.getDate();
     var valid = (day.getMonth() == this.date.getMonth());
     var weekend = ArtJs.ArrayUtils.include(ArtJs.Calendar.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
+    var background;
     
-    item.style.background = valid 
-      ? (weekend ? ArtJs.Calendar.WEEKEND_CELL_BACKGROUND : ArtJs.Calendar.VALID_CELL_BACKGROUND) 
-      : ArtJs.Calendar.INVALID_CELL_BACKGROUND;
+    if (valid) {
+      background = weekend ? ArtJs.Calendar.WEEKEND_CELL_BACKGROUND : ArtJs.Calendar.VALID_CELL_BACKGROUND;
+    }
+    else {
+      background = ArtJs.Calendar.INVALID_CELL_BACKGROUND;
+    }
+    
+    item.style.background = background;
     item.className = (value == this.date.getDate()) ? 'selected' : '';
     ArtJs.ElementUtils.setClass(item, 'invalid', !valid);
     ArtJs.ElementUtils.setContent(item, value);
@@ -182,7 +188,7 @@ ArtJs.Calendar.prototype = {
     var valid = !ArtJs.ElementUtils.hasClass(item, 'invalid');
     
     if (valid) {
-      this.date.setDate(parseInt(value));
+      this.date.setDate(parseInt(value, 10));
       this.update();
       this.field.value = ArtJs.DateUtils.toDMY(this.date, ArtJs.Calendar.SEPARATOR);
       this.hide();
@@ -213,7 +219,7 @@ ArtJs.Calendar.prototype = {
   onMonthSelect: function(e) {
     var select = e.currentTarget;
     
-    this.date.setMonth(parseInt(select.value) - 1);
+    this.date.setMonth(parseInt(select.value, 10) - 1);
     
     this.update();
     
@@ -223,7 +229,7 @@ ArtJs.Calendar.prototype = {
   onYearSelect: function(e) {
     var select = e.currentTarget;
     
-    this.date.setFullYear(parseInt(select.value));
+    this.date.setFullYear(parseInt(select.value, 10));
     
     this.update();
     

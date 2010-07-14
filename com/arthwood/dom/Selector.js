@@ -23,7 +23,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   
   up: function(element, path) {
-    if (!path) return element.parentNode;
+    if (!path) {return element.parentNode;}
     
     var signature = this.getSignature(path);
     var family = this.getFamily(element);
@@ -89,7 +89,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     var signature;
     var ok;
     
-    if (n == 1) return true;
+    if (n == 1) {return true;}
     
     var immediateParent = false;
     
@@ -104,7 +104,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
         }
         while (!ok && !immediateParent && j < n);
         
-        if (!ok) return false;
+        if (!ok) {return false;}
       }
       
       immediateParent = immediateParentTag;
@@ -121,17 +121,24 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     var au = ArtJs.ArrayUtils;
     var ou = ArtJs.ObjectUtils;
     
-    return (!tag || (node.tagName.toLowerCase() == tag))
-      && (!id || node.id == id)
-      && (au.empty(classes) || au.includeAll(node.className.split(' '), classes))
-      && (ou.empty(attributes) || ou.includeAll(node.attributes, attributes));
+    return (!tag || (node.tagName.toLowerCase() == tag)) &&
+      (!id || node.id == id) &&
+      (au.empty(classes) || au.includeAll(node.className.split(' '), classes)) &&
+      (ou.empty(attributes) || ou.includeAll(node.attributes, attributes));
   },
   
   getSignature: function(selector) {
-    return (selector == '>')
-      ? selector
-      : {tag: this.getTag(selector), id: this.getId(selector), classes: this.getClasses(selector),
-        attributes: this.getAttributes(selector)};
+    if (selector == '>') {
+      return selector;
+    }
+    else {
+      return  {
+        tag: this.getTag(selector), 
+        id: this.getId(selector), 
+        classes: this.getClasses(selector), 
+        attributes: this.getAttributes(selector)
+      };
+    }
   },
   
   getFamilyDescendant: function(i) {

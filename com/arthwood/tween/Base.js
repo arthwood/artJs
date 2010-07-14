@@ -74,11 +74,11 @@ com.arthwood.tween.Base.prototype = {
   },
   
   inInitialState: function() {
-    return this.p == 0;
+    return this.p === 0;
   },
   
   inFinalState: function() {
-    return this.p == 1;
+    return this.p === 1;
   },
   
   getIdentifier: function() {

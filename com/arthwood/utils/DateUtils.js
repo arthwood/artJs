@@ -25,9 +25,9 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     separator = separator || ':';
     
-    return su.addZeros(date.getHours().toString(), 2) + 
-      separator + su.addZeros(date.getMinutes().toString(), 2) + 
-      separator + su.addZeros(date.getSeconds().toString(), 2);
+    return su.addZeros(date.getHours().toString(), 2, false) + 
+      separator + su.addZeros(date.getMinutes().toString(), 2, false) + 
+      separator + su.addZeros(date.getSeconds().toString(), 2, false);
   },
   
   toYMD: function(date, separator) {
@@ -35,9 +35,9 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     separator = separator || '/';
     
-    return date.getFullYear()
-      + separator + su.addZeros((date.getMonth() + 1).toString(), 2)
-      + separator + su.addZeros(date.getDate().toString(), 2);
+    return date.getFullYear() +
+      separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) +
+      separator + su.addZeros(date.getDate().toString(), 2, false);
   },
   
   toDMY: function(date, separator) {

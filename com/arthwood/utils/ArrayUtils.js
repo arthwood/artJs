@@ -69,13 +69,13 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     while (n-- > 0) {
       if (arr[n] === item) {
         arr.splice(n, 1);
-        if (onlyFirst) return;
+        if (onlyFirst) { return; }
       }
     }
   },
 
   arrify: function(v, idx) {
-    var args = new Array();
+    var args = [];
     var n = v.length;
 
     for (var i = idx || 0; i < n; i++) {
@@ -86,11 +86,11 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   map: function(arr, func) {
-    var result = new Array();
+    var result = [];
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        result.push(func(arr[i], parseInt(i)));
+        result.push(func(arr[i], parseInt(i, 10)));
       }
     }
 
@@ -108,7 +108,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   eachIndex: function(arr, func) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func(parseInt(i));
+        func(parseInt(i, 10));
       }
     }
   },
@@ -116,21 +116,21 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   eachPair: function(arr, func) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func(parseInt(i), arr[i]);
+        func(parseInt(i, 10), arr[i]);
       }
     }
   },
   
   inject: function(arr, init, func) {
-    var vResult = init;
+    var result = init;
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        vResult = func(vResult, arr[i], i);
+        result = func(result, arr[i], i);
       }
     }
     
-    return vResult;
+    return result;
   },
   
   flatten: function(arr) {
@@ -142,30 +142,30 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   select: function(arr, func) {
-    var vResult = new Array();
+    var result = [];
     
     this.each(arr, function(i) {
-      if (func(i)) vResult.push(i);
+      if (func(i)) { result.push(i); }
     });
     
-    return vResult;
+    return result;
   },
   
   reject: function(arr, func) {
-    var vResult = new Array();
+    var result = [];
     
     this.each(arr, function(i) {
-      if (!func(i)) vResult.push(i);
+      if (!func(i)) { result.push(i); }
     });
     
-    return vResult;
+    return result;
   },
   
   $reject: function(arr, func) {
     var n = arr.length - 1;
 
     for (var i = n; i >= 0; i--) {
-      if (func(arr[i])) arr.splice(i, 1);
+      if (func(arr[i])) { arr.splice(i, 1); }
     }
   },
   
@@ -204,7 +204,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     var item;
     
     for (var i in arr) {
-      arr.hasOwnProperty(i) && (item = arr[i]) && (func(item, i) ? point.x : point.y).push(item);
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        (func(item, i) ? point.x : point.y).push(item);
+      }
     }
     
     return point;
@@ -213,10 +216,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   uniq: function(arr, func) {
     var comparison = func || this.uniqDefault;
     var copy = arr.concat();
-    var result = new Array();
+    var result = [];
     var item, n;
     
-    while (n = copy.length) {
+    while ((n = copy.length) > 0) {
       item = copy[0];
       result.push(item);
       
@@ -259,7 +262,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   empty: function(arr) {
-    return arr.length == 0;
+    return arr.length === 0;
   },
   
   nonEmpty: function(arr) {
@@ -291,7 +294,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   print: function(arr) {
-    this.each(arr, p);
+    this.each(arr, ArtJs.p);
   },
   
   doInjection: function() {

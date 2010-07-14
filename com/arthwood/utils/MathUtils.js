@@ -1,6 +1,6 @@
 ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
   sgn: function(x) {
-    return x == 0 ? 0 : Math.abs(x) / x;
+    return x === 0 ? 0 : Math.abs(x) / x;
   },
   
   limit: function(x, a, b) {
