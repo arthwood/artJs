@@ -16,7 +16,7 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   blank: function(str) {
-    return (str === null) || this.empty(str);
+    return (str === null) || (str === undefined) || this.empty(str);
   },
   
   empty: function(str) {
