@@ -10,6 +10,8 @@ FILES = %w(
   utils/DateUtils
   utils/ElementUtils
   utils/EventUtils
+  utils/Toggler
+  utils/ClassToggler
   modules/Locator
   events/DelegateCollection
   events/CustomEvent
