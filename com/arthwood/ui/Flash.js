@@ -32,7 +32,7 @@ ArtJs.Flash.prototype = {
     this.clearDelay();
     eu.show(this.element);
     eu.centerH(this.element);
-    eu.setY(this.element, 0.2 * ArtJs.ElementUtils.getWindowSize().y);
+    eu.setY(this.element, eu.getScrollPosition().y + 0.2 * eu.getWindowSize().y);
     eu.setAlpha(this.element, 1);
     
     var code = 'Flash.find(' + this.id + ').hide()';
