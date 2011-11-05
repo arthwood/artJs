@@ -112,7 +112,7 @@ ArtJs.Calendar.prototype = {
     
     var value = this.field.value;
     
-    this.date = ArtJs.StringUtils.empty(value) ? new Date() : ArtJs.DateUtils.fromDMY(value, ArtJs.Calendar.SEPARATOR);
+    this.date = ArtJs.StringUtils.empty(value) ? new Date() : ArtJs.DateUtils.fromYMD(value, ArtJs.Calendar.SEPARATOR);
     this.update();
     ArtJs.ElementUtils.setPosition(this.element, position);
     ArtJs.ElementUtils.show(this.element);
@@ -190,7 +190,7 @@ ArtJs.Calendar.prototype = {
     if (valid) {
       this.date.setDate(parseInt(value, 10));
       this.update();
-      this.field.value = ArtJs.DateUtils.toDMY(this.date, ArtJs.Calendar.SEPARATOR);
+      this.field.value = ArtJs.DateUtils.toYMD(this.date, ArtJs.Calendar.SEPARATOR);
       this.hide();
     }
     

@@ -33,7 +33,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   toYMD: function(date, separator) {
     var su = ArtJs.StringUtils;
     
-    separator = separator || '/';
+    separator = separator || '-';
     
     return date.getFullYear() +
       separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) +
@@ -41,7 +41,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   },
   
   toDMY: function(date, separator) {
-    separator = separator || '/';
+    separator = separator || '-';
     
     var ymd = this.toYMD(date, separator);
     var arr = ymd.split(separator);
@@ -52,12 +52,21 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   },
   
   fromDMY: function(str, separator) {
-    separator = separator || '/';
+    separator = separator || '-';
     
     var arr = str.split(separator);
     var au = ArtJs.ArrayUtils;
     
     return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
+  },
+  
+  fromYMD: function(str, separator) {
+    separator = separator || '-';
+    
+    var arr = str.split(separator);
+    var au = ArtJs.ArrayUtils;
+    
+    return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
   
   minutesToHM: function(minutes, separator) {
