@@ -11,7 +11,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     this.attrToArrayDC = ArtJs.$DC(this, this.attrToArray);
     this.filterByAttributesDC = ArtJs.$DC(this, this.filterByAttributes);
     this.getSignatureDC = ArtJs.$DC(this, this.getSignature);
-    this.getElementsByClassNameDC = ArtJs.$DC(this, this.getElementsByClassName);
+    this._getElementsByClassNameDC = ArtJs.$DC(this, this._getElementsByClassName);
     
     ArtJs.$ = ArtJs.$DC(this, this.getElementById);
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
@@ -187,7 +187,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     }
     
     if (!au.empty(classes)) {
-      var elementsByClass = au.intersection(au.map(classes, this.getElementsByClassNameDC));
+      var elementsByClass = this.getElementsByClassName(classes);
       
       if (au.empty(elementsByClass)) {
         return [];
@@ -265,6 +265,12 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
   
   getElementsByClassName: function(v) {
+    var au = ArtJs.ArrayUtils;
+    
+    return au.intersection(au.map(v, this._getElementsByClassNameDC));
+  },
+  
+  _getElementsByClassName: function(v) {
     return ArtJs.$A(document.getElementsByClassName(v));
   },
   
