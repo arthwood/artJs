@@ -11,13 +11,14 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     this.attrToArrayDC = ArtJs.$DC(this, this.attrToArray);
     this.filterByAttributesDC = ArtJs.$DC(this, this.filterByAttributes);
     this.getSignatureDC = ArtJs.$DC(this, this.getSignature);
+    this.getElementsByClassNameDC = ArtJs.$DC(this, this.getElementsByClassName);
     
     ArtJs.$ = ArtJs.$DC(this, this.getElementById);
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$down = ArtJs.$DC(this, this.down);
     ArtJs.$up = ArtJs.$DC(this, this.up);
   },
-
+  
   down: function(element, path) {
     return this.getElements(path, element);
   },
@@ -186,7 +187,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     }
     
     if (!au.empty(classes)) {
-      var elementsByClass = this.getElementsByClassName(classes);
+      var elementsByClass = au.intersection(au.map(classes, this.getElementsByClassNameDC));
       
       if (au.empty(elementsByClass)) {
         return [];
@@ -247,28 +248,28 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return i.split('=');
   },
   
-  stripIdSelector: function(selector) {
-    return selector.slice(1);
+  stripIdSelector: function(v) {
+    return v.slice(1);
   },
   
-  stripClassSelector: function(selector) {
-    return selector.slice(1);
+  stripClassSelector: function(v) {
+    return v.slice(1);
   },
   
-  stripAttributeSelector: function(selector) {
-    return selector.slice(1).slice(0, selector.length - 2);
+  stripAttributeSelector: function(v) {
+    return v.slice(1).slice(0, v.length - 2);
   },
   
-  getElementById: function(id) {
-    return document.getElementById(id);
+  getElementById: function(v) {
+    return document.getElementById(v);
   },
   
-  getElementsByClassName: function(selector) {
-    return ArtJs.$A(document.getElementsByClassName(selector));
+  getElementsByClassName: function(v) {
+    return ArtJs.$A(document.getElementsByClassName(v));
   },
   
-  getElementsByTagName: function(tagName) {
-    return ArtJs.$A(document.getElementsByTagName(tagName));
+  getElementsByTagName: function(v) {
+    return ArtJs.$A(document.getElementsByTagName(v));
   },
   
   doInjection: function() {
