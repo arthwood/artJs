@@ -143,9 +143,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   
   select: function(arr, func) {
     var result = [];
+    var test = func || this.defaultTestFunction;
     
     this.each(arr, function(i) {
-      if (func(i)) { result.push(i); }
+      if (test(i)) { result.push(i); }
     });
     
     return result;
@@ -153,9 +154,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   
   reject: function(arr, func) {
     var result = [];
+    var test = func || this.defaultTestFunction;
     
     this.each(arr, function(i) {
-      if (!func(i)) { result.push(i); }
+      if (!test(i)) { result.push(i); }
     });
     
     return result;
@@ -163,15 +165,18 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   
   $reject: function(arr, func) {
     var n = arr.length - 1;
-
+    var test = func || this.defaultTestFunction;
+    
     for (var i = n; i >= 0; i--) {
-      if (func(arr[i])) { arr.splice(i, 1); }
+      if (test(arr[i])) { arr.splice(i, 1); }
     }
   },
   
   detect: function(arr, func) {
+    var test = func || this.defaultTestFunction;
+    
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && func(arr[i])) {
+      if (arr.hasOwnProperty(i) && test(arr[i])) {
         return arr[i];
       }
     }
@@ -180,8 +185,10 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   all: function(arr, func) {
+    var test = func || this.defaultTestFunction;
+    
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && !func(arr[i])) {
+      if (arr.hasOwnProperty(i) && !test(arr[i])) {
         return false;
       }
     }
@@ -190,13 +197,19 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   any: function (arr, func) {
+    var test = func || this.defaultTestFunction;
+    
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && func(arr[i])) {
+      if (arr.hasOwnProperty(i) && test(arr[i])) {
         return true;
       }
     }
     
     return false;
+  },
+  
+  defaultTestFunction: function(i) {
+    return i;
   },
   
   partition: function(arr, func) {
@@ -214,7 +227,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   uniq: function(arr, func) {
-    var comparison = func || this.uniqDefault;
+    var test = func || this.defaultTestFunction;
     var copy = arr.concat();
     var result = [];
     var item, n;
@@ -224,17 +237,13 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
       result.push(item);
       
       while (n-- > 0) {
-        if (comparison(copy[n], item)) {
+        if (test(copy[n]) == test(item)) {
           copy.splice(n, 1);
         }
       }
     }
     
     return result;
-  },
-  
-  uniqDefault: function(i, j) {
-    return i === j;
   },
   
   intersection: function(arr) {
