@@ -76,7 +76,20 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   },
   
   translateKey: function(k) {
-    return (k == 'className') ? 'class' : k;
+    var result;
+    
+    switch (k) {
+      case 'className':
+        result = 'class';
+        break;
+      case 'forField':
+        result = 'for';
+        break;
+      default:
+        result = k;
+    }
+    
+    return result;
   },
   
   build: function(name, attributes, value, empty) {

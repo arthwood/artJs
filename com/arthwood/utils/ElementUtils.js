@@ -182,7 +182,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   putAtBottom: function(e, ref) {
-    return ref.appendChild(this.clone(e, true));
+    var result = this.clone(e, true);
+    
+    ref.appendChild(result);
+    
+    return result;
   },
     
   putAtTop: function(e, ref) {
