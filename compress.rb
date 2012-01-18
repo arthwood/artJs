@@ -28,6 +28,8 @@ FILES = %w(
   ui/containers/ModalBox
   ui/DatePicker
   ui/Flash
+  ui/ScreenManager
+  ui/Tabs
   tween/Base
   tween/Fade
   tween/Reveal

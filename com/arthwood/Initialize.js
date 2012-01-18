@@ -3,9 +3,7 @@ ArtJs.globalize = function() {
   
   delete copy.globalize;
   delete copy.doInjection;
-  delete copy.navigators;
-  delete copy.setup;
-  delete copy.success;
+  delete copy.artJsNavigators;
   
   this.ObjectUtils.copyProps(copy, window);
 };
