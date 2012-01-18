@@ -3,13 +3,9 @@ ArtJs.MouseController = com.arthwood.events.MouseController = function(e) {
   this.onOut = new ArtJs.CustomEvent('MouseController::onOut');
   this.onClick = new ArtJs.CustomEvent('MouseController::onClick');
   
-  this.onOverDC = ArtJs.$DC(this, this._onOver);
-  this.onOutDC = ArtJs.$DC(this, this._onOut);
-  this.onClickDC = ArtJs.$DC(this, this._onClick);
-  
-  e.addEventListener('mouseover', this.onOverDC, false);
-  e.addEventListener('mouseout', this.onOutDC, false);
-  e.addEventListener('click', this.onClickDC, false);
+  e.addEventListener('mouseover', ArtJs.$DC(this, this._onOver), false);
+  e.addEventListener('mouseout', ArtJs.$DC(this, this._onOut), false);
+  e.addEventListener('click', ArtJs.$DC(this, this._onClick), false);
   
   this.element = e;
   this.over = false;
