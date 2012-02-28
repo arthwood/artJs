@@ -172,8 +172,15 @@ ArtJs.Calendar.prototype = {
       background = ArtJs.Calendar.INVALID_CELL_BACKGROUND;
     }
     
-    item.style.background = background;
-    item.className = (value == this.date.getDate()) ? 'selected' : '';
+    if (value == this.date.getDate()) {
+      item.style.background = null;
+      item.className = 'selected';
+    }
+    else {
+      item.style.background = background;
+      item.className = null;
+    }
+    
     ArtJs.ElementUtils.setClass(item, 'invalid', !valid);
     ArtJs.ElementUtils.setContent(item, value);
   },
