@@ -1,8 +1,10 @@
 ArtJs.ClassToggler = com.arthwood.utils.ClassToggler = function(className) {
   this.className = className;
-  this.onD = new ArtJs.$D(this, this.on);
-  this.offD = new ArtJs.$D(this, this.off);
-  this.toggler = new Toggler(this.onD, this.offD);
+  this.toggler = new ArtJs.Toggler();
+  this.toggler.onActivate.add(ArtJs.$D(this, this._onActivate));
+  this.toggler.onDeactivate.add(ArtJs.$D(this, this._onDeactivate));
+  this.onActivate = new ArtJs.CustomEvent('ClassToggler::onActivate');
+  this.onDeactivate = new ArtJs.CustomEvent('ClassToggler::onDeactivate');
 };
 
 ArtJs.ClassToggler.prototype = {
@@ -10,11 +12,19 @@ ArtJs.ClassToggler.prototype = {
     this.toggler.toggle(item);
   },
   
-  on: function(item) {
-    item.addClass(this.className);
+  _onActivate: function(t) {
+    if (t.current) t.current.addClass(this.className);
+    
+    this.onActivate.fire(this);
   },
   
-  off: function(item) {
-    item.removeClass(this.className);
+  _onDeactivate: function(t) {
+    if (t.current) t.current.removeClass(this.className);
+    
+    this.onDeactivate.fire(this);
+  },
+  
+  getCurrent: function() {
+    return this.toggler.current;
   }
 };

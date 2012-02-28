@@ -1,15 +1,15 @@
-ArtJs.Toggler = com.arthwood.utils.Toggler = function(onDelegate, offDelegate) {
+ArtJs.Toggler = com.arthwood.utils.Toggler = function() {
   this.current = null;
-  this.onDelegate = onDelegate;
-  this.offDelegate = offDelegate;
+  this.onActivate = new ArtJs.CustomEvent('Toggler::onActivate');
+  this.onDeactivate = new ArtJs.CustomEvent('Toggler::onDeactivate');
 };
 
 ArtJs.Toggler.prototype = {
   toggle: function(item) {
-    if (this.current) this.offDelegate.invoke(this.current);
+    this.onDeactivate.fire(this);
     
     this.current = item;
     
-    if (this.current) this.onDelegate.invoke(this.current);
+    this.onActivate.fire(this);
   }
 };

@@ -1,9 +1,11 @@
 ArtJs.MouseController = com.arthwood.events.MouseController = function(e) {
   this.onOver = new ArtJs.CustomEvent('MouseController::onOver');
   this.onOut = new ArtJs.CustomEvent('MouseController::onOut');
+  this.onClick = new ArtJs.CustomEvent('MouseController::onClick');
   
   e.addEventListener('mouseover', ArtJs.$DC(this, this._onOver), false);
   e.addEventListener('mouseout', ArtJs.$DC(this, this._onOut), false);
+  e.addEventListener('click', ArtJs.$DC(this, this._onClick), false);
   
   this.element = e;
   this.over = false;
@@ -24,6 +26,10 @@ ArtJs.MouseController.prototype = {
       this.over = false;
       this.onOut.fire(e, this);
     }
+  },
+  
+  _onClick: function(e) {
+    this.onClick.fire(e, this);
   },
   
   getTargets: function(e, over) {

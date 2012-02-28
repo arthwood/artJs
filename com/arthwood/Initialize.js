@@ -1,11 +1,13 @@
+ArtJs.VERSION = '1.0';
+ArtJs.CLIENT = 'FF';
 ArtJs.globalize = function() {
   var copy = this.ObjectUtils.copy(this);
   
   delete copy.globalize;
   delete copy.doInjection;
-  delete copy.navigators;
-  delete copy.setup;
-  delete copy.success;
+  delete copy.artJsNavigators;
+  delete copy.VERSION;
+  delete copy.CLIENT;
   
   this.ObjectUtils.copyProps(copy, window);
 };
