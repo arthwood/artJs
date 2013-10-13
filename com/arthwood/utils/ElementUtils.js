@@ -65,14 +65,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return i.element == e;
   },
   
-  setAlpha: function(e, v) {
-    e.style.opacity = v;
-  },
-  
-  getAlpha: function(e) {
-    return e.style.opacity;
-  },
-  
   getSize: function(e, real) {
     return this.getBounds(e, real).getSize(); 
   },
@@ -100,10 +92,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     e.style.height = h + 'px';
   },
   
-  getStyle: function(e, prop) {
-    return window.getComputedStyle(e, null).getPropertyValue(prop);
-  },
-  
   setStyle: function(e, prop, v) {
     e.style[prop] = v;
   },
@@ -116,15 +104,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var v = value.match(this.SIZE_STYLE_RE);
     
     return v && Number(v[1]) || 0;
-  },
-  
-  getPadding: function(e) {
-    return new ArtJs.Rectangle(
-      this.getSizeStyle(e, 'padding-left'), 
-      this.getSizeStyle(e, 'padding-top'), 
-      this.getSizeStyle(e, 'padding-right'), 
-      this.getSizeStyle(e, 'padding-bottom')
-    );
   },
   
   elements: function(e) {
@@ -236,16 +215,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     return this.getWindowSize().sub(this.getSize(e)).times(0.5).add(this.getScrollPosition());
   },
   
-  getDocumentSize: function() {
-    var doc = window.document;
-    
-    return new ArtJs.Point(doc.width, doc.height);
-  },
-  
-  getWindowSize: function() {
-    return new ArtJs.Point(window.innerWidth, window.innerHeight);
-  },
-  
   setPosition: function(e, p) {
     this.setX(e, p.x);
     this.setY(e, p.y);
@@ -253,10 +222,6 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   
   getPosition: function(e, withoutScroll) {
     return this.getBounds(e, false, withoutScroll).getLeftTop();
-  },
-  
-  getScrollPosition: function() {
-    return new ArtJs.Point(window.scrollX, window.scrollY);
   },
   
   setX: function(e, v) {
@@ -437,5 +402,87 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.toggleClass = dc(this, this.toggleClass, true);
     proto.setClass = dc(this, this.setClass, true);
     proto.getAttributes = dc(this, this.getAttributes, true);
+  },
+  
+  ff: {
+    setAlpha: function(e, v) {
+      e.style.opacity = v;
+    },
+
+    getAlpha: function(e) {
+      return e.style.opacity;
+    },
+
+    getStyle: function(e, prop) {
+      return window.getComputedStyle(e, null).getPropertyValue(prop);
+    },
+
+    getPadding: function(e) {
+      return new ArtJs.Rectangle(
+        this.getSizeStyle(e, 'padding-left'),
+        this.getSizeStyle(e, 'padding-top'),
+        this.getSizeStyle(e, 'padding-right'),
+        this.getSizeStyle(e, 'padding-bottom')
+      );
+    },
+
+    getDocumentSize: function() {
+      var doc = window.document;
+
+      return new ArtJs.Point(doc.width, doc.height);
+    },
+
+    getWindowSize: function() {
+      return new ArtJs.Point(window.innerWidth, window.innerHeight);
+    },
+
+    getScrollPosition: function() {
+      return new ArtJs.Point(window.scrollX, window.scrollY);
+    }
+  },
+  
+  ie: {
+    setAlpha: function(e, v) {
+      e.style.filter = 'alpha(opacity=' + 100 * v + ')';
+    },
+
+    getAlpha: function(e) {
+      var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
+
+      return Number(ArtJs.ArrayUtils.second(e.style.filter.match(re)));
+    },
+
+    getStyle: function(e, prop) {
+      return e.currentStyle[prop];
+    },
+
+    getPadding: function(e) {
+      return new ArtJs.Rectangle(
+        this.getSizeStyle(e, 'paddingLeft'),
+        this.getSizeStyle(e, 'paddingTop'),
+        this.getSizeStyle(e, 'paddingRight'),
+        this.getSizeStyle(e, 'paddingBottom')
+      )
+    },
+
+    getDocumentSize: function() {
+      var body = window.document.body;
+
+      return new ArtJs.Point(body.clientWidth, body.clientHeight);
+    },
+
+    getWindowSize: function() {
+      var de = document.documentElement;
+
+      return new ArtJs.Point(de.clientWidth, de.clientHeight);
+    },
+
+    getScrollPosition: function() {
+      var de = document.documentElement;
+
+      return new ArtJs.Point(de.scrollLeft, de.scrollTop);
+    }
   }
 };
+
+ArtJs.extendClient(com.arthwood.utils.ElementUtils);

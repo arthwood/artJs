@@ -36,7 +36,7 @@ FILES = %w(
   Finalize
 )
 
-open('art.ff.js', 'w') do |output|
+open('art.js', 'w') do |output|
   FILES.each do |i|
     open("com/arthwood/#{i}.js", 'r') do |input|
       output << input.read.gsub(/\n/, '').gsub(/\s{2,}/, '')

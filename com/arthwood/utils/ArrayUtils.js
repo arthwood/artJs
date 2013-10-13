@@ -41,10 +41,6 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     return arr[i];
   },
   
-  indexOf: function(arr, item) {
-    return arr.indexOf(item);
-  },
-  
   invertedInclude: function(item, arr) {
     return this.include(arr, item);
   },
@@ -348,7 +344,36 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.sum = dc(this, this.sum, true);
     proto.stringify = dc(this, this.stringify, true);
     proto.print = dc(this, this.print, true);
+    
+    this._doInjection();
+  },
+
+  ff: {
+    indexOf: function(arr, item) {
+      return arr.indexOf(item);
+    },
+
+    _doInjection: function() {
+    }
+  },
+  
+  ie: {
+    indexOf: function(arr, item) {
+      for (var i in arr) {
+        if (arr.hasOwnProperty(i) && arr[i] === item) {
+          return parseInt(i);
+        }
+      }
+
+      return -1;
+    },
+
+    _doInjection: function() {
+      Array.prototype.indexOf = ArtJs.$DC(this, this.indexOf, true);
+    }
   }
 };
+
+ArtJs.extendClient(ArtJs.ArrayUtils);
 
 ArtJs.$A = ArtJs.ArrayUtils.arrify;

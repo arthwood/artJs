@@ -1,6 +1,6 @@
 ArtJs.DatePicker = com.arthwood.ui.DatePicker = function(container, firstDay, yearSpan) {
   this.items = ArtJs.$$('.datepicker');
-  this.onImgDC = ArtJs.$DC(this, this.onImg);
+  this.onImgDC = ArtJs.$DC(this, this.onImg, true);
   ArtJs.ArrayUtils.each(this.items, ArtJs.$DC(this, this.initField));
   this.calendar = new ArtJs.Calendar(container, firstDay, yearSpan);
 };
@@ -16,8 +16,7 @@ ArtJs.DatePicker.prototype = {
     img.onclick = this.onImgDC;
   },
   
-  onImg: function(e) {
-    var img = e.currentTarget;
+  onImg: function(img, e) {
     var imgRT = ArtJs.ElementUtils.getBounds(img).getRightTop();
     var position = imgRT.add(new ArtJs.Point(1, 1));
     
@@ -72,15 +71,15 @@ ArtJs.Calendar = com.arthwood.ui.Calendar = function(container, firstDay, yearSp
   
   this.monthSelect = selects[0];
   this.yearSelect = selects[1];
-  this.monthSelect.onchange = ArtJs.$DC(this, this.onMonthSelect);
-  this.yearSelect.onchange = ArtJs.$DC(this, this.onYearSelect);
+  this.monthSelect.onchange = ArtJs.$DC(this, this.onMonthSelect, true);
+  this.yearSelect.onchange = ArtJs.$DC(this, this.onYearSelect, true);
   
   this.headers = s.down(this.element, 'th');
   this.rows = s.down(this.element, 'tr').slice(1);
   this.items = s.down(this.element, 'td');
   this.updateHeaderDC = ArtJs.$DC(this, this.updateHeader);
   this.updateItemDC = ArtJs.$DC(this, this.updateItem);
-  this.onItemDC = ArtJs.$DC(this, this.onItem);
+  this.onItemDC = ArtJs.$DC(this, this.onItem, true);
   this.updateRowVisibilityDC = ArtJs.$DC(this, this.updateRowVisibility);
   au.each(this.items, ArtJs.$DC(this, this.initItem));
   this.field = null;
@@ -189,8 +188,7 @@ ArtJs.Calendar.prototype = {
     item.onclick = this.onItemDC;
   },
   
-  onItem: function(e) {
-    var item = e.currentTarget;
+  onItem: function(item, e) {
     var value = ArtJs.ElementUtils.getContent(item);
     var valid = !ArtJs.ElementUtils.hasClass(item, 'invalid');
     
@@ -223,9 +221,7 @@ ArtJs.Calendar.prototype = {
     return false;
   },
   
-  onMonthSelect: function(e) {
-    var select = e.currentTarget;
-    
+  onMonthSelect: function(select, e) {
     this.date.setMonth(parseInt(select.value, 10) - 1);
     
     this.update();
@@ -233,9 +229,7 @@ ArtJs.Calendar.prototype = {
     return false;
   },
   
-  onYearSelect: function(e) {
-    var select = e.currentTarget;
-    
+  onYearSelect: function(select, e) {
     this.date.setFullYear(parseInt(select.value, 10));
     
     this.update();

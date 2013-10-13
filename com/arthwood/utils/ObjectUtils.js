@@ -18,16 +18,16 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     return copy;
   },
   
-  copyProps: function(from, to) {
-    for (var i in from) {
-      if (from.hasOwnProperty(i)) {
-        to[i] = from[i];
+  copyProps: function(source, target) {
+    for (var i in source) {
+      if (source.hasOwnProperty(i)) {
+        target[i] = source[i];
       }
     }
   },
   
-  extend: function(obj, withObj) {
-    this.copyProps(withObj, obj);
+  extend: function(target, source) {
+    this.copyProps(source, target);
   },
   
   merge: function(obj, withObj) {

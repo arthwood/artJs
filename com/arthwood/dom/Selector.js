@@ -13,6 +13,8 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     this.getSignatureDC = ArtJs.$DC(this, this.getSignature);
     this._getElementsByClassNameDC = ArtJs.$DC(this, this._getElementsByClassName);
     
+    this._init();
+    
     ArtJs.$ = ArtJs.$DC(this, this.getElementById);
     ArtJs.$$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$down = ArtJs.$DC(this, this.down);
@@ -270,10 +272,6 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return au.intersection(au.map(v, this._getElementsByClassNameDC));
   },
   
-  _getElementsByClassName: function(v) {
-    return ArtJs.$A(document.getElementsByClassName(v));
-  },
-  
   getElementsByTagName: function(v) {
     return ArtJs.$A(document.getElementsByTagName(v));
   },
@@ -287,5 +285,30 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     proto.getFamily = dc(this, this.getFamily, true);
     proto.descendantOf = dc(this, this.descendantOf, true);
     proto.selfOrDescendant = dc(this, this.selfOrDescendant, true);
+  },
+    
+  ff: {
+    _init: function() {
+    },
+    
+    _getElementsByClassName: function(v) {
+      return ArtJs.$A(document.getElementsByClassName(v));
+    }
+  },
+    
+  ie: {
+    _init: function() {
+      this.elementHasClassNameDC = ArtJs.$DC(this, this.elementHasClassName);
+    },
+    
+    _getElementsByClassName: function(v) {
+      var elements = ArtJs.ElementUtils.filterElements(ArtJs.$A(document.all));
+
+      this.elementHasClassNameDC.delegate.args = [v];
+
+      return ArtJs.ArrayUtils.select(elements, this.elementHasClassNameDC);
+    }
   }
 };
+
+ArtJs.extendClient(com.arthwood.dom.Selector);

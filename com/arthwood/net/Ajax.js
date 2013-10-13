@@ -1,8 +1,7 @@
 ArtJs.Ajax = com.arthwood.net.Ajax = function(url, data, method) {
-  this.onReadyStateChangeDelegate = ArtJs.$DC(this, this.onReadyStateChange);
-  this.onProgressDelegate = ArtJs.$DC(this, this.onProgress);
-  this.onLoadDelegate = ArtJs.$DC(this, this.onLoad);
-  this.onErrorDelegate = ArtJs.$DC(this, this.onError);
+  this.onReadyStateChangeDelegate = ArtJs.$DC(this, this.onReadyStateChange, true);
+  this.onProgressDelegate = ArtJs.$DC(this, this.onProgress, true);
+  this.onErrorDelegate = ArtJs.$DC(this, this.onError, true);
   this.onSuccess = new ArtJs.CustomEvent('Ajax:onSuccess');
   this.onFailure = new ArtJs.CustomEvent('Ajax:onFailure');
   this.onProgress = new ArtJs.CustomEvent('Ajax:onProgress');
@@ -46,8 +45,9 @@ ArtJs.Ajax = com.arthwood.net.Ajax = function(url, data, method) {
   
   this._request.onreadystatechange = this.onReadyStateChangeDelegate;
   this._request.onprogress = this.onProgressDelegate;
-  this._request.onload = this.onLoadDelegate;
   this._request.onerror = this.onErrorDelegate;
+  
+  this._init();
 };
 
 ArtJs.Ajax.prototype = {
@@ -58,21 +58,14 @@ ArtJs.Ajax.prototype = {
   abort: function() {
     this._request.abort();
   },
-
-  onReadyStateChange: function(event) {
-  },
-
-  onProgress: function(event) {
+  
+  onProgress: function(request, event) {
     var r = event.position / event.totalSize;
     
     this.onProgress.fire(this, r);
   },
   
-  onLoad: function(event) {
-    this.onSuccess.fire(this);
-  },
-  
-  onError: function(event) {
+  onError: function(request, event) {
     this.onFailure.fire(this);
   },
   
@@ -106,8 +99,35 @@ ArtJs.Ajax.prototype = {
   
   getAllResponseHeaders: function() {
     return this._request.getAllResponseHeaders();
+  },
+  
+  ff: {
+    _init: function() {
+      this.onLoadDelegate = ArtJs.$DC(this, this.onLoad, true);
+      this._request.onload = this.onLoadDelegate;
+    },
+
+    onLoad: function(request, event) {
+      this.onSuccess.fire(this);
+    },
+
+    onReadyStateChange: function(request, event) {
+    }
+  },
+
+  ie: {
+    _init: function() {
+    },
+
+    onReadyStateChange: function(request) {
+      if (this.getReadyState() == ArtJs.Ajax.ReadyState.LOADED) {
+        this.onSuccess.fire(this);
+      }
+    }
   }
 };
+
+ArtJs.extendClient(ArtJs.Ajax.prototype);
 
 ArtJs.Ajax.Methods = {
   GET: 'GET',
