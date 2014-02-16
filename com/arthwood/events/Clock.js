@@ -1,16 +1,11 @@
 ArtJs.Clock = com.arthwood.events.Clock = function(interval, repeat) {
-  this.interval = interval;
-  this.repeat = repeat;
-  this.intervalId = null;
-  this.counter = 0;
+  this._interval = interval;
+  this._repeat = repeat;
+  this._intervalId = null;
+  this._counter = 0;
+  this._tickDC = ArtJs.$DC(this, this._tick); 
   this.onChange = new ArtJs.CustomEvent('Clock:onChange');
   this.onComplete = new ArtJs.CustomEvent('Clock:onComplete');
-  
-  var instances = arguments.callee.instances;
-  
-  this.id = instances.length;
-  
-  instances.push(this);
 };
 
 ArtJs.Clock.prototype = {
@@ -19,47 +14,39 @@ ArtJs.Clock.prototype = {
     this.resume(now);
   },
   
-  tick: function() {
-    this.counter++;
+  _tick: function() {
+    this._counter++;
     this.onChange.fire(this);
   
-    if (this.counter == this.repeat) {
+    if (this._counter == this._repeat) {
       this.stop();
       this.onComplete.fire(this);
     }
   },
   
   stop: function() {
-    clearInterval(this.intervalId);
-    this.intervalId = null;
-    this.counter = 0;
+    this.pause();
+    
+    this._counter = 0;
   },
   
   pause: function() {
-    clearInterval(this.intervalId);
-    this.intervalId = null;
+    clearInterval(this._intervalId);
+    this._intervalId = null;
   },
   
   resume: function(now) {
-    var code = 'Clock.find(' + this.id + ').tick()';
-    
-    this.intervalId = setInterval(code, this.interval);
+    this._intervalId = setInterval(this._tickDC, this._interval);
     
     if (now) {
-      this.tick();
+      this._tick();
     }
   },
   
   isRunning: function() {
-    return (this.intervalId !== null);
-  },
-  
-  getIdentifier: function() {
-    return this.id;
+    return (this._intervalId !== null);
   }
 };
-
-ArtJs.Locator.init(ArtJs.Clock);
 
 ArtJs.ObjectUtils.extend(ArtJs.Clock, {
   fire: function(delegate, delay, repeat) {

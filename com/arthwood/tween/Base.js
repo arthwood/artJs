@@ -5,17 +5,16 @@ com.arthwood.tween.Base = function(e, delta, interval, eventName) {
   this.on = true;
   this.p = 0;
   this.setDelta(delta || defaults.delta);
-  this.interval = interval;
-  this.clock = new ArtJs.Clock(this.interval || defaults.interval);
-  this.clock.onChange.add(ArtJs.$D(this, this.onTick));
+  this.clock = new ArtJs.Clock(interval || defaults.interval);
+  this.clock.onChange.add(ArtJs.$D(this, this._onTick));
   this.onComplete = new ArtJs.CustomEvent(eventName);
 };
 ArtJs.ObjectUtils.extend(com.arthwood.tween.Base, {
-  DEFAULTS: {delta: 0.05, interval: 20}
+  DEFAULTS: {delta: 0.05, interval: 10}
 });
 com.arthwood.tween.Base.prototype = {
   start: function() {
-    this.beforeStart();
+    this.before();
     this.clock.start();
   },
   
@@ -23,7 +22,7 @@ com.arthwood.tween.Base.prototype = {
     this.clock.stop();
   },
   
-  onTick: function(clock) {
+  _onTick: function(clock) {
     this.p += this.delta;
     
     if (this.on && this.p < 1 || !this.on && this.p > 0) {
@@ -33,7 +32,7 @@ com.arthwood.tween.Base.prototype = {
       this.clock.stop();
       this.p = Number(this.on);
       this.update();
-      this.afterFinish();
+      this.after();
       this.onComplete.fire(this);
     }
   },
@@ -44,7 +43,7 @@ com.arthwood.tween.Base.prototype = {
   
   setDelta: function(d) {
     this.delta = d;
-    this.on = Boolean(ArtJs.MathUtils.sgn(this.delta) + 1);
+    this.on = ArtJs.MathUtils.isNonNegative(this.delta);
   },
   
   getDelta: function() {
@@ -58,11 +57,11 @@ com.arthwood.tween.Base.prototype = {
     this.clock.isRunning();
   },
   
-  beforeStart: function() {
+  before: function() {
     this.update();
   },
   
-  afterFinish: function() {
+  after: function() {
   },
   
   setInitialState: function() {
@@ -73,11 +72,11 @@ com.arthwood.tween.Base.prototype = {
     this.p = 1;
   },
   
-  inInitialState: function() {
+  isInInitialState: function() {
     return this.p === 0;
   },
   
-  inFinalState: function() {
+  isInFinalState: function() {
     return this.p === 1;
   },
   

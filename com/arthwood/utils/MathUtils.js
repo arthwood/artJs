@@ -13,5 +13,9 @@ ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
   
   stairs: function(x, a, b) {
     return Math.floor((x - a) / (b - a));
+  },
+
+  isNonNegative: function(x) {
+    return Boolean(this.sgn(x) + 1);
   }
 };

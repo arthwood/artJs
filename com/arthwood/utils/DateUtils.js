@@ -1,4 +1,8 @@
 ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
+  getTime: function() {
+    return (new Date()).getTime();
+  },
+
   monthDaysNum: function(date) {
     var d = new Date(date);
     
@@ -98,7 +102,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     var arr = ms.split(separator);
     
-    return 60*parseInt(arr[0], 10) + parseInt(arr[1], 10);
+    return 60 * parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
   
   secondsToHMS: function(s, separator) {
@@ -128,7 +132,39 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   },
+
+  miliToHMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes % 60;
+    var totalHours = (totalMinutes - minutes) / 60;
+    var hours = totalHours;
+    
+    return hours.toString() + 
+      ':' + 
+      ArtJs.StringUtils.addZeros(minutes.toString(), 2) + 
+      ':' + 
+      ArtJs.StringUtils.addZeros(seconds.toString(), 2) + 
+      '.' + 
+      ArtJs.StringUtils.addZeros(mili.toString(), 3);
+  },
   
+  miliToMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes;
+  
+    return minutes.toString() + 
+      ':' +
+      ArtJs.StringUtils.addZeros(seconds.toString(), 2) + 
+      '.' +
+      ArtJs.StringUtils.addZeros(mili.toString(), 3);
+  },
+
   doInjection: function() {
     var proto = Date.prototype;
     var dc = ArtJs.$DC;

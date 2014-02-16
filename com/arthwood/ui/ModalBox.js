@@ -1,4 +1,4 @@
-ArtJs.ModalBox = com.arthwood.ui.containers.ModalBox = function(element, size, draggable) {
+ArtJs.ModalBox = com.arthwood.ui.ModalBox = function(element, size, draggable) {
   this.element = element;
   this.size = size;
   this.elementStyle = this.element.style;

@@ -1,4 +1,4 @@
-ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, function(e, delta, interval) {
+ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.ClassUtils.extend(com.arthwood.tween.Base, function(e, delta, interval) {
   arguments.callee.$super(e, delta, interval, 'Reveal:onComplete');
   
   var eu = ArtJs.ElementUtils;
@@ -27,24 +27,24 @@ ArtJs.Reveal = com.arthwood.tween.Reveal = ArtJs.$E(com.arthwood.tween.Base, fun
     s.paddingBottom = p3 + 'px';
   },
   
-  beforeStart: function() {
+  before: function() {
     arguments.callee.$super();
     
-    if (this.inInitialState() && this.on) {
+    if (this.isInInitialState() && this.on) {
       ArtJs.ElementUtils.show(this.element);
     }
   },
   
-  afterFinish: function() {
+  after: function() {
     arguments.callee.$super();
     
-    if (this.inInitialState() && !this.on) {
+    if (this.isInInitialState() && !this.on) {
       ArtJs.ElementUtils.hide(this.element);
     }
   }
 });
 
-ArtJs.Locator.init(ArtJs.Reveal);
+ArtJs.Locator.register(ArtJs.Reveal);
 
 ArtJs.ObjectUtils.extend(ArtJs.Reveal, {
   doInjection: function() {

@@ -1,5 +1,5 @@
 ArtJs.DatePicker = com.arthwood.ui.DatePicker = function(container, firstDay, yearSpan) {
-  this.items = ArtJs.$$('.datepicker');
+  this.items = ArtJs.$('.datepicker');
   this.onImgDC = ArtJs.$DC(this, this.onImg, true);
   ArtJs.ArrayUtils.each(this.items, ArtJs.$DC(this, this.initField));
   this.calendar = new ArtJs.Calendar(container, firstDay, yearSpan);
@@ -7,7 +7,7 @@ ArtJs.DatePicker = com.arthwood.ui.DatePicker = function(container, firstDay, ye
 
 ArtJs.DatePicker.prototype = {
   initField: function(item) {
-    var input = ArtJs.ArrayUtils.first(ArtJs.Selector.down(item, 'input'));
+    var input = ArtJs.ArrayUtils.first(ArtJs.Selector.find(item, 'input'));
     var img = ArtJs.ElementUtils.putAfter(
       ArtJs.$C('img', {src: '/images/datepicker/cal.gif', alt: 'calendar_icon', className: 'datepicker'}), input
     );
@@ -58,25 +58,25 @@ ArtJs.Calendar = com.arthwood.ui.Calendar = function(container, firstDay, yearSp
   
   ArtJs.ElementUtils.putAtBottom(ArtJs.$P(element), container);
   
-  this.element = ArtJs.$$('.datepicker_calendar').first();
+  this.element = ArtJs.$('.datepicker_calendar').first();
   
-  var arrows = s.down(this.element, '.nav a');
+  var arrows = s.find(this.element, '.nav a');
   
   this.prevMonth = arrows[0];
   this.nextMonth = arrows[1];
   this.prevMonth.onclick = ArtJs.$DC(this, this.onPrevMonth);
   this.nextMonth.onclick = ArtJs.$DC(this, this.onNextMonth);
   
-  var selects = s.down(this.element, '.nav select');
+  var selects = s.find(this.element, '.nav select');
   
   this.monthSelect = selects[0];
   this.yearSelect = selects[1];
   this.monthSelect.onchange = ArtJs.$DC(this, this.onMonthSelect, true);
   this.yearSelect.onchange = ArtJs.$DC(this, this.onYearSelect, true);
   
-  this.headers = s.down(this.element, 'th');
-  this.rows = s.down(this.element, 'tr').slice(1);
-  this.items = s.down(this.element, 'td');
+  this.headers = s.find(this.element, 'th');
+  this.rows = s.find(this.element, 'tr').slice(1);
+  this.items = s.find(this.element, 'td');
   this.updateHeaderDC = ArtJs.$DC(this, this.updateHeader);
   this.updateItemDC = ArtJs.$DC(this, this.updateItem);
   this.onItemDC = ArtJs.$DC(this, this.onItem, true);
@@ -111,7 +111,7 @@ ArtJs.Calendar.prototype = {
     
     var value = this.field.value;
     
-    this.date = ArtJs.StringUtils.empty(value) ? new Date() : ArtJs.DateUtils.fromYMD(value, ArtJs.Calendar.SEPARATOR);
+    this.date = ArtJs.StringUtils.isEmpty(value) ? new Date() : ArtJs.DateUtils.fromYMD(value, ArtJs.Calendar.SEPARATOR);
     this.update();
     ArtJs.ElementUtils.setPosition(this.element, position);
     ArtJs.ElementUtils.show(this.element);
@@ -161,7 +161,7 @@ ArtJs.Calendar.prototype = {
     
     var value = day.getDate();
     var valid = (day.getMonth() == this.date.getMonth());
-    var weekend = ArtJs.ArrayUtils.include(ArtJs.Calendar.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
+    var weekend = ArtJs.ArrayUtils.includes(ArtJs.Calendar.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
     var background;
     
     if (valid) {

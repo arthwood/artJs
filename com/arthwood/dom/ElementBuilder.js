@@ -1,13 +1,15 @@
-ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = function(name, attributes, value, empty) {
+ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = function(name, attributes, value, isEmpty) {
   this.name = name;
   this.attributes = attributes;
   this.value = value;
-  this.empty = Boolean(empty);
+  this.isEmpty = Boolean(isEmpty);
 };
 
 ArtJs.ElementBuilder.prototype = {
   toString: function() {
-    var attributes = ArtJs.ObjectUtils.empty(this.attributes) ? '' : (' ' + this.attributesString() + ' ');
+    var attributes = this.attributes && !ArtJs.ObjectUtils.isEmpty(this.attributes) 
+      ? (' ' + this.attributesString() + ' ') 
+      : '';
     var part;
     
     if (this.value) {
@@ -33,7 +35,7 @@ ArtJs.ElementBuilder.prototype = {
     
     ArtJs.ObjectUtils.eachPair(this.attributes, sa);
     
-    if (!this.empty) { e.innerHTML = this.value; }
+    if (this.value && !this.isEmpty) { e.innerHTML = this.value; }
     
     return e;
   },
@@ -41,27 +43,32 @@ ArtJs.ElementBuilder.prototype = {
   attributesString: function() {
     return ArtJs.ArrayUtils.map(
       ArtJs.ObjectUtils.toArray(this.attributes), 
-      ArtJs.ElementBuilder.attributePairToStringDC
+      ArtJs.ElementBuilder.attributePairToString, 
+      ArtJs.ElementBuilder
     ).join(' ');
   }
 };
 
 ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   init: function() {
+    ArtJs.$E = ArtJs.$DC(this, this.getElement);
     ArtJs.$B = ArtJs.$DC(this, this.build);
     ArtJs.$P = ArtJs.$DC(this, this.parse);
     ArtJs.$C = ArtJs.$DC(this, this.create);
-    this.attributePairToStringDC = ArtJs.$DC(this, this.attributePairToString);
+  },
+
+  getElement: function(name, attributes, value, empty) {
+    return (new this(name, attributes, value, empty)).getElement();
   },
   
-  getElement: function(i) {
+  _getElement: function(i) {
     return arguments.callee.element;
   },
   
   getCollection: function(n, element) {
-    this.getElement.element = element;
+    this._getElement.element = element;
     
-    return ArtJs.ArrayUtils.build(n, this.getElement).join('');
+    return ArtJs.ArrayUtils.build(n, this._getElement).join('');
   },
   
   setAttribute: function(k, v) {
@@ -108,5 +115,3 @@ ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
     return this.parse(this.build(name, attributes, value, empty));
   }
 });
-
-ArtJs.ElementBuilder.init();

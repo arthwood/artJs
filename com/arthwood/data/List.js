@@ -81,7 +81,7 @@ ArtJs.List.prototype = {
   },
   
   hasItem: function(item) {
-    return ArtJs.ArrayUtils.include(this.items, item);
+    return ArtJs.ArrayUtils.includes(this.items, item);
   },
   
   setPointerAtItem: function(item) {
@@ -132,9 +132,9 @@ ArtJs.List.prototype = {
   getLast: function() {
     return ArtJs.ArrayUtils.last(this.items);
   },
-  
-  empty: function() {
-    return ArtJs.ArrayUtils.empty(this.items);
+
+  isEmpty: function() {
+    return ArtJs.ArrayUtils.isEmpty(this.items);
   },
   
   isLast: function() {

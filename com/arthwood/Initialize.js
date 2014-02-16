@@ -1,25 +1,18 @@
 var ArtJs = {
-  CLIENT_MAPPING: {
-    'Microsoft Internet Explorer': 'ie',
-    'Netscape': 'ff',
-    'Opera': 'ff'
-  },
+  VERSION: '2.0',
   
-  VERSION: '1.0',
+  name: 'ArtJs',
   
   globalize: function() {
     var copy = this.ObjectUtils.copy(this);
-  
+    
     delete copy.globalize;
     delete copy.doInjection;
-    delete copy.extendClient;
-    delete copy.CLIENT_MAPPING;
     delete copy.VERSION;
-    delete copy.CLIENT;
   
     this.ObjectUtils.copyProps(copy, window);
   },
-
+  
   doInjection: function() {
     this.ArrayUtils.doInjection();
     this.ObjectUtils.doInjection();
@@ -29,16 +22,9 @@ var ArtJs = {
     this.ElementUtils.doInjection();
     this.EventUtils.doInjection();
     this.Delegate.doInjection();
-    com.arthwood.tween.Reveal.doInjection();
-    com.arthwood.tween.Fade.doInjection();
-  },
-  
-  extendClient: function(obj) {
-    this.ObjectUtils.extend(obj, obj[this.CLIENT]);
+    this.Blind.doInjection();
   }
 };
-
-ArtJs.CLIENT = ArtJs.CLIENT_MAPPING[navigator.appName];
 
 var com = {
   arthwood: {
@@ -48,10 +34,12 @@ var com = {
     math: {},
     modules: {},
     net: {},
-    tween: {},
-    ui: {
-      containers: {}
+    spec: {
+      matchers: {}
     },
+    transition: {},
+    tween: {},
+    ui: {},
     utils: {}
   }
 };

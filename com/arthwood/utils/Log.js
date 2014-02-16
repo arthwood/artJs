@@ -1,1 +1,5 @@
-ArtJs.p = window.console ? window.console.log : alert;
+ArtJs.p = function() {
+  if (console) {
+    console.log(ArtJs.$A(arguments));
+  }
+};

@@ -4,18 +4,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   MAIN_OBJ_RE: /^\w+/,
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
+  BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
   
   init: function() {
-    this.getContentDC = ArtJs.$DC(this, this.getContent);
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
-    this.isElementDC = ArtJs.$DC(this, this.isElement);
-    this.serializeInjectDC = ArtJs.$DC(this, this.serializeInject);
-    this.mapSubDC = ArtJs.$DC(this, this.mapSub);
-    this.selectCheckedDC = ArtJs.$DC(this, this.selectChecked);
-    this.mapAttributeDC = ArtJs.$DC(this, this.mapAttribute);
-    this.showDC = ArtJs.$DC(this, this.show);
-    this.hideDC = ArtJs.$DC(this, this.hide);
-    this.isHiddenDC = ArtJs.$DC(this, this.isHidden);
+    ArtJs.$insert = ArtJs.$DC(this, this.insert);
   },
   
   show: function(e) {
@@ -95,6 +88,30 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   setStyle: function(e, prop, v) {
     e.style[prop] = v;
   },
+
+  extendStyle: function(e, style) {
+    ArtJs.ObjectUtils.extend(e.style, style);
+  },
+
+  transitionStyle: function(prop, duration, type, delay) {
+    return this._effectStyle(new ArtJs.Point('transition', this._getTransitionStyleValue(prop, duration, type, delay)));  
+  },
+
+  _getTransitionStyleValue: function(prop, duration, type, delay) {
+    return [prop, duration + 's', type, delay + 's'].join(' ');
+  },
+  
+  _effectStyle: function(data) {
+    this._browserMap.data = data;
+
+    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
+  },
+
+  _browserMap: function(browser) {
+    var data = arguments.callee.data;
+
+    return [browser + data.x, data.y];
+  },
   
   getSizeStyle: function(e, prop) {
     return this.getSizeStyleValue(this.getStyle(e, prop));
@@ -111,7 +128,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   filterElements: function(items) {
-    return ArtJs.ArrayUtils.select(items, this.isElementDC);
+    return ArtJs.ArrayUtils.select(items, this.isElement, this);
   },
   
   isElement: function(e) {
@@ -158,6 +175,10 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   
   clone: function(e, deep) {
     return e.cloneNode(deep);
+  },
+
+  insert: function(e, el) {
+    return this.putAtBottom(el, e);
   },
   
   putAtBottom: function(e, ref) {
@@ -251,16 +272,15 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   serialize: function(e) {
     var s = ArtJs.Selector;
     var au = ArtJs.ArrayUtils;
-    var textfields = s.down(e, 'input[type=text]');
-    var checkboxes = au.select(s.down(e, 'input[type=checkbox]'), this.selectCheckedDC);
-    var radios = au.select(s.down(e, 'input[type=radio]'), this.selectCheckedDC);
+    var textfields = s.find(e, 'input[type=text]');
+    var checkboxes = au.select(s.find(e, 'input[type=checkbox]'), this.selectChecked, this);
+    var radios = au.select(s.down(e, 'input[type=radio]'), this.selectChecked, this);
     var selects = s.down(e, 'select');
     var textareas = s.down(e, 'textarea');
     var hiddenfields = s.down(e, 'input[type=hidden]');
     var inputs = au.flatten([textfields, checkboxes, radios, selects, textareas, hiddenfields]);
-    var result = au.inject(inputs, {}, this.serializeInjectDC);
     
-    return result;
+    return au.inject(inputs, {}, this.serializeInject, this);
   },
   
   selectChecked: function(i) {
@@ -272,7 +292,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     var value = i.value;
     var main = ArtJs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && ArtJs.ArrayUtils.map(ArtJs.$A(subobjectMatches), this.mapSubDC) || [];
+    var props = subobjectMatches && ArtJs.ArrayUtils.map(ArtJs.$A(subobjectMatches), this.mapSub, this) || [];
     
     props.unshift(main);
     
@@ -304,7 +324,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   hasClass: function(e, className) {
-    return ArtJs.ArrayUtils.include(this.getClasses(e), className);
+    return ArtJs.ArrayUtils.includes(this.getClasses(e), className);
   },
   
   getClasses: function(e) {
@@ -343,146 +363,120 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   getAttributes: function(e) {
-    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttributeDC));
+    return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(ArtJs.$A(e.attributes), this.mapAttribute, this));
   },
   
   mapAttribute: function(i) {
     return [i.name, i.value];
   },
+
+  setAlpha: function(e, v) {
+    e.style.opacity = v;
+    e.style.filter = 'alpha(opacity=' + 100 * v + ')';
+  },
+
+  getAlpha: function(e) {
+    if (e.style.filter) {
+      var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
+
+      return Number(ArtJs.ArrayUtils.second(e.style.filter.match(re)));
+    }
+    else {
+      return e.style.opacity;
+    }
+  },
+
+  getStyle: function(e, prop) {
+    if (window.getComputedStyle) {
+      return window.getComputedStyle(e, null).getPropertyValue(prop);
+    }
+    else {
+      return e.currentStyle[prop];
+    }
+  },
+
+  getPadding: function(e) {
+    return new ArtJs.Rectangle(
+      this.getSizeStyle(e, 'padding-left') || this.getSizeStyle(e, 'paddingLeft'),
+      this.getSizeStyle(e, 'padding-top') || this.getSizeStyle(e, 'paddingTop'),
+      this.getSizeStyle(e, 'padding-right') || this.getSizeStyle(e, 'paddingRight'),
+      this.getSizeStyle(e, 'padding-bottom') || this.getSizeStyle(e, 'paddingBottom')
+    );
+  },
+
+  getDocumentSize: function() {
+    var doc = window.document;
+    var body = doc.body;
+
+    return new ArtJs.Point(body.clientWidth || doc.width, body.clientHeight || doc.height);
+  },
+
+  getWindowSize: function() {
+    var de = document.documentElement;
+
+    return new ArtJs.Point(de.clientWidth || window.innerWidth, de.clientHeight || window.innerHeight);
+  },
+
+  getScrollPosition: function() {
+    var de = document.documentElement;
+    
+    return new ArtJs.Point(de.scrollLeft || window.scrollX, de.scrollTop || window.scrollY);
+  },
   
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;
-    
-    proto.getContent = dc(this, this.getContent, true);
-    proto.setContent = dc(this, this.setContent, true);
-    proto.show = dc(this, this.show, true);
-    proto.hide = dc(this, this.hide, true);
-    proto.toggle = dc(this, this.toggle, true);
-    proto.setVisible = dc(this, this.setVisible, true);
-    proto.isHidden = dc(this, this.isHidden, true);
-    proto.setAlpha = dc(this, this.setAlpha, true);
-    proto.getAlpha = dc(this, this.getAlpha, true);
-    proto.getSize = dc(this, this.getSize, true);
-    proto.getBounds = dc(this, this.getBounds, true);
-    proto.setWidth = dc(this, this.setWidth, true);
-    proto.setHeight = dc(this, this.setHeight, true);
-    proto.getStyle = dc(this, this.getStyle, true);
-    proto.setStyle = dc(this, this.setStyle, true);
-    proto.getPadding = dc(this, this.getPadding, true);
-    proto.elements = dc(this, this.elements, true);
-    proto.isElement = dc(this, this.isElement, true);
-    proto.remove = dc(this, this.remove, true);
-    proto.parent = dc(this, this.parent, true);
-    proto.firstElement = dc(this, this.firstElement, true);
-    proto.lastElement = dc(this, this.lastElement, true);
-    proto.prev = dc(this, this.prev, true);
-    proto.next = dc(this, this.next, true);
+
+    proto.addClass = dc(this, this.addClass, true);
+    proto.center = dc(this, this.center, true);
+    proto.centerH = dc(this, this.centerH, true);
+    proto.centerV = dc(this, this.centerV, true);
     proto.clone = dc(this, this.clone, true);
+    proto.disable = dc(this, this.disable, true);
+    proto.elements = dc(this, this.elements, true);
+    proto.enable = dc(this, this.enable, true);
+    proto.extendStyle = dc(this, this.extendStyle, true);
+    proto.firstElement = dc(this, this.firstElement, true);
+    proto.getAlpha = dc(this, this.getAlpha, true);
+    proto.getAttributes = dc(this, this.getAttributes, true);
+    proto.getBounds = dc(this, this.getBounds, true);
+    proto.getClasses = dc(this, this.getClasses, true);
+    proto.getContent = dc(this, this.getContent, true);
+    proto.getPadding = dc(this, this.getPadding, true);
+    proto.getPosition = dc(this, this.getPosition, true);
+    proto.getSize = dc(this, this.getSize, true);
+    proto.getStyle = dc(this, this.getStyle, true);
+    proto.hasClass = dc(this, this.hasClass, true);
+    proto.hide = dc(this, this.hide, true);
+    proto.insert = dc(this, this.insert, true);
+    proto.isElement = dc(this, this.isElement, true);
+    proto.isHidden = dc(this, this.isHidden, true);
+    proto.lastElement = dc(this, this.lastElement, true);
+    proto.next = dc(this, this.next, true);
+    proto.parent = dc(this, this.parent, true);
+    proto.prev = dc(this, this.prev, true);
     proto.putAtBottom = dc(this, this.putAtBottom, true);
     proto.putAtTop = dc(this, this.putAtTop, true);
     proto.putAfter = dc(this, this.putAfter, true);
     proto.putBefore = dc(this, this.putBefore, true);
+    proto.remove = dc(this, this.remove, true);
+    proto.removeClass = dc(this, this.removeClass, true);
+    proto.removeStyle = dc(this, this.removeStyle, true);
     proto.replace = dc(this, this.replace, true);
-    proto.getPosition = dc(this, this.getPosition, true);
+    proto.show = dc(this, this.show, true);
+    proto.serialize = dc(this, this.serialize, true);
+    proto.setAlpha = dc(this, this.setAlpha, true);
+    proto.setClass = dc(this, this.setClass, true);
+    proto.setContent = dc(this, this.setContent, true);
+    proto.setEnabled = dc(this, this.setEnabled, true);
+    proto.setHeight = dc(this, this.setHeight, true);
     proto.setPosition = dc(this, this.setPosition, true);
+    proto.setStyle = dc(this, this.setStyle, true);
+    proto.setVisible = dc(this, this.setVisible, true);
+    proto.setWidth = dc(this, this.setWidth, true);
     proto.setX = dc(this, this.setX, true);
     proto.setY = dc(this, this.setY, true);
-    proto.center = dc(this, this.center, true);
-    proto.centerH = dc(this, this.centerH, true);
-    proto.centerV = dc(this, this.centerV, true);
-    proto.enable = dc(this, this.enable, true);
-    proto.disable = dc(this, this.disable, true);
-    proto.setEnabled = dc(this, this.setEnabled, true);
-    proto.serialize = dc(this, this.serialize, true);
-    proto.hasClass = dc(this, this.hasClass, true);
-    proto.getClasses = dc(this, this.getClasses, true);
-    proto.addClass = dc(this, this.addClass, true);
-    proto.removeClass = dc(this, this.removeClass, true);
+    proto.toggle = dc(this, this.toggle, true);
     proto.toggleClass = dc(this, this.toggleClass, true);
-    proto.setClass = dc(this, this.setClass, true);
-    proto.getAttributes = dc(this, this.getAttributes, true);
-  },
-  
-  ff: {
-    setAlpha: function(e, v) {
-      e.style.opacity = v;
-    },
-
-    getAlpha: function(e) {
-      return e.style.opacity;
-    },
-
-    getStyle: function(e, prop) {
-      return window.getComputedStyle(e, null).getPropertyValue(prop);
-    },
-
-    getPadding: function(e) {
-      return new ArtJs.Rectangle(
-        this.getSizeStyle(e, 'padding-left'),
-        this.getSizeStyle(e, 'padding-top'),
-        this.getSizeStyle(e, 'padding-right'),
-        this.getSizeStyle(e, 'padding-bottom')
-      );
-    },
-
-    getDocumentSize: function() {
-      var doc = window.document;
-
-      return new ArtJs.Point(doc.width, doc.height);
-    },
-
-    getWindowSize: function() {
-      return new ArtJs.Point(window.innerWidth, window.innerHeight);
-    },
-
-    getScrollPosition: function() {
-      return new ArtJs.Point(window.scrollX, window.scrollY);
-    }
-  },
-  
-  ie: {
-    setAlpha: function(e, v) {
-      e.style.filter = 'alpha(opacity=' + 100 * v + ')';
-    },
-
-    getAlpha: function(e) {
-      var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
-
-      return Number(ArtJs.ArrayUtils.second(e.style.filter.match(re)));
-    },
-
-    getStyle: function(e, prop) {
-      return e.currentStyle[prop];
-    },
-
-    getPadding: function(e) {
-      return new ArtJs.Rectangle(
-        this.getSizeStyle(e, 'paddingLeft'),
-        this.getSizeStyle(e, 'paddingTop'),
-        this.getSizeStyle(e, 'paddingRight'),
-        this.getSizeStyle(e, 'paddingBottom')
-      )
-    },
-
-    getDocumentSize: function() {
-      var body = window.document.body;
-
-      return new ArtJs.Point(body.clientWidth, body.clientHeight);
-    },
-
-    getWindowSize: function() {
-      var de = document.documentElement;
-
-      return new ArtJs.Point(de.clientWidth, de.clientHeight);
-    },
-
-    getScrollPosition: function() {
-      var de = document.documentElement;
-
-      return new ArtJs.Point(de.scrollLeft, de.scrollTop);
-    }
   }
 };
-
-ArtJs.extendClient(com.arthwood.utils.ElementUtils);

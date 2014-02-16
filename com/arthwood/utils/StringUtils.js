@@ -1,7 +1,5 @@
 ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
-  init: function() {
-    this.parseJsonValueDC = ArtJs.$DC(this, this.parseJsonValue);
-  },
+  name: 'StringUtils',
   
   first: function(str) {
     return str.substr(0, 1);
@@ -14,17 +12,17 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   strip: function(str) {
     return str.replace(/\s/g, '');
   },
-  
-  blank: function(str) {
-    return (str === null) || (str === undefined) || this.empty(str);
+
+  isBlank: function(str) {
+    return (str === null) || (str === undefined) || this.isEmpty(str);
   },
-  
-  empty: function(str) {
+
+  isEmpty: function(str) {
     return this.strip(str) == '';
   },
   
   nullifyEmpty: function(str) {
-    return this.empty(str) ? null : str;
+    return this.isEmpty(str) ? null : str;
   },
   
   toS: function(str) {
@@ -32,13 +30,13 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   countPattern: function(str, pattern) {
-    return str.match(pattern, 'g').length;
+    return str.match(new RegExp(pattern, 'g')).length;
   },
   
   align: function(str, n, char, left) {
-    var zeros = this.getMultiPattern(char, n - str.length);
+    var c = this.getMultiPattern(char, n - str.length);
     
-    return left ? str + zeros : zeros + str;
+    return left ? str + c : c + str;
   },
   
   getMultiPattern: function (pattern, n) {
@@ -63,8 +61,40 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
     return this.align(str, n, '0', left);
   },
   
-  truncate: function(text, length, end) {
-    return text.substr(0, length) + ((text.length > length)? (end || '...') : '');
+  truncate: function(text, length, onlyWords, end) {
+    if (text.length > length) {
+      var shrinkedText = text.substr(0, length);
+      
+      if (onlyWords) {
+        if (text[length] == ' ') {
+          return this._truncation(shrinkedText, end);
+        }
+        else {
+          var lastSpace = shrinkedText.lastIndexOf(' ');
+
+          if (lastSpace > -1) {
+            return this._subtruncation(text, lastSpace, end);
+          }
+          else {
+            return this._subtruncation(text, length, end);
+          }
+        }
+      }
+      else {
+        return this._subtruncation(text, length, end);
+      }
+    }
+    else {
+      return text;
+    }
+  },
+
+  _subtruncation: function(text, index, end) {
+    return this._truncation(text.substr(0, index), end);
+  },
+  
+  _truncation: function(text, end) {
+    return text + (end || '...');
   },
   
   singularOrPlural: function(text, n) {
@@ -80,11 +110,16 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   capitalizeUnderscored: function(str) {
-    return this.stripSpaces(this.capitalize(str.replace('_', ' ')));
+    return this.strip(this.capitalize(str.replace(new RegExp('_', 'g'), ' ')));
   },
 
-  trim: function(str) {
-    return str.replace(/^\s+/, '').replace(/\s+$/, '');
+  trim: function(str, character, replacement) {
+    var c = character || ' ';
+    var r = replacement || '';
+    
+    return str
+      .replace(new RegExp('^' + c + '+'), r)
+      .replace(new RegExp(c + '+$'), r);
   },
   
   sub: function(str, i, j) {
@@ -103,37 +138,30 @@ ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
   },
   
   toJson: function(str) {
-    return ArtJs.ObjectUtils.mapValue(eval('(' + str + ')'), this.parseJsonValueDC);
-  },
-  
-  parseJsonValue: function(i) {
-    return (typeof(i) == 'string' && this.first(i) == '{' && this.last(i) == '}') ? this.toJson(i) : i;
+    return eval('(' + str + ')');
   },
   
   doInjection: function() {
     var proto = String.prototype;
     var dc = ArtJs.$DC;
     
-    proto.first = dc(this, this.first, true);
-    proto.last = dc(this, this.last, true);
-    proto.stripSpaces = dc(this, this.stripSpaces, true);
-    proto.stripTabs = dc(this, this.stripTabs, true);
-    proto.stripNewLines = dc(this, this.stripNewLines, true);
-    proto.strip = dc(this, this.strip, true);
-    proto.blank = dc(this, this.blank, true);
-    proto.empty = dc(this, this.empty, true);
-    proto.nullifyEmpty = dc(this, this.nullifyEmpty, true);
-    proto.toS = dc(this, this.toS, true);
-    proto.countPattern = dc(this, this.countPattern, true);
     proto.align = dc(this, this.align, true);
-    proto.getMultiPattern = dc(this, this.getMultiPattern, true);
-    proto.truncate = dc(this, this.truncate, true);
-    proto.singularOrPlural = dc(this, this.singularOrPlural, false);
+    proto.isBlank = dc(this, this.isBlank, true);
     proto.capitalize = dc(this, this.capitalize, true);
-    proto.capitalizeWord = dc(this, this.capitalizeWord, true);
     proto.capitalizeUnderscored = dc(this, this.capitalizeUnderscored, true);
-    proto.trim = dc(this, this.trim, true);
+    proto.capitalizeWord = dc(this, this.capitalizeWord, true);
+    proto.countPattern = dc(this, this.countPattern, true);
+    proto.first = dc(this, this.first, true);
+    proto.getMultiPattern = dc(this, this.getMultiPattern, true);
+    proto.isEmpty = dc(this, this.isEmpty, true);
+    proto.last = dc(this, this.last, true);
+    proto.nullifyEmpty = dc(this, this.nullifyEmpty, true);
+    proto.singularOrPlural = dc(this, this.singularOrPlural, false);
+    proto.strip = dc(this, this.strip, true);
     proto.sub = dc(this, this.sub, true);
+    proto.toS = dc(this, this.toS, true);
     proto.toJson = dc(this, this.toJson, true);
+    proto.truncate = dc(this, this.truncate, true);
+    proto.trim = dc(this, this.trim, true);
   }
 };

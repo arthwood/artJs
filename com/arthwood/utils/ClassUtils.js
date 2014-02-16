@@ -1,9 +1,6 @@
 ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
   init: function() {
-    this.eachInstanceMethodDC = ArtJs.$DC(this, this.eachInstanceMethod);
-    this.eachClassMethodDC = ArtJs.$DC(this, this.eachClassMethod);
-    
-    ArtJs.$E = ArtJs.$DC(this, this.extend);
+    ArtJs.$X = ArtJs.$DC(this, this.extend);
   },
   
   extend: function(base, constr, instanceMethods, classMethods) {
@@ -27,19 +24,19 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
     
     this.builder = builder;
     
-    ArtJs.ObjectUtils.eachPair(instanceMethods, this.eachInstanceMethodDC);
-    ArtJs.ObjectUtils.eachPair(classMethods, this.eachClassMethodDC);
+    ArtJs.ObjectUtils.eachPair(instanceMethods, this._eachInstanceMethod, this);
+    ArtJs.ObjectUtils.eachPair(classMethods, this._eachClassMethod, this);
     
     return builder;
   },
   
-  eachInstanceMethod: function(k, v) {
+  _eachInstanceMethod: function(k, v) {
     var b = this.builder;
     
     this.defineOverride(k, v, b.prototype, b.base.prototype[k]);
   },
   
-  eachClassMethod: function(k, v) {
+  _eachClassMethod: function(k, v) {
     var b = this.builder;
     var base = b.base;
     
@@ -66,5 +63,3 @@ ArtJs.ClassUtils = com.arthwood.utils.ClassUtils = {
     }
   }
 };
-
-ArtJs.ClassUtils.init();

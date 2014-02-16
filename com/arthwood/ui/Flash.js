@@ -1,7 +1,7 @@
 ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay, yPosition) {
   this.element = element;
-  this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.element, 'img'));
-  this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.down(this.element, 'span'));
+  this.image = ArtJs.ArrayUtils.first(ArtJs.Selector.find(this.element, 'img'));
+  this.span = ArtJs.ArrayUtils.first(ArtJs.Selector.find(this.element, 'span'));
   this.path = path;
   this.fade = new ArtJs.Fade(this.element, - 0.05);
   this.fade.onComplete.add(ArtJs.$D(this, this.onFadeComplete));
@@ -9,7 +9,7 @@ ArtJs.Flash = com.arthwood.ui.Flash = function(element, path, delay, yPosition) 
   this.delay = (delay || 6) * 1000;
   this.yPosition = yPosition || 100;
   
-  var visible = !ArtJs.StringUtils.empty(ArtJs.ElementUtils.getContent(this.span));
+  var visible = !ArtJs.StringUtils.isEmpty(ArtJs.ElementUtils.getContent(this.span));
   var instances = arguments.callee.instances;
   
   this.id = instances.length;
@@ -72,4 +72,4 @@ ArtJs.Flash.prototype = {
   }
 };
 
-ArtJs.Locator.init(ArtJs.Flash);
+ArtJs.Locator.register(ArtJs.Flash);

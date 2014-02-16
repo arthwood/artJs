@@ -1,6 +1,6 @@
-ArtJs.ArrayUtils.init();
 ArtJs.ObjectUtils.init();
-ArtJs.StringUtils.init();
+ArtJs.ClassUtils.init();
+ArtJs.ElementBuilder.init();
 ArtJs.ElementUtils.init();
 ArtJs.Selector.init();
 ArtJs.ClassUtils.init();

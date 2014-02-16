@@ -8,7 +8,7 @@ ArtJs.QueuedClock = com.arthwood.events.QueuedClock = function(interval) {
 
 ArtJs.QueuedClock.prototype = {
   start: function() {
-    if (this.queue.empty()) {
+    if (this.queue.isEmpty()) {
       this.clock.stop();
     }
     else {

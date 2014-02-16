@@ -28,9 +28,9 @@ ArtJs.Queue.prototype = {
   getLength: function() {
     return this.list.getLength();
   },
-  
-  empty: function() {
-    return this.list.empty();
+
+  isEmpty: function() {
+    return this.list.isEmpty();
   },
   
   toString: function() {

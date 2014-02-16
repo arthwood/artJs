@@ -1,11 +1,5 @@
 ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
-  init: function() {
-    this.intersectionSelectDC = ArtJs.$DC(this, this.intersectionSelect);
-    this.includeDC = ArtJs.$DC(this, this.include);
-    this.invertedIncludeDC = ArtJs.$DC(this, this.invertedInclude);
-    this.nonEmptyDC = ArtJs.$DC(this, this.nonEmpty);
-    this.notNullDC = ArtJs.$DC(this, this.notNull);
-  },
+  name: 'ArrayUtils',
   
   build: function(n, func) {
     var arr = new Array(n);
@@ -41,18 +35,22 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     return arr[i];
   },
   
-  invertedInclude: function(item, arr) {
-    return this.include(arr, item);
+  includesInv: function(item, arr) {
+    return this.includes(arr, item);
   },
 
-  include: function(arr, item) {
+  includes: function(arr, item) {
     return Boolean(this.indexOf(arr, item) + 1);
   },
   
-  includeAll: function(arr, subset) {
-    this.invertedIncludeDC.delegate.args = [arr];
+  includesAll: function(arr, subset) {
+    this._includesAll.arr = arr;
     
-    return this.all(subset, this.invertedIncludeDC);
+    return this.all(subset, this._includesAll);
+  },
+
+  _includesAll: function(i, idx) {
+    return this.includesInv(i, arguments.callee.arr);
   },
   
   insertAt: function(arr, idx, insertion) {
@@ -85,48 +83,77 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     return args;
   },
   
-  map: function(arr, func) {
+  map: function(arr, func, context) {
     var result = [];
+    var item;
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        result.push(func(arr[i], parseInt(i, 10)));
+        item = arr[i];
+        
+        result.push(func.call(context, item, parseInt(i, 10)));
       }
     }
 
     return result;
   },
-  
-  each: function(arr, func) {
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        func(arr[i]);
-      }
-    }
+
+  pluck: function(arr, prop) {
+    this._pluck.prop = prop;
+    
+    return this.map(arr, this._pluck, this);
+  },
+
+  _pluck: function(i) {
+    return i[arguments.callee.prop];
   },
   
-  eachIndex: function(arr, func) {
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        func(parseInt(i, 10));
-      }
-    }
-  },
-  
-  eachPair: function(arr, func) {
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        func(parseInt(i, 10), arr[i]);
-      }
-    }
-  },
-  
-  inject: function(arr, init, func) {
-    var result = init;
+  each: function(arr, func, context) {
+    var item;
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        result = func(result, arr[i], i);
+        item = arr[i];
+        
+        func.call(context, item, parseInt(i, 10));
+      }
+    }
+  },
+
+  eachItem: function(arr, func, context) {
+    var item;
+
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+
+        func.call(context, item);
+      }
+    }
+  },
+
+  eachIndex: function(arr, func, context) {
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        func.call(context, parseInt(i, 10));
+      }
+    }
+  },
+  
+  inject: function(arr, init, func, context) {
+    var result = init;
+    var mem;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+
+        mem = func.call(context, result, item, parseInt(i, 10));
+        
+        if (mem) {
+          result = mem;
+        }
       }
     }
     
@@ -134,246 +161,312 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   flatten: function(arr) {
-    return this.inject(arr, [], this.flattenCallback);
+    return this.inject(arr, [], this._flattenCallback, this);
   },
   
-  flattenCallback: function(mem, i) {
-    return mem.concat(i);
+  _flattenCallback: function(mem, i, idx) {
+    mem.splice.apply(mem, [mem.length, 0].concat(i));
   },
   
-  select: function(arr, func) {
+  select: function(arr, func, context) {
     var result = [];
-    var test = func || this.defaultTestFunction;
+    var test = func || this._defaultTestFunction;
+    var item;
     
-    this.each(arr, function(i) {
-      if (test(i)) { result.push(i); }
-    });
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (func.call(context, item, parseInt(i, 10))) { 
+          result.push(item); 
+        }
+      }
+    }
     
     return result;
   },
   
-  reject: function(arr, func) {
+  reject: function(arr, func, context) {
     var result = [];
-    var test = func || this.defaultTestFunction;
+    var test = func || this._defaultTestFunction;
+    var item;
     
-    this.each(arr, function(i) {
-      if (!test(i)) { result.push(i); }
-    });
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (!test.call(context, item, parseInt(i, 10))) {
+          result.push(item);
+        }
+      }
+    }
     
     return result;
   },
   
-  $reject: function(arr, func) {
+  $reject: function(arr, func, context) {
     var n = arr.length - 1;
-    var test = func || this.defaultTestFunction;
+    var test = func || this._defaultTestFunction;
+    var item;
     
     for (var i = n; i >= 0; i--) {
-      if (test(arr[i])) { arr.splice(i, 1); }
+      item = arr[i];
+      
+      if (test.call(context || this, item, parseInt(i, 10))) { 
+        arr.splice(i, 1); 
+      }
     }
   },
   
-  detect: function(arr, func) {
-    var test = func || this.defaultTestFunction;
+  detect: function(arr, func, context) {
+    var test = func || this._defaultTestFunction;
+    var item;
     
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && test(arr[i])) {
-        return arr[i];
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (test.call(context || this, item, parseInt(i, 10))) {
+          return item;
+        }
       }
     }
     
     return null;
   },
+
+  equal: function(arr) {
+    return this.all(this.transpose(arr), this.itemsEqual, this);
+  },
+
+  itemsEqual: function(arr) {
+    return this.uniq(arr).length == 1;
+  },
   
-  all: function(arr, func) {
-    var test = func || this.defaultTestFunction;
+  transpose: function(arr) {
+    var result = [];
+    var n = arr.length;
+    var m = Math.max.apply(Math, this.pluck(arr, 'length'));
+    
+    for (var i = 0; i < m; i++) {
+      result[i] = [];
+      for (var j = 0; j < n; j++) {
+        result[i][j] = arr[j][i];
+      }
+    }
+    
+    return result;
+  },
+
+  all: function(arr, func, context) {
+    var test = func || this._defaultTestFunction;
+    var item;
     
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && !test(arr[i])) {
-        return false;
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (!test.call(context || this, item, parseInt(i, 10))) {
+          return false;
+        }
       }
     }
     
     return true;
   },
   
-  any: function (arr, func) {
-    var test = func || this.defaultTestFunction;
+  any: function (arr, func, context) {
+    var test = func || this._defaultTestFunction;
+    var item;
     
     for (var i in arr) {
-      if (arr.hasOwnProperty(i) && test(arr[i])) {
-        return true;
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (test.call(context || this, item, parseInt(i, 10))) {
+          return true;
+        }
       }
     }
     
     return false;
   },
   
-  defaultTestFunction: function(i) {
+  _defaultTestFunction: function(i) {
     return i;
   },
   
-  partition: function(arr, func) {
+  partition: function(arr, func, context) {
     var point = new ArtJs.Point([], []);
     var item;
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
-        (func(item, i) ? point.x : point.y).push(item);
+        
+        (func.call(context, item, i) ? point.x : point.y).push(item);
       }
     }
     
     return point;
   },
   
-  uniq: function(arr, func) {
-    var test = func || this.defaultTestFunction;
-    var copy = arr.concat();
-    var result = [];
-    var item, n;
+  uniq: function(arr, func, context) {
+    var groups = this.groupBy(arr, func, context, true);
     
-    while ((n = copy.length) > 0) {
-      item = copy[0];
-      result.push(item);
-      
-      while (n-- > 0) {
-        if (test(copy[n]) == test(item)) {
-          copy.splice(n, 1);
+    return this.map(this.pluck(groups, 'y'), this.first, this);
+  },
+
+  groupBy: function(arr, func, context, keepOrder) {
+    var test = func || this._defaultTestFunction;
+    var result = [];
+    var values = {};
+    var group;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        group = String(test.call(context || this, item, parseInt(i, 10)));
+        
+        if (values[group] == undefined) {
+          result.push(new ArtJs.Point(group, values[group] = []));
         }
+        
+        values[group].push(item);
       }
+    }
+    
+    if (!keepOrder) {
+      result = ArtJs.ObjectUtils.build(result);
     }
     
     return result;
   },
   
-  intersection: function(arr) {
-    this.commonTestArray = arr.slice(1);
-    
-    return this.select(arr[0], this.intersectionSelectDC);
+  indexOf: function(arr, item) {
+    return arr.indexOf ? arr.indexOf(item) : this._indexOf(arr, item);
   },
   
-  intersectionSelect: function(i) {
-    this.includeDC.delegate.args = [i];
+  intersection: function(arr) {
+    this._intersectionSelect.array = arr.slice(1);
     
-    return this.all(this.commonTestArray, this.includeDC);
+    return this.select(arr[0], this._intersectionSelect, this);
+  },
+  
+  _intersectionSelect: function(i) {
+    this._intersectionInclude.item = i;
+    
+    return this.all(arguments.callee.array, this._intersectionInclude, this);
+  },
+  
+  _intersectionInclude: function(arr, idx) {
+    return this.includes(arr, arguments.callee.item);
   },
   
   selectNonEmpty: function(arr) {
-    return this.select(arr, this.nonEmptyDC);
+    return this.select(arr, this.nonEmpty, this);
   },
   
   compact: function(arr) {
-    return this.select(arr, this.notNullDC);
+    return this.reject(arr, this.isNullLike, this);
   },
-  
-  notNull: function(i) {
-    return !isNaN(i) || Boolean(i);
+
+  isNullLike: function(i) {
+    return i === null || i === undefined;
   },
-  
-  empty: function(arr) {
-    return arr.length === 0;
+
+  isEmpty: function(arr) {
+    return arr.length == 0;
   },
   
   nonEmpty: function(arr) {
-    return !this.empty(arr);
+    return !this.isEmpty(arr);
   },
   
   numerize: function(arr) {
-    return this.map(arr, this.numerizeCallback);
+    return this.map(arr, this._numerizeCallback);
+  },
+
+  print: function(arr) {
+    this.eachItem(arr, ArtJs.p);
   },
   
-  numerizeCallback: function (i) {
+  _numerizeCallback: function (i) {
     return Number(i);
   },
   
   sum: function(arr) {
-    return Number(this.inject(arr, 0, this.sumCallback));
+    return Number(this.inject(arr, 0, this._sumCallback, this));
   },
   
-  sumCallback: function(sum, i) {
+  _sumCallback: function(sum, i) {
     return sum + i;
   },
   
   stringify: function(arr) {
-    return this.map(arr, this.stringifyCallback);
+    return this.map(arr, this._stringifyCallback, this);
   },
   
-  stringifyCallback: function(i) {
-    return i.toString();
+  _stringifyCallback: function(i) {
+    return this.isNullLike(i) ? '' : i.toString();
   },
-  
-  print: function(arr) {
-    this.each(arr, ArtJs.p);
+
+  _indexOf: function(arr, item) {
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i) && arr[i] === item) {
+        return parseInt(i);
+      }
+    }
+
+    return -1;
   },
   
   doInjection: function() {
     var proto = Array.prototype;
     var dc = ArtJs.$DC;
-    
-    proto.first = dc(this, this.first, true);
-    proto.second = dc(this, this.second, true);
-    proto.third = dc(this, this.third, true);
-    proto.beforeLast = dc(this, this.beforeLast, true);
-    proto.last = dc(this, this.last, true);
-    proto.getItem = dc(this, this.getItem, true);
-    proto.include = dc(this, this.include, true);
-    proto.includeAll = dc(this, this.includeAll, true);
-    proto.insertAt = dc(this, this.insertAt, true);
-    proto.removeAt = dc(this, this.removeAt, true);
-    proto.removeItem = dc(this, this.removeItem, true);
-    proto.map = dc(this, this.map, true);
-    proto.each = dc(this, this.each, true);
-    proto.eachIndex = dc(this, this.eachIndex, true);
-    proto.eachPair = dc(this, this.eachPair, true);
-    proto.inject = dc(this, this.inject, true);
-    proto.flatten = dc(this, this.flatten, true);
-    proto.select = dc(this, this.select, true);
-    proto.reject = dc(this, this.reject, true);
-    proto.$reject = dc(this, this.$reject, true);
-    proto.detect = dc(this, this.detect, true);
+
     proto.all = dc(this, this.all, true);
     proto.any = dc(this, this.any, true);
-    proto.partition = dc(this, this.partition, true);
-    proto.uniq = dc(this, this.uniq, true);
-    proto.intersection = dc(this, this.intersection, true);
-    proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
+    proto.beforeLast = dc(this, this.beforeLast, true);
     proto.compact = dc(this, this.compact, true);
-    proto.empty = dc(this, this.empty, true);
+    proto.detect = dc(this, this.detect, true);
+    proto.each = dc(this, this.each, true);
+    proto.eachIndex = dc(this, this.eachIndex, true);
+    proto.eachItem = dc(this, this.eachItem, true);
+    proto.eachPair = dc(this, this.eachPair, true);
+    proto.equal = dc(this, this.equal, true);
+    proto.first = dc(this, this.first, true);
+    proto.flatten = dc(this, this.flatten, true);
+    proto.getItem = dc(this, this.getItem, true);
+    proto.includes = dc(this, this.includes, true);
+    proto.includesAll = dc(this, this.includesAll, true);
+    proto.inject = dc(this, this.inject, true);
+    proto.insertAt = dc(this, this.insertAt, true);
+    proto.intersection = dc(this, this.intersection, true);
+    proto.isEmpty = dc(this, this.isEmpty, true);
+    proto.itemsEqual = dc(this, this.itemsEqual, true);
+    proto.last = dc(this, this.last, true);
+    proto.map = dc(this, this.map, true);
     proto.nonEmpty = dc(this, this.nonEmpty, true);
     proto.numerize = dc(this, this.numerize, true);
-    proto.sum = dc(this, this.sum, true);
-    proto.stringify = dc(this, this.stringify, true);
+    proto.partition = dc(this, this.partition, true);
+    proto.pluck = dc(this, this.pluck, true);
     proto.print = dc(this, this.print, true);
-    
-    this._doInjection();
-  },
-
-  ff: {
-    indexOf: function(arr, item) {
-      return arr.indexOf(item);
-    },
-
-    _doInjection: function() {
-    }
-  },
-  
-  ie: {
-    indexOf: function(arr, item) {
-      for (var i in arr) {
-        if (arr.hasOwnProperty(i) && arr[i] === item) {
-          return parseInt(i);
-        }
-      }
-
-      return -1;
-    },
-
-    _doInjection: function() {
-      Array.prototype.indexOf = ArtJs.$DC(this, this.indexOf, true);
-    }
+    proto.reject = dc(this, this.reject, true);
+    proto.$reject = dc(this, this.$reject, true);
+    proto.removeAt = dc(this, this.removeAt, true);
+    proto.removeItem = dc(this, this.removeItem, true);
+    proto.second = dc(this, this.second, true);
+    proto.select = dc(this, this.select, true);
+    proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
+    proto.stringify = dc(this, this.stringify, true);
+    proto.sum = dc(this, this.sum, true);
+    proto.third = dc(this, this.third, true);    
+    proto.transpose = dc(this, this.transpose, true);    
+    proto.uniq = dc(this, this.uniq, true);
   }
 };
-
-ArtJs.extendClient(ArtJs.ArrayUtils);
 
 ArtJs.$A = ArtJs.ArrayUtils.arrify;

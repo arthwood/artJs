@@ -12,7 +12,7 @@ Default load location is set to "javascripts/" but you can change it by setting 
 
 Just after library is loaded there are two methods that you may want to use: ArtJs.globalize() and ArtJs.doInjection()
 
-ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like: $, $$, $P, $B, $D, $DC, $E.
+ArtJs.globalize() makes all the classes globally accessible in window object, as well as shorthand utility methods like: $, $P, $B, $D, $DC, $E.
 
 ArtJs.doInjection() makes an extensions on native classes like Object, Array, Date, Element etc. so that you can use:
 

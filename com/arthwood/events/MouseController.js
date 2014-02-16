@@ -13,14 +13,14 @@ ArtJs.MouseController = com.arthwood.events.MouseController = function(e) {
 
 ArtJs.MouseController.prototype = {
   _onOver: function(e) {
-    if (ArtJs.EventUtils.edge(this.getTargets(e, true)) && !this.over) {
+    if (ArtJs.EventUtils.edge(this._getTargets(e, true)) && !this.over) {
       this.over = true;
       this.onOver.fire(e, this);
     }
   },
   
   _onOut: function(e) {
-    if (ArtJs.EventUtils.edge(this.getTargets(e, false)) && this.over) {
+    if (ArtJs.EventUtils.edge(this._getTargets(e, false)) && this.over) {
       this.over = false;
       this.onOut.fire(e, this);
     }
@@ -34,25 +34,29 @@ ArtJs.MouseController.prototype = {
     return this.element;
   },
   
-  ff: {
-    _attachEvents: function() {
-      e.addEventListener('mouseover', ArtJs.$DC(this, this._onOver), false);
-      e.addEventListener('mouseout', ArtJs.$DC(this, this._onOut), false);
-      e.addEventListener('click', ArtJs.$DC(this, this._onClick), false);
-    },
+
+  _attachEvents: function(e) {
+    var onOver = ArtJs.$DC(this, this._onOver);
+    var onOut = ArtJs.$DC(this, this._onOut);
+    var onClick = ArtJs.$DC(this, this._onClick);
     
-    getTargets: function(e, over) {
-      return {origin: e.target, current: e.currentTarget, related: e.relatedTarget};
+    if (e.addEventListener) {
+      e.addEventListener('mouseover', onOver, false);
+      e.addEventListener('mouseout', onOut, false);
+      e.addEventListener('click', onClick, false);
+    }
+    else {
+      e.attachEvent('onmouseover', onOver);
+      e.attachEvent('onmouseout', onOut);
+      e.attachEvent('onclick', onClick);
     }
   },
-  
-  ie: {
-    _attachEvents: function() {
-      e.attachEvent('onmouseover', ArtJs.$DC(this, this._onOver));
-      e.attachEvent('onmouseout', ArtJs.$DC(this, this._onOut));
-      e.attachEvent('onclick', ArtJs.$DC(this, this._onClick));
-    },
-    getTargets: function(e, over) {
+    
+  _getTargets: function(e, over) {
+    if (e.target) {
+      return {origin: e.target, current: e.currentTarget, related: e.relatedTarget};
+    }
+    else {
       var originRelated = [e.fromElement, e.toElement];
 
       if (over) originRelated.reverse();
@@ -62,6 +66,4 @@ ArtJs.MouseController.prototype = {
   }
 };
 
-ArtJs.extendClient(ArtJs.MouseController.prototype);
-
-ArtJs.Locator.init(ArtJs.MouseController);
+ArtJs.Locator.register(ArtJs.MouseController);
