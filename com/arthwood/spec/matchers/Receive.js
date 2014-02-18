@@ -14,16 +14,27 @@ ArtJs.ReceiveMatcher.prototype = {
   failureText: function(actual) {
     var result = ['"' + actual.value.name + '"', 'expected to call', this.expected];
 
-    if (this.receiver.args) {
-      result.push('with');
-      result.push('(' + this.receiver.args.join(', ') + ')');
+    if (this.receiver.args()) {
+      var expectedArgs = this.receiver.args();
+      var actualArgs = this.receiver.actualArgs();
       
-      if (this.actualArgs) {
-        result.push('but was (' + this.actualArgs.join(', ') + ')');
+      result.push('with');
+      result.push(this._argsString(expectedArgs));
+      
+      if (actualArgs) {
+        result.push('but was ' +  this._argsString(actualArgs));
       }
     }
     
     return result.join(' ');
+  },
+  
+  _mapArgs: function(i) {
+    return '[' + i.join(', ') + ']';
+  },
+  
+  _argsString: function(args) {
+    return '(' + (this.receiver.isInSeries() ? ArtJs.ArrayUtils.map(args, this._mapArgs, this) : args).join(', ') + ')';
   }
 };
 
