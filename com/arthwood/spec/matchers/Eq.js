@@ -1,21 +1,20 @@
-ArtJs.EqMatcher = com.arthwood.spec.matchers.Eq = function(expected) {
-  this.expected = expected;
-};
-
-ArtJs.EqMatcher.prototype = {
-  resolve: function(actual) {
-    if (ArtJs.ObjectUtils.isArray(actual.value)) {
-      return ArtJs.ArrayUtils.equal([actual.value, this.expected]);
-    }
-    else {
-      return actual.value === this.expected;
+ArtJs.EqMatcher = com.arthwood.spec.matchers.Eq = ArtJs.Class(
+  function(expected) {
+    this.super(arguments, expected, 'equal');
+  },
+  {
+    resolve: function(actual) {
+      if (ArtJs.ObjectUtils.isArray(actual.value)) {
+        return ArtJs.ArrayUtils.equal([actual.value, this.expected]);
+      }
+      else {
+        return this.super(arguments, actual);
+      }
     }
   },
-
-  failureText: function(actual) {
-    return ['"' + actual.value + '"', 'expected to equal', '"' + this.expected + '"'].join(' ');
-  }
-};
+  null,
+  ArtJs.BaseMatcher
+);
 
 function eq(expected) {
   return new ArtJs.EqMatcher(expected);

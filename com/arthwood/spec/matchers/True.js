@@ -1,15 +1,11 @@
-ArtJs.TrueMatcher = com.arthwood.spec.matchers.True = function () {
-};
-
-ArtJs.TrueMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === true;
+ArtJs.TrueMatcher = com.arthwood.spec.matchers.True = ArtJs.Class(
+  function() {
+    this.super(arguments, true);
   },
-
-  failureText: function(actual) {
-    return ['"' + actual.value + '"', 'expected to be true'].join(' ');
-  }
-};
+  null,
+  null,
+  ArtJs.BaseMatcher
+);
 
 function beTrue() {
   return new ArtJs.TrueMatcher();

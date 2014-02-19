@@ -1,15 +1,11 @@
-ArtJs.NullMatcher = com.arthwood.spec.matchers.Null = function () {
-};
-
-ArtJs.NullMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === null;
+ArtJs.NullMatcher = com.arthwood.spec.matchers.Null = ArtJs.Class(
+  function() {
+    this.super(arguments, null);
   },
-
-  failureText: function(actual) {
-    return ['"' + actual.value + '"', 'expected to be null'].join(' ');
-  }
-};
+  null,
+  null,
+  ArtJs.BaseMatcher
+);
 
 function beNull() {
   return new ArtJs.NullMatcher();

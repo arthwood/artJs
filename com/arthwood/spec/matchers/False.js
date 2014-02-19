@@ -1,15 +1,11 @@
-ArtJs.FalseMatcher = com.arthwood.spec.matchers.False = function () {
-};
-
-ArtJs.FalseMatcher.prototype = {
-  resolve: function(actual) {
-    return actual.value === false;
+ArtJs.FalseMatcher = com.arthwood.spec.matchers.False = ArtJs.Class(
+  function() {
+    this.super(arguments, false);
   },
-
-  failureText: function(actual) {
-    return ['"' + actual.value + '"', 'expected to be false'].join(' ');
-  }
-};
+  null,
+  null,
+  ArtJs.BaseMatcher
+);
 
 function beFalse() {
   return new ArtJs.FalseMatcher();
