@@ -5,7 +5,7 @@ ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
     var rt = targets.related;
     var s = ArtJs.Selector;
     
-    return (t == ct) && !s.descendantOf(rt, ct) || s.descendantOf(t, ct) && !s.selfOrDescendant(rt, ct);
+    return (t == ct) && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
   },
   
   doInjection: function() {

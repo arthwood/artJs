@@ -38,7 +38,6 @@ var com = {
       matchers: {}
     },
     transition: {},
-    tween: {},
     ui: {},
     utils: {}
   }

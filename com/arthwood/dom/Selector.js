@@ -23,11 +23,11 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   },
 
   first: function(element, path) {
-    return ArtJs.ArrayUtils.first(this.getElements(path, element));
+    return ArtJs.ArrayUtils.first(this.find(element, path));
   },
 
   last: function(element, path) {
-    return ArtJs.ArrayUtils.last(this.getElements(path, element));
+    return ArtJs.ArrayUtils.last(this.find(element, path));
   },
   
   parent: function(element, path) {
@@ -71,7 +71,7 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return !this._au.isEmpty(descendants) && descendants.length > 1;
   },
 
-  isSelfOrDescendant: function(e, root) {
+  isSelfOrDescendantOf: function(e, root) {
     return e == root || this.isDescendantOf(e, root);
   },
 
@@ -89,14 +89,6 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
       : this._getElementsByClassName(v);
   },
 
-  getHead: function() {
-    return ArtJs.ArrayUtils.first(this.getElements('head'));
-  },
-
-  getBody: function() {
-    return ArtJs.ArrayUtils.first(this.getElements('body'));
-  },
-  
   _toDescendants: function(i, idx, root) {
     return this._getDescendants(i, root);
   },
