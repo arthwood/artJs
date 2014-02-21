@@ -3,3 +3,7 @@ ArtJs.p = function() {
     console.log(ArtJs.$A(arguments));
   }
 };
+
+ArtJs.log = function(msg, level) {
+  console.log(msg);
+};

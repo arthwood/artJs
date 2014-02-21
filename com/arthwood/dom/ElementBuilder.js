@@ -51,14 +51,14 @@ ArtJs.ElementBuilder.prototype = {
 
 ArtJs.ObjectUtils.extend(ArtJs.ElementBuilder, {
   init: function() {
-    ArtJs.$E = ArtJs.$DC(this, this.getElement);
     ArtJs.$B = ArtJs.$DC(this, this.build);
-    ArtJs.$P = ArtJs.$DC(this, this.parse);
     ArtJs.$C = ArtJs.$DC(this, this.create);
+    ArtJs.$E = ArtJs.$DC(this, this.getElement);
+    ArtJs.$P = ArtJs.$DC(this, this.parse);
   },
 
   getElement: function(name, attributes, value, empty) {
-    return (new this(name, attributes, value, empty)).getElement();
+    return this.build(name, attributes, value, empty).getElement();
   },
   
   _getElement: function(i) {

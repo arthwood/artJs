@@ -5,11 +5,13 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(
     
     var actualValue = this._actual.value;
     var expected = this._matcher.expected;
+    var dc = ArtJs.$DC(this, this.resolve);
     
-    this._original = ArtJs.$D(actualValue, actualValue[expected]);
-    this._delegate = ArtJs.$D(this, this.resolve);
+    if (!this._isForMock()) {
+      this._original = ArtJs.$D(actualValue, actualValue[expected]);
+    }
     
-    actualValue[expected] = this._delegate.callback();
+    actualValue[expected] = dc;
     
     this._successCounter = 0;
     this._callCounter = 0;
@@ -76,7 +78,13 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(
     },
   
     andCallOriginal: function() {
-      this._callOriginal = true;
+      if (this._isForMock()) {
+        ArtJs.log('WARNING: Using "andCallOriginal" for mock has no result.');
+        this._callOriginal = false;
+      }
+      else {
+        this._callOriginal = true;
+      }
   
       return this;
     },
@@ -120,7 +128,13 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(
     },
   
     rollback: function() {
-      this._actual.value[this._matcher.expected] = this._original.method;
+      if (!this._isForMock()) {
+        this._actual.value[this._matcher.expected] = this._original.method;
+      }
+    },
+    
+    _isForMock: function() {
+      return this._actual.value instanceof ArtJs.Mock;
     }
   }
 );

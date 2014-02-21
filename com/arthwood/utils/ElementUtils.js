@@ -328,7 +328,9 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   getClasses: function(e) {
-    return e.className.split(' ');
+    var className = ArtJs.StringUtils.trim(e.className);
+    
+    return ArtJs.StringUtils.isBlank(className) ? [] : className.split(' ');
   },
   
   setClass: function(e, className, add) {
