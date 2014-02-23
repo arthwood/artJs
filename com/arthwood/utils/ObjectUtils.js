@@ -48,10 +48,10 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
   removeValues: function(obj, values) {
     this._invertedRemoveValueDC.delegate.args = [obj];
     
-    ArtJs.ArrayUtils.each(values, this._invertedRemoveValueDC);
+    ArtJs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
   },
 
-  getKeys: function(obj) {
+  keys: function(obj) {
     var result = [];
 
     for (var i in obj) {
@@ -63,7 +63,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     return result;
   },
 
-  getValues: function(obj) {
+  values: function(obj) {
     var result = [];
 
     for (var i in obj) {
@@ -324,8 +324,8 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     proto.each = dc(this, this.each, true);
     proto.eachPair = dc(this, this.eachPair, true);
     proto.extend = dc(this, this.extend, true);
-    proto.getKeys = dc(this, this.getKeys, true);
-    proto.getValues = dc(this, this.getValues, true);
+    proto.keys = dc(this, this.keys, true);
+    proto.values = dc(this, this.values, true);
     proto.includes = dc(this, this.includes, true);
     proto.includesAll = dc(this, this.includesAll, true);
     proto.isArray = dc(this, this.isArray, true);

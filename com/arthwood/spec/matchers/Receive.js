@@ -11,11 +11,11 @@ ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(
       return this.receiver;
     },
     
-    failureText: function(actual) {
-      var result = this.super.failureText(arguments, actual);
+    _failureData: function(actual) {
+      var result = this.super(arguments, actual);
+      var expectedArgs = this.receiver.args();
       
-      if (this.receiver.args()) {
-        var expectedArgs = this.receiver.args();
+      if (expectedArgs) {
         var actualArgs = this.receiver.actualArgs();
         
         result.push('with');
@@ -26,7 +26,7 @@ ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(
         }
       }
 
-      return result.join(' ');
+      return result;
     },
     
     _mapArgs: function(i) {

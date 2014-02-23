@@ -7,9 +7,13 @@ ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(
     resolve: function(actual) {
       return actual.value === this.expected;
     },
-  
+    
+    _failureData: function(actual) {
+      return ['"' + actual.value + '"', 'expected to', this.toText, String(this.expected)];
+    },
+
     failureText: function(actual) {
-      return ['"' + actual.value + '"', 'expected to', this.toText, String(this.expected)].join(' ');
+      return this._failureData(actual).join(' ');
     }
   }
 );
