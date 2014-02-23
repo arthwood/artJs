@@ -50,7 +50,7 @@ ArtJs.List.prototype = {
   },
   
   getItemAt: function(position) {
-    position = this.loop ? (ArtJs.MathUtils.periodicLimit(position, 0, this.getLength())) : position;
+    position = this.loop ? (ArtJs.MathUtils.sawtooth(position, 0, this.getLength())) : position;
   
     return this.items[position];
   },

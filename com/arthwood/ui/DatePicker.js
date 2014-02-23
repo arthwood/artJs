@@ -134,7 +134,7 @@ ArtJs.Calendar.prototype = {
     var monthFirstDay = monthFirstDate.getDay();
     var monthDaysNum = du.monthDaysNum(this.date);
     
-    this.startIndex = mu.periodicLimit(monthFirstDay - this.firstDay, 0, 7);
+    this.startIndex = mu.sawtooth(monthFirstDay - this.firstDay, 0, 7);
     this.rowsNum = mu.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
     this.monthSelect.value = this.date.getMonth() + 1;
     this.yearSelect.value = this.date.getFullYear();
@@ -149,7 +149,7 @@ ArtJs.Calendar.prototype = {
   },
   
   updateHeader: function(idx, header) {
-    var index = ArtJs.MathUtils.periodicLimit(this.firstDay + idx, 0, 7);
+    var index = ArtJs.MathUtils.sawtooth(this.firstDay + idx, 0, 7);
     
     ArtJs.ElementUtils.setContent(header, ArtJs.Calendar.DAYS[index]);
   },

@@ -6,8 +6,8 @@ ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
   limit: function(x, a, b) {
     return Math.min(Math.max(x, a), b);
   },
-  
-  periodicLimit: function(x, a, b) {
+
+  sawtooth: function(x, a, b) {
     return x - this.stairs(x, a, b) * (b - a);
   },
   
