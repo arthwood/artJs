@@ -4,7 +4,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   },
 
   monthDaysNum: function(date) {
-    var d = new Date(date);
+    var d = this.copy(date);
     
     d.setMonth(d.getMonth() + 1);
     d.setDate(0);
@@ -13,7 +13,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   },
   
   firstDate: function(date) {
-    var d = new Date(date);
+    var d = this.copy(date);
     
     d.setDate(1);
     
@@ -55,15 +55,6 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     return arr.join(separator);
   },
   
-  fromDMY: function(str, separator) {
-    separator = separator || '-';
-    
-    var arr = str.split(separator);
-    var au = ArtJs.ArrayUtils;
-    
-    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
-  },
-  
   fromYMD: function(str, separator) {
     separator = separator || '-';
     
@@ -72,7 +63,16 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
-  
+
+  fromDMY: function(str, separator) {
+    separator = separator || '-';
+
+    var arr = str.split(separator);
+    var au = ArtJs.ArrayUtils;
+
+    return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
+  },
+
   minutesToHM: function(minutes, separator) {
     separator = separator || ':';
     
@@ -84,7 +84,7 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     
     var arr = hm.split(separator);
   
-    return 60*parseInt(arr[0], 10) + parseInt(arr[1], 10);
+    return 60 * parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
   
   secondsToMS: function(s, separator) {
@@ -114,6 +114,38 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
     return this.minutesToHM(minutes, separator) + separator + ArtJs.StringUtils.addZeros(seconds.toString(), 2);
   },
 
+  miliToHMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes % 60;
+    var totalHours = (totalMinutes - minutes) / 60;
+    var hours = totalHours;
+
+    return hours.toString() +
+      ':' +
+      ArtJs.StringUtils.addZeros(minutes.toString(), 2) +
+      ':' +
+      ArtJs.StringUtils.addZeros(seconds.toString(), 2) +
+      '.' +
+      ArtJs.StringUtils.addZeros(mili.toString(), 3);
+  },
+
+  miliToMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes;
+
+    return minutes.toString() +
+      ':' +
+      ArtJs.StringUtils.addZeros(seconds.toString(), 2) +
+      '.' +
+      ArtJs.StringUtils.addZeros(mili.toString(), 3);
+  },
+  
   /**
    * Overrides ObjectUtils.copy if injected.
    */
@@ -131,38 +163,6 @@ ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
   
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  },
-
-  miliToHMSM: function(v) {
-    var mili = v % 1000;
-    var totalSeconds = (v - mili) / 1000;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes % 60;
-    var totalHours = (totalMinutes - minutes) / 60;
-    var hours = totalHours;
-    
-    return hours.toString() + 
-      ':' + 
-      ArtJs.StringUtils.addZeros(minutes.toString(), 2) + 
-      ':' + 
-      ArtJs.StringUtils.addZeros(seconds.toString(), 2) + 
-      '.' + 
-      ArtJs.StringUtils.addZeros(mili.toString(), 3);
-  },
-  
-  miliToMSM: function(v) {
-    var mili = v % 1000;
-    var totalSeconds = (v - mili) / 1000;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes;
-  
-    return minutes.toString() + 
-      ':' +
-      ArtJs.StringUtils.addZeros(seconds.toString(), 2) + 
-      '.' +
-      ArtJs.StringUtils.addZeros(mili.toString(), 3);
   },
 
   doInjection: function() {
