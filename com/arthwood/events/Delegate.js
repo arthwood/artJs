@@ -17,14 +17,16 @@ ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(
         var delegate = callee.delegate;
         var args = ArtJs.$A(arguments);
         
-        if (callee.withSource) { args.unshift(this); }
+        if (callee.withSource) {
+          args.unshift(this); 
+        }
         
         return delegate.invoke.apply(delegate, args);
       };
-    
+      
       result.withSource = withSource;
       result.delegate = this;
-    
+      
       return result;
     }
   },
@@ -34,17 +36,17 @@ ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(
     callback: function(object, method, withSource) {
       var delegate = new ArtJs.Delegate(object, method);
       var callback = delegate.callback(withSource);
-  
+      
       delegate.args = ArtJs.$A(arguments, 3);
-  
+      
       return callback;
     },
-
+    
     create: function(object, method) {
       var delegate = new ArtJs.Delegate(object, method);
-  
+      
       delegate.args = ArtJs.$A(arguments, 2);
-  
+      
       return delegate;
     },
 

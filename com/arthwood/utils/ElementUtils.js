@@ -424,6 +424,10 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     
     return new ArtJs.Point(de.scrollLeft || window.scrollX, de.scrollTop || window.scrollY);
   },
+
+  onClick: function(e, delegate) {
+    return ArtJs.on(e, 'click', delegate);
+  },
   
   doInjection: function() {
     var proto = Element.prototype;
@@ -455,6 +459,7 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     proto.isHidden = dc(this, this.isHidden, true);
     proto.lastElement = dc(this, this.lastElement, true);
     proto.next = dc(this, this.next, true);
+    proto.onClick = dc(this, this.onClick, true);
     proto.parent = dc(this, this.parent, true);
     proto.prev = dc(this, this.prev, true);
     proto.putAtBottom = dc(this, this.putAtBottom, true);

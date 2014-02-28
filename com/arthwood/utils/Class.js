@@ -6,33 +6,32 @@ ArtJs.Class = function(ctor, proto, stat, superclass) {
 
 ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
-  this.ctor.prototype.constructor = this.ctor;
   
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
       var _arguments_ = ArtJs.$A(arguments);
       var __arguments__ = _arguments_.shift();
-      var __callee__ = __arguments__.callee;
-      var _super_;
-
-      _super_ = __callee__ == ctor ? ctor.superclass : __callee__.super;
-
+      var _callee_ = __arguments__.callee;
+      var _super_ = _callee_.superclass || _callee_.super;
+      
       return _super_.apply(this, _arguments_);
     };
-
+    
     _super_.ctor = this.ctor;
+    
+    ArtJs.ObjectUtils.extend(this.ctor, superclass);
+    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
     
     this.ctor.superclass = superclass;
     this.ctor.super = _super_;
     this.ctor.prototype.super = _super_;
-    
-    ArtJs.ObjectUtils.extend(this.ctor, superclass);
-    ArtJs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
   }
   else {
     this.ctor.prototype = {};
   }
+
+  this.ctor.prototype.ctor = this.ctor;
   
   if (proto) {
     ArtJs.ObjectUtils.eachPair(proto, this._eachProto, this);
@@ -46,7 +45,7 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
 ArtJs.ClassBuilder.prototype = {
   _defaultConstructor: function() {
     return function() { 
-      this.super(); 
+      this.super(arguments); 
     };
   },
   
