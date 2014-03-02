@@ -366,7 +366,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   },
   
   selectNonEmpty: function(arr) {
-    return this.select(arr, this.nonEmpty, this);
+    return this.select(arr, this.isNotEmpty, this);
   },
   
   compact: function(arr) {
@@ -380,8 +380,8 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
   isEmpty: function(arr) {
     return arr.length == 0;
   },
-  
-  nonEmpty: function(arr) {
+
+  isNotEmpty: function(arr) {
     return !this.isEmpty(arr);
   },
   
@@ -449,7 +449,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
     proto.itemsEqual = dc(this, this.itemsEqual, true);
     proto.last = dc(this, this.last, true);
     proto.map = dc(this, this.map, true);
-    proto.nonEmpty = dc(this, this.nonEmpty, true);
+    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
     proto.numerize = dc(this, this.numerize, true);
     proto.partition = dc(this, this.partition, true);
     proto.pluck = dc(this, this.pluck, true);

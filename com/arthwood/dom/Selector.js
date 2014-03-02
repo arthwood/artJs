@@ -1,7 +1,7 @@
 ArtJs.Selector = com.arthwood.dom.Selector = {
   tagRE: /^\w+/gi,
-  classesRE: /\.\w+/gi,
-  idRE: /#\w+/i,
+  classesRE: /\.[\w\-]+/gi,
+  idRE: /#[\w\-]+/gi,
   attrsRE: /\[.*\]/gi,
   
   init: function() {

@@ -9,8 +9,12 @@ ArtJs.ElementInspector = com.arthwood.ui.ElementInspector = ArtJs.Class(
   {
     _onMouseMove: function(e, ee) {
       var targets = ee.getTargets(e);
+      var origin = targets.origin;
+      var eu = ArtJs.ElementUtils;
       
-      this._toggler.toggle(targets.origin);
+      if (eu.children(origin).any(eu.isText)) {
+        this._toggler.toggle(origin);
+      }
     },
 
     _onActivate: function(toggler) {

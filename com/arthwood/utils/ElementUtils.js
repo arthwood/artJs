@@ -122,9 +122,13 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
     
     return v && Number(v[1]) || 0;
   },
+
+  children: function(e) {
+    return ArtJs.$A(e.childNodes);
+  },
   
   elements: function(e) {
-    return this.filterElements(ArtJs.$A(e.childNodes));
+    return this.filterElements(this.children(e));
   },
   
   filterElements: function(items) {
@@ -132,7 +136,11 @@ ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
   },
   
   isElement: function(e) {
-    return e.nodeType == 1;
+    return e.nodeType == Node.ELEMENT_NODE;
+  },
+
+  isText: function(e) {
+    return e.nodeType == Node.TEXT_NODE;
   },
   
   remove: function(e) {
