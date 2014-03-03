@@ -1,4 +1,4 @@
-ArtJs.ArrayUtils = com.arthwood.utils.ArrayUtils = {
+ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   name: 'ArrayUtils',
   
   build: function(n, func) {

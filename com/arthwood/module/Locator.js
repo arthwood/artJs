@@ -1,4 +1,4 @@
-ArtJs.Locator = com.arthwood.modules.Locator = {
+ArtJs.Locator = com.arthwood.module.Locator = {
   register: function(object) {
     object.instances = [];
     

@@ -1,4 +1,4 @@
-ArtJs.ElementUtils = com.arthwood.utils.ElementUtils = {
+ArtJs.ElementUtils = com.arthwood.utils.Element = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: '',
   MAIN_OBJ_RE: /^\w+/,

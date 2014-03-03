@@ -7,7 +7,7 @@ ArtJs.ElementBuilder = com.arthwood.dom.ElementBuilder = function(name, attribut
 
 ArtJs.ElementBuilder.prototype = {
   toString: function() {
-    var attributes = this.attributes && !ArtJs.ObjectUtils.isEmpty(this.attributes) 
+    var attributes = this.attributes && ArtJs.ObjectUtils.isNotEmpty(this.attributes) 
       ? (' ' + this.attributesString() + ' ') 
       : '';
     var part;

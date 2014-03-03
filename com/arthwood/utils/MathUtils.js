@@ -1,4 +1,4 @@
-ArtJs.MathUtils = com.arthwood.utils.MathUtils = {
+ArtJs.MathUtils = com.arthwood.utils.Math = {
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;
   },

@@ -1,4 +1,4 @@
-ArtJs.DateUtils = com.arthwood.utils.DateUtils = {
+ArtJs.DateUtils = com.arthwood.utils.Date = {
   getTime: function() {
     return (new Date()).getTime();
   },

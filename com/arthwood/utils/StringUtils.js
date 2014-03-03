@@ -1,4 +1,4 @@
-ArtJs.StringUtils = com.arthwood.utils.StringUtils = {
+ArtJs.StringUtils = com.arthwood.utils.String = {
   name: 'StringUtils',
   
   first: function(str) {

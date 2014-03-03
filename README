@@ -1,14 +1,25 @@
-ArtJs is JavaScript framework of general purpose. It allows you to select or manipulate DOM elements, perform AJAX requests, provides load of helper methods for String, Date and other native classes, etc.
+ArtJs is JavaScript framework for building complex web applications. 
+It allows you to:
+  - select or manipulate DOM elements, 
+  - perform AJAX requests, 
+  - provides load of helper methods for String, Array, Object, Date and other native classes,
+  - provides number of UI elements
+  - comes with built in testing framework
 
-Currently it supports FF, Chrome, Safari and IE8.
+Currently it supports FF, Chrome, Safari and IE8 >.
 
-Zip package contains art.js file that loads appropriate library depending on the browser.
-You only need to inlude that file in your head section.
-Default load location is set to "javascripts/" but you can change it by setting your own path like this:
-<script type="text/javascript">
-  window.ArtJs_path = '../javascripts/';
-</script>
-<script src="../javascripts/art.js" type="text/javascript"></script>
+You can download development or minified version of source code.
+You only need to include that single file in your head section.
+
+<script src="../javascripts/art-min.js" type="text/javascript"></script>
+
+It offers two methods for initializing the application:
+
+ArtJs.onDocumentLoad
+
+and
+
+ArtJs.onWindowLoad
 
 Just after library is loaded there are two methods that you may want to use: ArtJs.globalize() and ArtJs.doInjection()
 
@@ -21,3 +32,5 @@ arr.first();
 otherwise you are still able to call the method using:
 
 ArtJs.ArrayUtils.first(arr);
+
+See documentation for more detailed information.

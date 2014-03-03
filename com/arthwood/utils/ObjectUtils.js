@@ -1,4 +1,4 @@
-ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
+ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   QUERY_DELIMITER: '&',
   
   init: function() {
@@ -184,6 +184,10 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     
     return true;
   },
+  
+  isNotEmpty: function(obj) {
+    return !this.isEmpty(obj);
+  },
 
   build: function(arr) {
     var result = {};
@@ -330,6 +334,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.ObjectUtils = {
     proto.includesAll = dc(this, this.includesAll, true);
     proto.isArray = dc(this, this.isArray, true);
     proto.isEmpty = dc(this, this.isEmpty, true);
+    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
     proto.map = dc(this, this.map, true);
     proto.mapKey = dc(this, this.mapKey, true);
     proto.mapValue = dc(this, this.mapValue, true);

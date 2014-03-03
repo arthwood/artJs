@@ -28,15 +28,18 @@ var ArtJs = {
 
 var com = {
   arthwood: {
-    data: {},
+    data: {
+      tree: {}
+    },
     dom: {},
     events: {},
     math: {},
-    modules: {},
+    module: {},
     net: {},
     spec: {
       matchers: {}
     },
+    template: {},
     transition: {},
     ui: {},
     utils: {}

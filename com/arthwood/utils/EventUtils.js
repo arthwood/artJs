@@ -1,4 +1,4 @@
-ArtJs.EventUtils = com.arthwood.utils.EventUtils = {
+ArtJs.EventUtils = com.arthwood.utils.Event = {
   edge: function(targets) {
     var t = targets.origin;
     var ct = targets.current;
