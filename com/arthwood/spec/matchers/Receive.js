@@ -1,6 +1,6 @@
 ArtJs.ReceiveMatcher = com.arthwood.spec.matchers.Receive = ArtJs.Class(
   function(expected) {
-    this.super(arguments, expected, 'call');
+    this.super(arguments, expected, 'receive');
   },
   {
     resolve: function(actual) {

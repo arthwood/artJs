@@ -15,7 +15,7 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
       var _callee_ = __arguments__.callee;
       var _super_ = _callee_.superclass || _callee_.super;
       
-      return _super_.apply(this, _arguments_);
+      return _super_.apply(this, _arguments_.concat(ArtJs.$A(__arguments__)));
     };
     
     _super_.ctor = this.ctor;

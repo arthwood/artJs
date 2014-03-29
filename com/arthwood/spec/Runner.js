@@ -20,18 +20,18 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
       this.timeline.start();
       
       this.runnerElement = ArtJs.$insert(document.body, this.runnerTemplate);
-  
-      ArtJs.ArrayUtils.each(this.specs, this._eachSpec, this);
-  
+      
+      ArtJs.ArrayUtils.invoke(this.specs, 'execute');
+      
       var duration = this.timeline.mark();
       var failures = ArtJs.ArrayUtils.select(this.results, this._isFailure, this);
       var success = ArtJs.ArrayUtils.isEmpty(failures);
       var classNames = ['results'];
       var n = this.results.length;
       var k = failures.length;
-  
+      
       classNames.push(success ? 'success' : 'failure');
-  
+      
       this.resultsTemplate.className = classNames.join(' ');
       this.resultsElement = ArtJs.$insert(document.body, this.resultsTemplate);
       
@@ -42,17 +42,17 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
       var durationText = 'Duration: ' + ArtJs.DateUtils.miliToHMSM(duration);
       var resultElement = ArtJs.$E('p', {className: 'result'}, resultText);
       var statElement = ArtJs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
-  
+      
       ArtJs.$insert(this.resultsElement, resultElement);
       ArtJs.$insert(this.resultsElement, statElement);
-  
+      
       if (!success) {
         var list = ArtJs.$E('ul');
-  
+        
         this._getFailureHtml.list = list;
-  
+        
         ArtJs.ArrayUtils.each(failures, this._getFailureHtml, this);
-  
+        
         ArtJs.$insert(this.resultsElement, list);
       }
     },
@@ -67,17 +67,17 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
       if (!this.alreadyFailed()) {
         result.it = this.it;
         this.results.push(result);
-  
+        
         ArtJs.ElementUtils.setContent(this.testTemplate, result.value ? '.' : 'F');
         this.testTemplate.className = result.value ? 'success' : 'failure';
         ArtJs.ElementUtils.insert(this.runnerElement, this.testTemplate);
       }
     },
-  
-    testReceivers: function() {
+    
+    _testReceivers: function() {
       ArtJs.ArrayUtils.each(this.receivers, this.testReceiver, this);
     },
-  
+    
     testReceiver: function(receiver) {
       var result = receiver.getResult();
       
@@ -88,31 +88,24 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
     
     _getFailureHtml: function(i) {
       var path = ArtJs.ArrayUtils.map(i.path, this._nodeToString).join(' ');
-      var info = i.matcher.failureText(i.expectation);
+      var info = i.failureText();
       var pathElement = ArtJs.$E('p', {className: 'path'}, path);
       var infoElement = ArtJs.$E('p', {className: 'info'}, info);
       var item = ArtJs.$E('li');
-  
+      
       ArtJs.$insert(item, pathElement);
       ArtJs.$insert(item, infoElement);
       ArtJs.$insert(arguments.callee.list, item);
     },
-  
+    
     _nodeToString: function(i) {
       var facet = i.facet;
-  
+      
       return typeof(facet) == 'string' ? facet : facet.name;
     },
-  
+    
     _isFailure: function(i) {
       return !i.value;
-    },
-  
-    _eachSpec: function(i) {
-      this.subject = i.facet;
-      this.path.push(i);
-  
-      i.body();
     }
   }
 );

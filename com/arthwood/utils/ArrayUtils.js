@@ -91,13 +91,24 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        result.push(func.call(context, item, parseInt(i, 10)));
+        result.push(func.call(context, item, parseInt(i, 10), arr));
       }
     }
 
     return result;
   },
 
+  invoke: function(arr, meth, args) {
+    this._invoke.meth = meth;
+    this._invoke.args = args;
+    
+    return this.map(arr, this._invoke, this);
+  },
+  
+  _invoke: function(i) {
+    return i[arguments.callee.meth].apply(i, arguments.callee.args);
+  },
+  
   pluck: function(arr, prop) {
     this._pluck.prop = prop;
     
@@ -115,7 +126,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        func.call(context, item, parseInt(i, 10));
+        func.call(context, item, parseInt(i, 10), arr);
       }
     }
   },
@@ -127,7 +138,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
 
-        func.call(context, item);
+        func.call(context, item, arr);
       }
     }
   },
@@ -135,7 +146,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   eachIndex: function(arr, func, context) {
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
-        func.call(context, parseInt(i, 10));
+        func.call(context, parseInt(i, 10), arr);
       }
     }
   },
@@ -149,7 +160,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
 
-        mem = func.call(context, result, item, parseInt(i, 10));
+        mem = func.call(context, result, item, parseInt(i, 10), arr);
         
         if (mem) {
           result = mem;
@@ -177,7 +188,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (func.call(context, item, parseInt(i, 10))) { 
+        if (func.call(context, item, parseInt(i, 10), arr)) { 
           result.push(item); 
         }
       }
@@ -195,7 +206,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (!test.call(context, item, parseInt(i, 10))) {
+        if (!test.call(context, item, parseInt(i, 10), arr)) {
           result.push(item);
         }
       }
@@ -212,7 +223,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     for (var i = n; i >= 0; i--) {
       item = arr[i];
       
-      if (test.call(context || this, item, parseInt(i, 10))) { 
+      if (test.call(context || this, item, parseInt(i, 10), arr)) { 
         arr.splice(i, 1); 
       }
     }
@@ -226,7 +237,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (test.call(context || this, item, parseInt(i, 10))) {
+        if (test.call(context || this, item, parseInt(i, 10), arr)) {
           return item;
         }
       }
@@ -266,7 +277,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (!test.call(context || this, item, parseInt(i, 10))) {
+        if (!test.call(context || this, item, parseInt(i, 10), arr)) {
           return false;
         }
       }
@@ -283,7 +294,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (test.call(context || this, item, parseInt(i, 10))) {
+        if (test.call(context || this, item, parseInt(i, 10), arr)) {
           return true;
         }
       }
@@ -304,7 +315,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        (func.call(context, item, i) ? point.x : point.y).push(item);
+        (func.call(context, item, i, arr) ? point.x : point.y).push(item);
       }
     }
     
@@ -339,7 +350,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     }
     
     if (!keepOrder) {
-      result = ArtJs.ObjectUtils.build(result);
+      result = ArtJs.ObjectUtils.fromPoints(result);
     }
     
     return result;
@@ -390,7 +401,11 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
 
   print: function(arr) {
-    this.eachItem(arr, ArtJs.p);
+    this.eachItem(arr, this._printEach, this);
+  },
+  
+  _printEach: function(i) {
+    ArtJs.p(i);
   },
   
   _numerizeCallback: function (i) {
@@ -435,7 +450,6 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     proto.each = dc(this, this.each, true);
     proto.eachIndex = dc(this, this.eachIndex, true);
     proto.eachItem = dc(this, this.eachItem, true);
-    proto.eachPair = dc(this, this.eachPair, true);
     proto.equal = dc(this, this.equal, true);
     proto.first = dc(this, this.first, true);
     proto.flatten = dc(this, this.flatten, true);
@@ -445,6 +459,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     proto.inject = dc(this, this.inject, true);
     proto.insertAt = dc(this, this.insertAt, true);
     proto.intersection = dc(this, this.intersection, true);
+    proto.invoke = dc(this, this.invoke, true);
     proto.isEmpty = dc(this, this.isEmpty, true);
     proto.itemsEqual = dc(this, this.itemsEqual, true);
     proto.last = dc(this, this.last, true);

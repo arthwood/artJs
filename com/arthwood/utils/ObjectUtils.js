@@ -1,4 +1,6 @@
 ArtJs.ObjectUtils = com.arthwood.utils.Object = {
+  name: 'ObjectUtils',
+  
   QUERY_DELIMITER: '&',
   
   init: function() {
@@ -189,7 +191,21 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     return !this.isEmpty(obj);
   },
 
-  build: function(arr) {
+  build: function(arr, func, context) {
+    var result = {};
+    var item;
+
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        result[item] = func.call(context, item);
+      }
+    }
+
+    return result;
+  },
+  
+  fromPoints: function(arr) {
     var result = {};
     var item;
 
@@ -314,7 +330,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     }
   },
 
-  _invertedRemoveValue: function(val, obj) {
+  _invertedRemoveValue: function(val, arr, obj) {
     this.removeValue(obj, val);
   },
 

@@ -1,17 +1,7 @@
 ArtJs.Selector = com.arthwood.dom.Selector = {
-  tagRE: /^\w+/gi,
-  classesRE: /\.[\w\-]+/gi,
-  idRE: /#[\w\-]+/gi,
-  attrsRE: /\[.*\]/gi,
-  
   init: function() {
-    this._filterDescendantsDC = ArtJs.$DC(this, this._filterDescendants);
-    this._toDescendantsDC = ArtJs.$DC(this, this._toDescendants);
-    this._filterByAttributesDC = ArtJs.$DC(this, this._filterByAttributes);
     this._au = ArtJs.ArrayUtils;
     this._ou = ArtJs.ObjectUtils;
-
-    this._elementHasClassNameDC = ArtJs.$DC(this, this._elementHasClassName);
     
     ArtJs.$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$find = ArtJs.$DC(this, this.find);
@@ -30,67 +20,29 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
     return ArtJs.ArrayUtils.last(this.find(element, path));
   },
   
-  parent: function(element, path) {
-    if (!path) {
-      return element.parentNode;
-    }
-    
-    var signature = this._getSignature(path);
-    var family = this._getDescendants(element);
-    var j = 1;
-    var n = family.length;
-    var ok;
+  parent: function(element, pattern) {
+    this._signature = new ArtJs.Signature(pattern || '');
 
-    do {
-      ok = this._checkNode(family[j++], signature);
-    }
-    while (!ok && j < n);
-
-    return ok ? family[j - 1] : null;
+    return this._au.detect(this._getDescendants(element), this._signature.checkNode, this._signature);
   },
   
-  getElements: function(path, root) {
-    var items = path.split(' ');
-    var signatures = this._au.map(items, this._getSignature, this);
-    var candidates = this._getElementsBySignature(this._au.last(signatures));
+  getElements: function(pattern, root) {
+    this._root = root;
     
-    this._toDescendantsDC.delegate.args = [root];
+    var elements = this._findBySignature(new ArtJs.Signature(pattern));
+    var descendants = this._au.map(elements, this._elementToDescendants, this);
     
-    var descendants = this._au.selectNonEmpty(this._au.map(candidates, this._toDescendantsDC));
+    descendants = this._au.select(descendants, this._hasElementDescendants, this);
     
-    this._filterDescendantsDC.delegate.args = [signatures];
-    
-    var filteredDescendants = this._au.select(descendants, this._filterDescendantsDC);
-    
-    return this._au.map(filteredDescendants, this._au.first, this._au);
+    return this._au.pluck(descendants, 'x');
   },
-
-  isDescendantOf: function(e, root) {
-    var descendants = this._getDescendants(e, root);
-
-    return !this._au.isEmpty(descendants) && descendants.length > 1;
+  
+  _elementToDescendants: function(element) {
+    return new ArtJs.Point(element, this._toDescendants(element));
   },
-
-  isSelfOrDescendantOf: function(e, root) {
-    return e == root || this.isDescendantOf(e, root);
-  },
-
-  getElementById: function(v) {
-    return document.getElementById(v);
-  },
-
-  getElementsByTagName: function(v) {
-    return ArtJs.$A(document.getElementsByTagName(v));
-  },
-
-  getElementsByClassName: function(v) {
-    return document.getElementsByClassName
-      ? ArtJs.$A(document.getElementsByClassName(v))
-      : this._getElementsByClassName(v);
-  },
-
-  _toDescendants: function(i, idx, root) {
-    return this._getDescendants(i, root);
+  
+  _toDescendants: function(i) {
+    return this._getDescendants(i, this._root);
   },
   
   _getDescendants: function(e, root) {
@@ -101,78 +53,45 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
       e = e.parentNode;
     }
     
-    return result.slice(0, result.indexOf(root || document.body) + 1);
+    var index = result.indexOf(root || document.body);
+    
+    return root && index == -1 ? null : result.slice(1, index);
   },
   
-  _filterDescendants: function(descendants, signatures) {
-    var i = signatures.length - 1;
-    var j = 1;
-    var n = descendants.length;
-    var signature;
-    var ok;
-    
-    if (n == 1) {
-      return true;
-    }
-    
-    var immediateParent = false;
-    
-    while (i--) {
-      signature = signatures[i];
-      
-      var immediateParentTag = (signature == '>');
-      
-      if (!immediateParentTag) {
-        do {
-          ok = this._checkNode(descendants[j++], signature);
-        }
-        while (!ok && !immediateParent && j < n);
-        
-        if (!ok) {return false;}
-      }
-      
-      immediateParent = immediateParentTag;
-    }
-    
-    return true;
+  _hasElementDescendants: function(point) {
+    return !(point.y === null);
   },
   
-  _checkNode: function(node, signature) {
-    var tag = signature.tag;
-    var id = signature.id;
-    var classes = signature.classes;
-    var attributes = signature.attributes;
-    
-    return (!tag || (node.tagName.toLowerCase() == tag)) &&
-      (!id || node.id == id) &&
-      (this._au.isEmpty(classes) || this._au.includesAll(node.className.split(' '), classes)) &&
-      (this._ou.isEmpty(attributes) || this._ou.includesAll(node.attributes, attributes));
+  isDescendantOf: function(e, root) {
+    var descendants = this._getDescendants(e, root);
+
+    return !this._au.isEmpty(descendants);
   },
   
-  _getSignature: function(selector) {
-    if (selector == '>') {
-      return selector;
-    }
-    else {
-      return  {
-        tag: this._getTag(selector), 
-        id: this._getId(selector), 
-        classes: this._getClasses(selector), 
-        attributes: this._getAttributes(selector)
-      };
-    }
+  isSelfOrDescendantOf: function(e, root) {
+    return e == root || this.isDescendantOf(e, root);
   },
   
-  _getElementsBySignature: function(signature) {
-    var id = signature.id;
-    var tag = signature.tag;
-    var classes = signature.classes;
-    var attributes = signature.attributes;
+  getElementById: function(v) {
+    return document.getElementById(v);
+  },
+  
+  getElementsByTagName: function(v) {
+    return ArtJs.$A(document.getElementsByTagName(v));
+  },
+  
+  getElementsByClassName: function(v) {
+    return document.getElementsByClassName
+      ? ArtJs.$A(document.getElementsByClassName(v))
+      : this._findByClassName(v);
+  },
+  
+  _findBySignature: function(signature) {
     var elements = [];
     
-    if (id) {
-      var elementById = this.getElementById(id);
-    
+    if (signature.id) {
+      var elementById = this.getElementById(signature.id);
+      
       if (elementById) {
         elements.push(elementById);
       }
@@ -181,8 +100,8 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
       }
     }
     
-    if (tag) {
-      var elementsByTag = this.getElementsByTagName(tag);
+    if (signature.tag) {
+      var elementsByTag = this.getElementsByTagName(signature.tag);
       
       if (this._au.isEmpty(elementsByTag)) {
         return [];
@@ -202,8 +121,8 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
       }
     }
     
-    if (!this._au.isEmpty(classes)) {
-      var elementsByClass = this._getElementsByClassNames(classes);
+    if (!this._au.isEmpty(signature.classes)) {
+      var elementsByClass = this._findByClassNames(signature.classes);
       
       if (this._au.isEmpty(elementsByClass)) {
         return [];
@@ -221,74 +140,31 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
       }
     }
     
-    this._filterByAttributesDC.delegate.args = [attributes];
+    this._filterByAttributes.attributes = signature.attributes;
     
-    return this._au.compact(this._au.select(elements, this._filterByAttributesDC));
+    return this._au.compact(this._au.select(elements, this._filterByAttributes, this));
   },
   
-  _getTag: function(selector) {
-    var matches = selector.match(this.tagRE);
-    
-    return matches && this._au.first(matches);
-  },
-  
-  _getId: function(selector) {
-    var match = this._au.first(this._match(selector, this.idRE));
-    
-    return match && this._stripIdSelector(match);
-  },
-  
-  _getClasses: function(selector) {
-    return this._au.map(this._match(selector, this.classesRE), this._stripClassSelector, this);
-  },
-  
-  _getAttributes: function(selector) {
-    var matches = this._au.map(this._match(selector, this.attrsRE), this._stripAttributeSelector, this);
-    var arr = this._au.map(matches[0] && matches[0].split(',') || [], this._attrToArray, this);
-
-    return this._ou.fromArray(arr);
-  },
-  
-  _match: function(str, re) {
-    var matches = str.match(re);
-    
-    return matches && ArtJs.$A(matches) || [];
-  },
-  
-  _attrToArray: function(i) {
-    return i.split('=');
-  },
-  
-  _stripIdSelector: function(v) {
-    return v.slice(1);
-  },
-  
-  _stripClassSelector: function(v) {
-    return v.slice(1);
-  },
-  
-  _stripAttributeSelector: function(v) {
-    return v.slice(1).slice(0, v.length - 2);
-  },
-  
-  _getElementsByClassNames: function(v) {
+  _findByClassNames: function(v) {
     return this._au.intersection(this._au.map(v, this.getElementsByClassName, this));
   },
 
-  _elementHasClassName: function(e, className) {
-    return ArtJs.ElementUtils.hasClass(e, className);
+  _elementHasClassName: function(e) {
+    return ArtJs.ElementUtils.hasClass(e, arguments.callee.className);
   },
 
-  _filterByAttributes: function(i, attributes) {
+  _filterByAttributes: function(i) {
+    var attributes = arguments.callee.attributes;
+    
     return this._ou.includesAll(ArtJs.ElementUtils.getAttributes(i), attributes);
   },
   
-  _getElementsByClassName: function(v) {
+  _findByClassName: function(v) {
     var elements = ArtJs.ElementUtils.filterElements(ArtJs.$A(document.all));
 
-    this._elementHasClassNameDC.delegate.args = [v];
+    this._elementHasClassName.className = v;
 
-    return this._au.select(elements, this._elementHasClassNameDC);
+    return this._au.select(elements, this._elementHasClassName);
   },
   
   doInjection: function() {

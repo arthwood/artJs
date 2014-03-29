@@ -437,6 +437,35 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
     return ArtJs.on(e, 'click', delegate);
   },
   
+  toString: function(e) {
+    var classes = this.getClasses(e);
+    var attr = this.getAttributes(e);
+    
+    delete attr['id'];
+    delete attr['class'];
+    
+    return this.toTagString(e)
+      + this.toIdString(e) 
+      + ArtJs.ArrayUtils.map(classes, this.toClassString).join('') 
+      + ArtJs.ObjectUtils.map(attr, this.toAttrString).join('');
+  },
+  
+  toTagString: function(e) {
+    return e.tagName.toLowerCase();
+  },
+  
+  toIdString: function(e) {
+    return '#' + e.id;
+  },
+  
+  toClassString: function(v) {
+    return '.' + v;
+  },
+  
+  toAttrString: function(k, v) {
+    return '[' + k + '=' + v + ']';
+  },
+  
   doInjection: function() {
     var proto = Element.prototype;
     var dc = ArtJs.$DC;

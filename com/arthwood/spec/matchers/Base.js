@@ -9,7 +9,7 @@ ArtJs.BaseMatcher = com.arthwood.spec.matchers.Base = ArtJs.Class(
     },
     
     _failureData: function(actual) {
-      return ['"' + actual.value + '"', 'expected to', this.toText, String(this.expected)];
+      return [actual.value, 'expected to', this.toText, String(this.expected)];
     },
 
     failureText: function(actual) {

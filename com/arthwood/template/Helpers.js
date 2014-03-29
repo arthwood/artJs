@@ -1,4 +1,16 @@
 ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
+  render: function(templateId, scope) {
+    var template = ArtJs.TemplateLibrary.getTemplate(templateId);
+    
+    return ArtJs.TemplateBase.compile(template, scope);
+  },
+  
+  renderCollection: function(template, collection) {
+    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, template);
+    
+    return ArtJs.ArrayUtils.map(collection, callback).join('');
+  },
+  
   list: function(items) {
     var ul = ArtJs.$B('ul');
     
@@ -7,5 +19,23 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   
   renderItem: function(i) {
     return ArtJs.$B('li', null, i.render()).toString();
+  },
+  
+  registerAll: function(helpers) {
+    ArtJs.ObjectUtils.eachPair(helpers, this.register, this);
+  },
+  
+  register: function(name, method) {
+    this[name] = method;
+  },
+  
+  perform: function(action, args) {
+    return this[action].apply(this, args);
+  },
+  
+  _renderCollectionItem: function(scope, idx, arr, template) {
+    scope._index = idx;
+    
+    return this.render(template, scope);
   }
 };

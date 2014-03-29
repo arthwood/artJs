@@ -78,14 +78,14 @@ ArtJs.SpecReceiver = com.arthwood.spec.Receiver = ArtJs.Class(
     },
   
     andCallOriginal: function() {
-      if (this._isForMock()) {
+      var forMock = this._isForMock();
+      
+      if (forMock) {
         ArtJs.log('WARNING: Using "andCallOriginal" for mock has no result.');
-        this._callOriginal = false;
       }
-      else {
-        this._callOriginal = true;
-      }
-  
+      
+      this._callOriginal = !forMock;
+      
       return this;
     },
   
