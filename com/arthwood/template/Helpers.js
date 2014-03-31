@@ -5,10 +5,22 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
     return ArtJs.TemplateBase.compile(template, scope);
   },
   
+  renderInto: function(element, templateId, scope) {
+    var content = this.render(templateId, scope);
+      
+    ArtJs.ElementUtils.setContent(element, content);
+    
+    ArtJs.Component.scan(element);
+  },
+  
   renderCollection: function(template, collection) {
     var callback = ArtJs.$DC(this, this._renderCollectionItem, false, template);
     
     return ArtJs.ArrayUtils.map(collection, callback).join('');
+  },
+  
+  renderIf: function(value, method) {
+    return value ? this[method](value) : '';
   },
   
   list: function(items) {

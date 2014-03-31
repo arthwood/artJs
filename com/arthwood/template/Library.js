@@ -1,6 +1,8 @@
 ArtJs.TemplateLibrary = com.arthwood.template.Library = {
-  PATH: '/templates',
-  TEMPLATES: [],
+  config: {
+    PATH: '/templates',
+    TEMPLATES: []
+  },
   
   _templates: {},
   
@@ -11,13 +13,13 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   
   _loadAll: function() {
-    ArtJs.ArrayUtils.each(this.TEMPLATES, this._load, this);
+    ArtJs.ArrayUtils.each(this.config.TEMPLATES, this._load, this);
     
     this._loadCheck();
   },
   
   _load: function(i) {
-    var request = ArtJs.$get(this.PATH + '/' +  i + '.html', null, this._onLoadSuccessBind);
+    var request = ArtJs.$get(this.config.PATH + '/' +  i + '.html', null, this._onLoadSuccessBind);
     
     request.id = i;
   },
@@ -33,7 +35,10 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   
   _loadCheck: function() {
-    if (ArtJs.ObjectUtils.keys(this._templates).length == this.TEMPLATES.length) {
+    if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
+      ArtJs.ElementUtils.setContent(document.body, ArtJs.TemplateBase.compile(document.body.innerHTML));
+      ArtJs.Component.scan(document.body);
+
       ArtJs.onLibraryLoad.fire(this);
     }
   }

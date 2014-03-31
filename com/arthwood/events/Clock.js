@@ -2,7 +2,7 @@ ArtJs.Clock = com.arthwood.events.Clock = ArtJs.Class(
   function(interval, repeat) {
     this._interval = interval;
     this._repeat = repeat;
-    this._intervalId = null;
+    this._id = null;
     this._counter = 0;
     this._tickDC = ArtJs.$DC(this, this._tick); 
     this.onChange = new ArtJs.CustomEvent('Clock:onChange');
@@ -14,6 +14,29 @@ ArtJs.Clock = com.arthwood.events.Clock = ArtJs.Class(
       this.resume(now);
     },
     
+    stop: function() {
+      this.pause();
+      
+      this._counter = 0;
+    },
+    
+    pause: function() {
+      clearInterval(this._id);
+      this._id = null;
+    },
+    
+    resume: function(now) {
+      this._id = setInterval(this._tickDC, this._interval);
+      
+      if (now) {
+        this._tick();
+      }
+    },
+    
+    isRunning: function() {
+      return (this._id !== null);
+    },
+    
     _tick: function() {
       this._counter++;
       this.onChange.fire(this);
@@ -22,38 +45,6 @@ ArtJs.Clock = com.arthwood.events.Clock = ArtJs.Class(
         this.stop();
         this.onComplete.fire(this);
       }
-    },
-    
-    stop: function() {
-      this.pause();
-      
-      this._counter = 0;
-    },
-    
-    pause: function() {
-      clearInterval(this._intervalId);
-      this._intervalId = null;
-    },
-    
-    resume: function(now) {
-      this._intervalId = setInterval(this._tickDC, this._interval);
-      
-      if (now) {
-        this._tick();
-      }
-    },
-    
-    isRunning: function() {
-      return (this._intervalId !== null);
-    }
-  },
-  {
-    fire: function(delegate, delay, repeat) {
-      var clock = new ArtJs.Clock(delegate, delay, repeat);
-      
-      clock.start();
-      
-      return clock;
     }
   }
 );

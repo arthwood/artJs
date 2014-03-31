@@ -59,6 +59,12 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(
       template.compile();
       
       return template.content;
+    },
+    
+    compileInto: function(element, content, scope) {
+      ArtJs.ElementUtils.setContent(element, this.compile(content, scope));
+      
+      ArtJs.Component.scan(element);
     }
   }
 );
