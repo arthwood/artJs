@@ -4,8 +4,12 @@ ArtJs.Class = function(ctor, proto, stat, superclass) {
   return builder.ctor;
 };
 
+ArtJs.Class._name = 'Class';
+
 ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
+  this.ctor._onCreated = this._defaultOnCreated;
+  this.ctor._onExtended = this._defaultOnExtended;
   
   if (superclass) {
     var _super_ = function() {
@@ -40,9 +44,23 @@ ArtJs.ClassBuilder = function(ctor, proto, stat, superclass) {
   if (stat) {
     ArtJs.ObjectUtils.eachPair(stat, this._eachStat, this);
   }
+  
+  this.ctor._onCreated();
+  
+  if (superclass) {
+    this.ctor._onExtended();
+  }
 };
 
 ArtJs.ClassBuilder.prototype = {
+  _defaultOnCreated: function() {
+    this.subclasses = [];
+  },
+  
+  _defaultOnExtended: function() {
+    this.superclass.subclasses.push(this);
+  },
+  
   _defaultConstructor: function() {
     return function() { 
       this.super(arguments); 

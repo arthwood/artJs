@@ -1,16 +1,10 @@
 ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   render: function(templateId, scope) {
-    var template = ArtJs.TemplateLibrary.getTemplate(templateId);
-    
-    return ArtJs.TemplateBase.compile(template, scope);
+    return ArtJs.TemplateBase.renderTemplate(templateId, scope);
   },
   
   renderInto: function(element, templateId, scope) {
-    var content = this.render(templateId, scope);
-      
-    ArtJs.ElementUtils.setContent(element, content);
-    
-    ArtJs.Component.scan(element);
+    return ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
   
   renderCollection: function(template, collection) {

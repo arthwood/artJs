@@ -1,5 +1,5 @@
 ArtJs.Selector = com.arthwood.dom.Selector = {
-  init: function() {
+  _init: function() {
     ArtJs.$ = ArtJs.$DC(this, this.getElements);
     ArtJs.$find = ArtJs.$DC(this, this.find);
     ArtJs.$parent = ArtJs.$DC(this, this.parent);
@@ -69,14 +69,13 @@ ArtJs.Selector = com.arthwood.dom.Selector = {
   _getDescendants: function(e, root) {
     var result = [];
     
-    while (e) {
+    while (e = e.parentNode) {
       result.push(e);
-      e = e.parentNode;
     }
     
     var index = result.indexOf(root || document.body);
     
-    return root && index == -1 ? null : result.slice(1, index);
+    return root && index == -1 ? null : result.slice(0, index);
   },
   
   _hasElementDescendants: function(point) {

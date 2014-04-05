@@ -1,9 +1,9 @@
 ArtJs.ObjectUtils = com.arthwood.utils.Object = {
-  name: 'ObjectUtils',
+  _name: 'ObjectUtils',
   
   QUERY_DELIMITER: '&',
   
-  init: function() {
+  _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
     this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
     this._invertedIncludesDC = ArtJs.$DC(this, this._invertedIncludes);

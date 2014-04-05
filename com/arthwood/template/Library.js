@@ -6,7 +6,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   
   _templates: {},
   
-  init: function() {
+  _init: function() {
     this.onLoad = new ArtJs.CustomEvent('Library::Load');
     this._onLoadSuccessBind = ArtJs.$D(this, this.onLoadSuccess);
     ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
@@ -36,9 +36,8 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   
   _loadCheck: function() {
     if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
-      ArtJs.ElementUtils.setContent(document.body, ArtJs.TemplateBase.compile(document.body.innerHTML));
-      ArtJs.Component.scan(document.body);
-
+      ArtJs.TemplateBase.renderInto(document.body, document.body.innerHTML);
+      
       ArtJs.onLibraryLoad.fire(this);
     }
   }

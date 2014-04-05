@@ -101,7 +101,7 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
     _nodeToString: function(i) {
       var facet = i.facet;
       
-      return typeof(facet) == 'string' ? facet : facet.name;
+      return typeof(facet) == 'string' ? facet : facet._name;
     },
     
     _isFailure: function(i) {

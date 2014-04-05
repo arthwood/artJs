@@ -53,18 +53,31 @@ ArtJs.TemplateBase = com.arthwood.template.Base = ArtJs.Class(
     }
   },
   {
-    compile: function(content, scope) {
-      var template = new this(content, scope);
+    renderContent: function(content, scope) {
+      var instance = new this(content, scope);
       
-      template.compile();
+      instance.compile();
       
-      return template.content;
+      return instance.content;
     },
     
-    compileInto: function(element, content, scope) {
-      ArtJs.ElementUtils.setContent(element, this.compile(content, scope));
-      
-      ArtJs.Component.scan(element);
+    renderInto: function(element, content, scope) {
+      this.render(element, this.renderContent(content, scope));
+    },
+    
+    renderTemplate: function(templateId, scope) {
+      var template = ArtJs.TemplateLibrary.getTemplate(templateId);
+    
+      return this.renderContent(template, scope);
+    },
+    
+    renderTemplateInto: function(element, templateId, scope) {
+      this.render(element, this.renderTemplate(templateId, scope));
+    },
+    
+    render: function(element, content) {
+      ArtJs.ElementUtils.setContent(element, content);
+      ArtJs.Component._scan(element);
     }
   }
 );

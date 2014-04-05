@@ -7,13 +7,13 @@ ArtJs.Locator = com.arthwood.module.Locator = {
   
   extensions: {
     find: function(i) {
-      this.found.identifier = i;
+      this.identifier = i;
       
-      return ArtJs.ArrayUtils.detect(this.instances, this.found);
+      return ArtJs.ArrayUtils.detect(this.instances, this.found, this);
     },
   
     found: function(i) {
-      return i.getIdentifier() == arguments.callee.identifier;
+      return i.getIdentifier() == this.identifier;
     }
   }
 };

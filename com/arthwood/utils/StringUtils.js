@@ -1,5 +1,5 @@
 ArtJs.StringUtils = com.arthwood.utils.String = {
-  name: 'StringUtils',
+  _name: 'StringUtils',
   
   first: function(str) {
     return str.substr(0, 1);

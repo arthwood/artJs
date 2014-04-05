@@ -17,6 +17,6 @@ ArtJs.Toggler = com.arthwood.utils.Toggler = ArtJs.Class(
     }
   },
   {
-    name: 'Toggler'
+    _name: 'Toggler'
   }
 );

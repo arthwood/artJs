@@ -1,5 +1,5 @@
 ArtJs.MathUtils = com.arthwood.utils.Math = {
-  name: 'MathUtils',
+  _name: 'MathUtils',
   
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;

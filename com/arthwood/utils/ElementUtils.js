@@ -6,7 +6,7 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
   
-  init: function() {
+  _init: function() {
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
     ArtJs.$insert = ArtJs.$DC(this, this.insert);
   },

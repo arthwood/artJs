@@ -1,5 +1,10 @@
 ArtJs.ArrayUtils = com.arthwood.utils.Array = {
-  name: 'ArrayUtils',
+  _name: 'ArrayUtils',
+  
+  _init: function() {
+    this._areItemsEqualCallback = ArtJs.$DC(this, this.areItemsEqual);
+    this._invokeCallback = ArtJs.$DC(this, this._invoke);
+  },
   
   build: function(n, func) {
     var arr = new Array(n);
@@ -66,7 +71,8 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
 
     while (n-- > 0) {
       if (arr[n] === item) {
-        arr.splice(n, 1);
+        this.removeAt(arr, n);
+        
         if (onlyFirst) { return; }
       }
     }
@@ -98,15 +104,14 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return result;
   },
 
-  invoke: function(arr, meth, args) {
-    this._invoke.meth = meth;
-    this._invoke.args = args;
+  invoke: function(arr, meth) {
+    this._invokeCallback.delegate.args = [meth, this.arrify(arguments, 2)];
     
-    return this.map(arr, this._invoke, this);
+    return this.map(arr, this._invokeCallback);
   },
   
-  _invoke: function(i) {
-    return i[arguments.callee.meth].apply(i, arguments.callee.args);
+  _invoke: function(i, idx, arr, meth, args) {
+    return i[meth].apply(i, args);
   },
   
   pluck: function(arr, prop) {
@@ -181,7 +186,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   
   select: function(arr, func, context) {
     var result = [];
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
@@ -197,9 +202,23 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return result;
   },
   
+  $select: function(arr, func, context) {
+    var n = arr.length - 1;
+    var test = func || this.identity;
+    var item;
+    
+    for (var i = n; i >= 0; i--) {
+      item = arr[i];
+      
+      if (!test.call(context || this, item, parseInt(i, 10), arr)) { 
+        this.removeAt(arr, i);
+      }
+    }
+  },
+  
   reject: function(arr, func, context) {
     var result = [];
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
@@ -217,20 +236,20 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   
   $reject: function(arr, func, context) {
     var n = arr.length - 1;
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i = n; i >= 0; i--) {
       item = arr[i];
       
-      if (test.call(context || this, item, parseInt(i, 10), arr)) { 
-        arr.splice(i, 1); 
+      if (test.call(context || this, item, parseInt(i, 10), arr)) {
+        this.removeAt(arr, i);
       }
     }
   },
   
   detect: function(arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
@@ -246,12 +265,14 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return null;
   },
 
-  equal: function(arr) {
-    return this.all(this.transpose(arr), this.itemsEqual, this);
+  equal: function(arr, func, context) {
+    this._areItemsEqualCallback.delegate.args = [func, context];
+    
+    return this.all(this.transpose(arr), this._areItemsEqualCallback, this);
   },
 
-  itemsEqual: function(arr) {
-    return this.uniq(arr).length == 1;
+  areItemsEqual: function(i, idx, arr, func, context) {
+    return this.uniq(i, func, context).length == 1;
   },
   
   transpose: function(arr) {
@@ -270,7 +291,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
 
   all: function(arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
@@ -287,7 +308,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   
   any: function (arr, func, context) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
@@ -303,7 +324,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     return false;
   },
   
-  _defaultTestFunction: function(i) {
+  identity: function(i) {
     return i;
   },
   
@@ -329,7 +350,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
 
   groupBy: function(arr, func, context, keepOrder) {
-    var test = func || this._defaultTestFunction;
+    var test = func || this.identity;
     var result = [];
     var values = {};
     var group;
@@ -475,6 +496,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
     proto.removeItem = dc(this, this.removeItem, true);
     proto.second = dc(this, this.second, true);
     proto.select = dc(this, this.select, true);
+    proto.$select = dc(this, this.$select, true);
     proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
     proto.stringify = dc(this, this.stringify, true);
     proto.sum = dc(this, this.sum, true);
