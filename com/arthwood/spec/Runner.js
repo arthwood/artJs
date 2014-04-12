@@ -17,7 +17,7 @@ ArtJs.SpecRunner = com.arthwood.spec.Runner = ArtJs.Class(
     },
     
     run: function() {
-      this.timeline.start();
+      this.timeline.mark();
       
       this.runnerElement = ArtJs.$insert(document.body, this.runnerTemplate);
       
