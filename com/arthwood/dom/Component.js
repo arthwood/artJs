@@ -95,7 +95,7 @@ ArtJs.Component = com.arthwood.dom.Component = ArtJs.Class(
     },
     
     _toInstances: function(i) {
-      return (i.instances = i.instances || []);
+      return i.instances;
     },
     
     _eachDependeeInstance: function(i) {

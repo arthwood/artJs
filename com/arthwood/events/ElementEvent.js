@@ -41,10 +41,20 @@ ArtJs.MouseEvent = com.arthwood.events.Mouse = ArtJs.Class(
   },
   {
     _on: function(e) {
-      if (ArtJs.EventUtils.edge(this.getTargets(e, this.on)) && !(this.on == this.over)) {
+      if (this._edge(e) && !(this.on == this.over)) {
         this.over = this.on;
         this.super(arguments, e);
       }
+    },
+    
+    _edge: function(e) {
+      var targets = this.getTargets(e, this.on);
+      var t = targets.origin;
+      var ct = targets.current;
+      var rt = targets.related;
+      var s = ArtJs.Selector;
+      
+      return (t == ct) && !s.isDescendantOf(rt, ct) || s.isDescendantOf(t, ct) && !s.isSelfOrDescendantOf(rt, ct);
     }
   }, null, ArtJs.ElementEvent
 );

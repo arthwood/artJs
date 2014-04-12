@@ -1,4 +1,4 @@
-ArtJs.Class = function(ctor, proto, stat, superclass) {
+ArtJs.Class = com.arthwood.utils.Class = function(ctor, proto, stat, superclass) {
   var builder = new ArtJs.ClassBuilder(ctor, proto, stat, superclass);
   
   return builder.ctor;
@@ -62,8 +62,10 @@ ArtJs.ClassBuilder.prototype = {
   },
   
   _defaultConstructor: function() {
-    return function() { 
-      this.super(arguments); 
+    return function() {
+      if (arguments.callee.superclass) {
+        this.super(arguments);
+      }
     };
   },
   

@@ -7,8 +7,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   _templates: {},
   
   _init: function() {
-    this.onLoad = new ArtJs.CustomEvent('Library::Load');
-    this._onLoadSuccessBind = ArtJs.$D(this, this.onLoadSuccess);
+    this._onLoadSuccessBind = ArtJs.$D(this, this._onLoadSuccess);
     ArtJs.onDocumentLoad.add(ArtJs.$D(this, this._loadAll));
   },
   
@@ -24,7 +23,7 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
     request.id = i;
   },
   
-  onLoadSuccess: function(ajax) {
+  _onLoadSuccess: function(ajax) {
     this._templates[ajax.id] = ajax.getResponseText();
     
     this._loadCheck();

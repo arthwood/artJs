@@ -4,27 +4,17 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
   },
   
   renderInto: function(element, templateId, scope) {
-    return ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
+    ArtJs.TemplateBase.renderTemplateInto(element, templateId, scope);
   },
   
-  renderCollection: function(template, collection) {
-    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, template);
+  renderCollection: function(templateId, collection) {
+    var callback = ArtJs.$DC(this, this._renderCollectionItem, false, templateId);
     
     return ArtJs.ArrayUtils.map(collection, callback).join('');
   },
   
   renderIf: function(value, method) {
     return value ? this[method](value) : '';
-  },
-  
-  list: function(items) {
-    var ul = ArtJs.$B('ul');
-    
-    return ArtJs.ArrayUtils.map(items, this.renderItem, this).toString();
-  },
-  
-  renderItem: function(i) {
-    return ArtJs.$B('li', null, i.render()).toString();
   },
   
   registerAll: function(helpers) {
@@ -39,9 +29,9 @@ ArtJs.TemplateHelpers = com.arthwood.template.Helpers = {
     return this[action].apply(this, args);
   },
   
-  _renderCollectionItem: function(scope, idx, arr, template) {
+  _renderCollectionItem: function(scope, idx, arr, templateId) {
     scope._index = idx;
     
-    return this.render(template, scope);
+    return this.render(templateId, scope);
   }
 };

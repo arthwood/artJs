@@ -3,7 +3,6 @@ ArtJs.onWindowLoad = new ArtJs.CustomEvent('window:load');
 ArtJs.onLibraryLoad = new ArtJs.CustomEvent('library:load');
 
 document.addEventListener('DOMContentLoaded', function() {
-  ArtJs.Component._init();
   ArtJs.onDocumentLoad.fire();
 }, false);
 
@@ -12,6 +11,7 @@ window.addEventListener('load', function() {
 }, false);
 
 ArtJs.ArrayUtils._init();
+ArtJs.Component._init();
 ArtJs.ObjectUtils._init();
 ArtJs.ElementBuilder._init();
 ArtJs.ElementUtils._init();

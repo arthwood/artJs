@@ -5,16 +5,22 @@ ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(
     this.onComplete = new ArtJs.CustomEvent('Timeout:onComplete');
   }, 
   {
-    _onTimeout: function() {
-      this.onComplete.fire(this);
-    },
-    
-    start: function(now) {
+    start: function() {
       this._id = setTimeout(this._onTimeoutDC, this._delay);
     },
     
     isRunning: function() {
       return (this._id !== null);
+    },
+    
+    getDelay: function() {
+      return this._delay;
+    },
+    
+    _onTimeout: function() {
+      delete this._id;
+      
+      this.onComplete.fire(this);
     }
   },
   {

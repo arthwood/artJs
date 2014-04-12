@@ -20,7 +20,6 @@ var ArtJs = {
     this.DateUtils.doInjection();
     this.Selector.doInjection();
     this.ElementUtils.doInjection();
-    this.EventUtils.doInjection();
     this.Delegate.doInjection();
     this.Blind.doInjection();
   }
