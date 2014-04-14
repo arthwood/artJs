@@ -14,15 +14,20 @@ ArtJs.Tree = com.arthwood.ui.Tree = ArtJs.Class(
       return ArtJs.ArrayUtils.isNotEmpty(ArtJs.Selector.find(item, 'ul'));
     });
     
-    var nodes = point.x;
-    var leaves = point.y;
+    this._nodes = point.x;
+    this._leaves = point.y;
     
-    ArtJs.ArrayUtils.each(nodes, ArtJs.$DC(this, this._eachNode));
-    ArtJs.ArrayUtils.each(leaves, ArtJs.$DC(this, this._eachLeaf));
+    ArtJs.ArrayUtils.each(this._nodes, ArtJs.$DC(this, this._eachNode));
+    ArtJs.ArrayUtils.each(this._leaves, ArtJs.$DC(this, this._eachLeaf));
   },
   {
     render: function() {
       return ArtJs.$P(this._renderNode(this.data));
+    },
+    
+    open: function() {
+      this._expandNode(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._nodes)));
+      this._leafAction(ArtJs.ElementUtils.firstElement(ArtJs.ArrayUtils.first(this._leaves)));
     },
     
     _renderNode: function(node) {

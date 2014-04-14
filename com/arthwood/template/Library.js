@@ -12,6 +12,8 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   },
   
   _loadAll: function() {
+    ArtJs.ElementUtils.hide(document.body);
+    
     ArtJs.ArrayUtils.each(this.config.TEMPLATES, this._load, this);
     
     this._loadCheck();
@@ -35,8 +37,8 @@ ArtJs.TemplateLibrary = com.arthwood.template.Library = {
   
   _loadCheck: function() {
     if (ArtJs.ObjectUtils.keys(this._templates).length == this.config.TEMPLATES.length) {
+      ArtJs.ElementUtils.show(document.body);
       ArtJs.TemplateBase.renderInto(document.body, document.body.innerHTML);
-      
       ArtJs.onLibraryLoad.fire(this);
     }
   }
