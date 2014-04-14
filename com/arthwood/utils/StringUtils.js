@@ -138,7 +138,7 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
   },
   
   toJson: function(str) {
-    return eval('(' + str + ')');
+    return JSON.parse(str);
   },
   
   doInjection: function() {
