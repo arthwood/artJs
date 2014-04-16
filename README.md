@@ -18,7 +18,7 @@ Currently it supports FF, Chrome, Safari, Opera, IE10.
 
 Just include art-min.js file in your head section.
 
-#What are the options?
+# What are the options?
 
 You can optionally use two following methods:
 ```ArtJs.globalize()```
