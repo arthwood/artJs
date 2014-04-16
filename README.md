@@ -26,6 +26,7 @@ ArtJs.globalize()
 ```
 
 Which makes all the classes globally accessible in window object, as well as shorthand utility methods like:
+
 `$, $P, $B, $D, $DC, $E.`
   
 ```
