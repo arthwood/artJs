@@ -1,39 +1,32 @@
-<h1>What can it do for you?</h1>
-<p>ArtJs is JavaScript framework of general purpose. Among many features it offers:</p>
-<ul>
-  <li>selecting or manipulation DOM elements</li>
-  <li>performing AJAX requests</li>
-  <li>lots of built in helpers for Object, Array, String, Date, etc.</li>
-  <li>templates for dynamic content rendering</li>
-  <li>component class that allows you to define behaviour of UI elements</li>
-  <li>built in testing framework</li>
-  <li>visual effects</li>
-  <li>UI library</li>
-</ul>
-<h1>Where can you run it?</h1>
-<p>
-  Currently it supports FF, Chrome, Safari, Opera, IE10.
-</p>
-<h1>How you use it?</h1>
-<p>
-  Just include art-min.js file in your head section.
-</p>
-<h1>What are the options?</h1>
-<div>
-  <p>You can optionally use two following methods:</p>
-  <p class="block code">ArtJs.globalize()</p>
-  <p>
-    Which makes all the classes globally accessible in window object, as well as shorthand utility methods like:
-    <span class="code">$, $P, $B, $D, $DC, $E.</span>
-  </p>
+# What can it do for you?
+ArtJs is JavaScript framework of general purpose. Among many features it offers:
+
+* selecting or manipulation DOM elements
+* performing AJAX requests
+* lots of built in helpers for Object, Array, String, Date, etc.
+* templates for dynamic content rendering
+* component class that allows you to define behaviour of UI elements
+* built in testing framework
+* visual effects
+* UI library
+
+# Where can you run it?
+
+Currently it supports FF, Chrome, Safari, Opera, IE10.
+
+#How you use it?
+
+Just include art-min.js file in your head section.
+
+#What are the options?
+
+You can optionally use two following methods:
+```ArtJs.globalize()```
+
+Which makes all the classes globally accessible in window object, as well as shorthand utility methods like:
+`$, $P, $B, $D, $DC, $E.`
   
-  <p class="block code">ArtJs.doInjection()</p>
-  <p>
-    Which makes an extensions on native classes like Object, Array, Date, Element etc. so that you can use:
-    <span class="code">arr.first();</span>
-  </p>
-  <p>
-    Otherwise you are still able to call the method using:
-    <span class="block code">ArtJs.ArrayUtils.first(arr);</span>
-  </p>
-</div>
+```ArtJs.doInjection()```
+
+Which makes an extensions on native classes like Object, Array, Date, Element etc. so that you can use `arr.first()`
+Otherwise you are still able to call the method using `ArtJs.ArrayUtils.first(arr)`
