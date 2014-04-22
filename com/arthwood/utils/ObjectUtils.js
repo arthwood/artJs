@@ -6,6 +6,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
     this._eachPairDeleteValueDC = ArtJs.$DC(this, this._eachPairDeleteValue);
+    this._eachKeyDeleteKeyDC = ArtJs.$DC(this, this._eachKeyDeleteKey);
     this._invertedIncludesDC = ArtJs.$DC(this, this._invertedIncludes);
     this._pairToQueryStringDC = ArtJs.$DC(this, this._pairToQueryString);
     this._parseArrayValueDC = ArtJs.$DC(this, this._parseArrayValue);
@@ -45,6 +46,12 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     this._eachPairDeleteValueDC.delegate.args = [obj, val];
     
     this.eachPair(obj, this._eachPairDeleteValueDC);
+  },
+  
+  removeKeys: function(obj, keys) {
+    this._eachKeyDeleteKeyDC.delegate.args = [obj];
+    
+    ArtJs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
   },
   
   removeValues: function(obj, values) {
@@ -326,12 +333,32 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
 
   _eachPairDeleteValue: function(i, j, obj, val) {
     if (j === val) {
-      delete obj[i];
+      this._deleteKey(obj, i);
     }
+  },
+  
+  _eachKeyDeleteKey: function(i, idx, arr, obj) {
+    this._deleteKey(obj, i);
+  },
+  
+  _deleteKey: function(obj, i) {
+    delete obj[i];
   },
 
   _invertedRemoveValue: function(val, arr, obj) {
     this.removeValue(obj, val);
+  },
+  
+  isNullLike: function(i) {
+    return i === null || i === undefined;
+  },
+  
+  isPresent: function(i) {
+    return !this.isNullLike(i);
+  },
+  
+  getDefault: function(i, defaultValue) {
+    return this.isNullLike(i) ? defaultValue : i;
   },
 
   doInjection: function() {

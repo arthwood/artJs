@@ -1,23 +1,27 @@
-ArtJs.Blind = com.arthwood.transition.Blind = {
-  EASE_IN_OUT: 'ease-in-out',
-
-  blindToggle: function (e, value, duration, type, delay) {
-    this.blindTo(e, e.style.height == '0px' ? value : 0, duration, type, delay);
+ArtJs.Blind = com.arthwood.transition.Blind = ArtJs.Class(
+  function() {
+    this.super(arguments, 'height');
   },
-
-  blindTo: function (e, value, duration, type, delay) {
-    var eu = ArtJs.ElementUtils;
-    var baseStyle = {overflow: 'hidden', height: value + 'px'};
-    var effectStyle = eu.transitionStyle('height', duration || 0.4, type || this.EASE_IN_OUT, delay || 0);
-
-    eu.extendStyle(e, baseStyle);
-    eu.extendStyle(e, effectStyle);
+  {
+    _setStyle: function(value) {
+      this.super(arguments, value + 'px');
+      
+      ArtJs.ElementUtils.setStyle(this.element, 'overflow', 'hidden');
+    }
   },
-
-  doInjection: function () {
-    var proto = Element.prototype;
-
-    proto.blindToggle = ArtJs.$DC(this, this.blindToggle, true);
-    proto.blindTo = ArtJs.$DC(this, this.blindTo, true);
-  }
-};
+  {
+    toggle: function (e, value, duration, type, delay) {
+      var v = e.style.height == '0px' ? value : 0;
+      
+      this.run(e, v, duration, type, delay);
+    },
+  
+    doInjection: function () {
+      var proto = Element.prototype;
+  
+      proto.blindToggle = ArtJs.$DC(this, this.toggle, true);
+      proto.blindTo = ArtJs.$DC(this, this.run, true);
+    }
+  },
+  ArtJs.TransitionBase
+);

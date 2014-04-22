@@ -31,6 +31,10 @@ ArtJs.Timeout = com.arthwood.events.Timeout = ArtJs.Class(
       instance.start();
       
       return instance;
+    },
+    
+    defer: function(delegate) {
+      return this.fire(delegate, 0);
     }
   }
 );

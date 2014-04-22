@@ -92,25 +92,23 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   extendStyle: function(e, style) {
     ArtJs.ObjectUtils.extend(e.style, style);
   },
-
+  
   transitionStyle: function(prop, duration, type, delay) {
-    return this._effectStyle(new ArtJs.Point('transition', this._getTransitionStyleValue(prop, duration, type, delay)));  
+    return this._effectStyle(this._getTransitionStyleValue(prop, duration, type, delay));  
   },
 
   _getTransitionStyleValue: function(prop, duration, type, delay) {
     return [prop, duration + 's', type, delay + 's'].join(' ');
   },
   
-  _effectStyle: function(data) {
-    this._browserMap.data = data;
+  _effectStyle: function(value) {
+    this._browserMap.value = value;
 
     return ArtJs.ObjectUtils.fromArray(ArtJs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
   },
 
   _browserMap: function(browser) {
-    var data = arguments.callee.data;
-
-    return [browser + data.x, data.y];
+    return [browser + 'transition', arguments.callee.value];
   },
   
   getSizeStyle: function(e, prop) {
