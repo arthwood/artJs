@@ -1,5 +1,5 @@
 ArtJs.log = function() {
-  if (console) {
+  if (typeof console === "object") {
     console.log(ArtJs.$A(arguments));
   }
 };
