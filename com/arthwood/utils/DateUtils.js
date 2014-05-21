@@ -1,6 +1,17 @@
 ArtJs.DateUtils = com.arthwood.utils.Date = {
   _name: 'DateUtils',
   
+  INJECTABLES: [
+    'monthDaysNum',
+    'firstDay',
+    'toHMS',
+    'toYMD',
+    'toDMY',
+    'copy',
+    'getDateShifted',
+    'stripDayTime'
+  ],
+  
   getTime: function() {
     return (new Date()).getTime();
   },
@@ -168,19 +179,6 @@ ArtJs.DateUtils = com.arthwood.utils.Date = {
   },
 
   doInjection: function() {
-    var proto = Date.prototype;
-    var dc = ArtJs.$DC;
-    
-    proto.monthDaysNum = dc(this, this.monthDaysNum, true);
-    proto.firstDay = dc(this, this.firstDay, true);
-    proto.toHMS = dc(this, this.toHMS, true);
-    proto.toYMD = dc(this, this.toYMD, true);
-    proto.toDMY = dc(this, this.toDMY, true);
-    proto.minutesToHM = dc(this, this.minutesToHM, false);
-    proto.hmToMinutes = dc(this, this.hmToMinutes, false);
-    proto.secondsToMS = dc(this, this.secondsToMS, false);
-    proto.copy = dc(this, this.copy, true);
-    proto.getDateShifted = dc(this, this.getDateShifted, true);
-    proto.stripDayTime = dc(this, this.stripDayTime, true);
+    ArtJs.ObjectUtils.prototypify(this, Date);
   }
 };

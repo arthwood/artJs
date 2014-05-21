@@ -1,6 +1,27 @@
 ArtJs.StringUtils = com.arthwood.utils.String = {
   _name: 'StringUtils',
   
+  INJECTABLES: [
+    'align',
+    'isBlank',
+    'capitalize',
+    'capitalizeUnderscored',
+    'capitalizeWord',
+    'countPattern',
+    'first',
+    'getMultiPattern',
+    'isEmpty',
+    'last', 
+    'nullifyEmpty',
+    'singularOrPlural',
+    'strip',
+    'sub',
+    'toS',
+    'toJson',
+    'truncate',
+    'trim '
+  ],
+  
   first: function(str) {
     return str.substr(0, 1);
   },
@@ -142,26 +163,6 @@ ArtJs.StringUtils = com.arthwood.utils.String = {
   },
   
   doInjection: function() {
-    var proto = String.prototype;
-    var dc = ArtJs.$DC;
-    
-    proto.align = dc(this, this.align, true);
-    proto.isBlank = dc(this, this.isBlank, true);
-    proto.capitalize = dc(this, this.capitalize, true);
-    proto.capitalizeUnderscored = dc(this, this.capitalizeUnderscored, true);
-    proto.capitalizeWord = dc(this, this.capitalizeWord, true);
-    proto.countPattern = dc(this, this.countPattern, true);
-    proto.first = dc(this, this.first, true);
-    proto.getMultiPattern = dc(this, this.getMultiPattern, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.last = dc(this, this.last, true);
-    proto.nullifyEmpty = dc(this, this.nullifyEmpty, true);
-    proto.singularOrPlural = dc(this, this.singularOrPlural, false);
-    proto.strip = dc(this, this.strip, true);
-    proto.sub = dc(this, this.sub, true);
-    proto.toS = dc(this, this.toS, true);
-    proto.toJson = dc(this, this.toJson, true);
-    proto.truncate = dc(this, this.truncate, true);
-    proto.trim = dc(this, this.trim, true);
+    ArtJs.ObjectUtils.prototypify(this, String);
   }
 };

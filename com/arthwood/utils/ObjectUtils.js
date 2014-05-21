@@ -2,6 +2,34 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   _name: 'ObjectUtils',
   
   QUERY_DELIMITER: '&',
+  INJECTABLES: [
+    'all',
+    'copy', 
+    'copyProps',
+    'each', 
+    'eachPair',
+    'extend',
+    'keys', 
+    'values',
+    'includes',
+    'includesAll',
+    'isArray',
+    'isEmpty',
+    'isNotEmpty',
+    'isNull',
+    'map',
+    'mapKey',
+    'mapValue',
+    'merge',
+    'removeValue',
+    'removeValues',
+    'reject',
+    'select',
+    'selectWithKey', 
+    'toArray',
+    'toQueryString', 
+    'update'
+  ],
   
   _init: function() {
     this._invertedRemoveValueDC = ArtJs.$DC(this, this._invertedRemoveValue);
@@ -181,7 +209,15 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   },
   
   isArray: function(obj) {
-    return obj.constructor === Array;
+    return this.is(obj, Array);
+  },
+  
+  isString: function(obj) {
+    return this.is(obj, String);
+  },
+  
+  is: function(obj, type) {
+    return obj.constructor === type;
   },
   
   isEmpty: function(obj) {
@@ -361,35 +397,18 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     return this.isNull(i) ? defaultValue : i;
   },
 
+  prototypify: function(context, klass) {
+    arguments.callee.context = context;
+    arguments.callee.class = klass;
+    
+    ArtJs.ArrayUtils.each(context.INJECTABLES, this._prototypifyMethod, this);
+  },
+  
+  _prototypifyMethod: function(i) {
+    this.prototypify.class.prototype.all = ArtJs.$DC(this.prototypify.context, i, true);
+  },
+  
   doInjection: function() {
-    var proto = Object.prototype;
-    var dc = ArtJs.$DC;
-
-    proto.all = dc(this, this.all, true);
-    proto.copy = dc(this, this.copy, true);
-    proto.copyProps = dc(this, this.copyProps, true);
-    proto.each = dc(this, this.each, true);
-    proto.eachPair = dc(this, this.eachPair, true);
-    proto.extend = dc(this, this.extend, true);
-    proto.keys = dc(this, this.keys, true);
-    proto.values = dc(this, this.values, true);
-    proto.includes = dc(this, this.includes, true);
-    proto.includesAll = dc(this, this.includesAll, true);
-    proto.isArray = dc(this, this.isArray, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
-    proto.isNull = dc(this, this.isNull, true);
-    proto.map = dc(this, this.map, true);
-    proto.mapKey = dc(this, this.mapKey, true);
-    proto.mapValue = dc(this, this.mapValue, true);
-    proto.merge = dc(this, this.merge, true);
-    proto.removeValue = dc(this, this.removeValue, true);
-    proto.removeValues = dc(this, this.removeValues, true);
-    proto.reject = dc(this, this.reject, true);
-    proto.select = dc(this, this.select, true);
-    proto.selectWithKey = dc(this, this.selectWithKey, true);
-    proto.toArray = dc(this, this.toArray, true);
-    proto.toQueryString = dc(this, this.toQueryString, true);
-    proto.update = dc(this, this.update, true);
+    ArtJs.ObjectUtils.prototypify(this, Object);
   }
 };

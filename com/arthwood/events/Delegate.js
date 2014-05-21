@@ -1,7 +1,7 @@
 ArtJs.Delegate = com.arthwood.events.Delegate = ArtJs.Class(
   function(object, method) {
     this.object = object;
-    this.method = method;
+    this.method = ArtJs.ObjectUtils.isString(method) ? this.object[method] : method;
     this.args = ArtJs.$A(arguments, 2);
   },
   {

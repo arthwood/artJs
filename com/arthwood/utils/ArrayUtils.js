@@ -1,6 +1,49 @@
 ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   _name: 'ArrayUtils',
   
+  INJECTABLES: [
+    'all',
+    'any',
+    'beforeLast',
+    'compact',
+    'detect',
+    'each',
+    'eachIndex',
+    'eachItem',
+    'equal',
+    'first',
+    'flatten',
+    'getItem',
+    'includes',
+    'includesAll', 
+    'inject',
+    'insertAt',
+    'intersection',
+    'invoke',
+    'isEmpty',
+    'itemsEqual',
+    'last',
+    'map',
+    'isNotEmpty',
+    'numerize',
+    'partition',
+    'pluck',
+    'print',
+    'reject',
+    '$reject',
+    'removeAt',
+    'removeItem',
+    'second',
+    'select',
+    '$select',
+    'selectNonEmpty',
+    'stringify',
+    'sum',
+    'third',
+    'transpose',
+    'uniq'
+  ],
+  
   _init: function() {
     this._areItemsEqualCallback = ArtJs.$DC(this, this.areItemsEqual);
     this._invokeCallback = ArtJs.$DC(this, this._invoke);
@@ -456,49 +499,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   
   doInjection: function() {
-    var proto = Array.prototype;
-    var dc = ArtJs.$DC;
-
-    proto.all = dc(this, this.all, true);
-    proto.any = dc(this, this.any, true);
-    proto.beforeLast = dc(this, this.beforeLast, true);
-    proto.compact = dc(this, this.compact, true);
-    proto.detect = dc(this, this.detect, true);
-    proto.each = dc(this, this.each, true);
-    proto.eachIndex = dc(this, this.eachIndex, true);
-    proto.eachItem = dc(this, this.eachItem, true);
-    proto.equal = dc(this, this.equal, true);
-    proto.first = dc(this, this.first, true);
-    proto.flatten = dc(this, this.flatten, true);
-    proto.getItem = dc(this, this.getItem, true);
-    proto.includes = dc(this, this.includes, true);
-    proto.includesAll = dc(this, this.includesAll, true);
-    proto.inject = dc(this, this.inject, true);
-    proto.insertAt = dc(this, this.insertAt, true);
-    proto.intersection = dc(this, this.intersection, true);
-    proto.invoke = dc(this, this.invoke, true);
-    proto.isEmpty = dc(this, this.isEmpty, true);
-    proto.itemsEqual = dc(this, this.itemsEqual, true);
-    proto.last = dc(this, this.last, true);
-    proto.map = dc(this, this.map, true);
-    proto.isNotEmpty = dc(this, this.isNotEmpty, true);
-    proto.numerize = dc(this, this.numerize, true);
-    proto.partition = dc(this, this.partition, true);
-    proto.pluck = dc(this, this.pluck, true);
-    proto.print = dc(this, this.print, true);
-    proto.reject = dc(this, this.reject, true);
-    proto.$reject = dc(this, this.$reject, true);
-    proto.removeAt = dc(this, this.removeAt, true);
-    proto.removeItem = dc(this, this.removeItem, true);
-    proto.second = dc(this, this.second, true);
-    proto.select = dc(this, this.select, true);
-    proto.$select = dc(this, this.$select, true);
-    proto.selectNonEmpty = dc(this, this.selectNonEmpty, true);
-    proto.stringify = dc(this, this.stringify, true);
-    proto.sum = dc(this, this.sum, true);
-    proto.third = dc(this, this.third, true);    
-    proto.transpose = dc(this, this.transpose, true);    
-    proto.uniq = dc(this, this.uniq, true);
+    ArtJs.ObjectUtils.prototypify(this, Array);
   }
 };
 

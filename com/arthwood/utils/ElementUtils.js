@@ -5,6 +5,60 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   SUB_OBJ_RE: /\[\w+\]/g,
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
+  INJECTABLES: [
+    'addClass',
+    'center',
+    'centerH',
+    'centerV',
+    'clone',
+    'disable',
+    'elements',
+    'enable',
+    'extendStyle',
+    'firstElement',
+    'getAlpha',
+    'getAttributes',
+    'getBounds',
+    'getClasses',
+    'getContent',
+    'getPadding',
+    'getPosition',
+    'getSize',
+    'getStyle',
+    'hasClass',
+    'hide',
+    'insert',
+    'isElement',
+    'isHidden',
+    'lastElement',
+    'next',
+    'onClick',
+    'parent',
+    'prev',
+    'putAtBottom',
+    'putAtTop',
+    'putAfter',
+    'putBefore',
+    'remove',
+    'removeClass',
+    'removeStyle',
+    'replace',
+    'show',
+    'serialize',
+    'setAlpha',
+    'setClass',
+    'setContent',
+    'setEnabled',
+    'setHeight',
+    'setPosition',
+    'setStyle',
+    'setVisible',
+    'setWidth',
+    'setX',
+    'setY',
+    'toggle',
+    'toggleClass'
+  ],
   
   _init: function() {
     this.detectHiddenElementDC = ArtJs.$DC(this, this.detectHiddenElement);
@@ -465,60 +519,6 @@ ArtJs.ElementUtils = com.arthwood.utils.Element = {
   },
   
   doInjection: function() {
-    var proto = Element.prototype;
-    var dc = ArtJs.$DC;
-
-    proto.addClass = dc(this, this.addClass, true);
-    proto.center = dc(this, this.center, true);
-    proto.centerH = dc(this, this.centerH, true);
-    proto.centerV = dc(this, this.centerV, true);
-    proto.clone = dc(this, this.clone, true);
-    proto.disable = dc(this, this.disable, true);
-    proto.elements = dc(this, this.elements, true);
-    proto.enable = dc(this, this.enable, true);
-    proto.extendStyle = dc(this, this.extendStyle, true);
-    proto.firstElement = dc(this, this.firstElement, true);
-    proto.getAlpha = dc(this, this.getAlpha, true);
-    proto.getAttributes = dc(this, this.getAttributes, true);
-    proto.getBounds = dc(this, this.getBounds, true);
-    proto.getClasses = dc(this, this.getClasses, true);
-    proto.getContent = dc(this, this.getContent, true);
-    proto.getPadding = dc(this, this.getPadding, true);
-    proto.getPosition = dc(this, this.getPosition, true);
-    proto.getSize = dc(this, this.getSize, true);
-    proto.getStyle = dc(this, this.getStyle, true);
-    proto.hasClass = dc(this, this.hasClass, true);
-    proto.hide = dc(this, this.hide, true);
-    proto.insert = dc(this, this.insert, true);
-    proto.isElement = dc(this, this.isElement, true);
-    proto.isHidden = dc(this, this.isHidden, true);
-    proto.lastElement = dc(this, this.lastElement, true);
-    proto.next = dc(this, this.next, true);
-    proto.onClick = dc(this, this.onClick, true);
-    proto.parent = dc(this, this.parent, true);
-    proto.prev = dc(this, this.prev, true);
-    proto.putAtBottom = dc(this, this.putAtBottom, true);
-    proto.putAtTop = dc(this, this.putAtTop, true);
-    proto.putAfter = dc(this, this.putAfter, true);
-    proto.putBefore = dc(this, this.putBefore, true);
-    proto.remove = dc(this, this.remove, true);
-    proto.removeClass = dc(this, this.removeClass, true);
-    proto.removeStyle = dc(this, this.removeStyle, true);
-    proto.replace = dc(this, this.replace, true);
-    proto.show = dc(this, this.show, true);
-    proto.serialize = dc(this, this.serialize, true);
-    proto.setAlpha = dc(this, this.setAlpha, true);
-    proto.setClass = dc(this, this.setClass, true);
-    proto.setContent = dc(this, this.setContent, true);
-    proto.setEnabled = dc(this, this.setEnabled, true);
-    proto.setHeight = dc(this, this.setHeight, true);
-    proto.setPosition = dc(this, this.setPosition, true);
-    proto.setStyle = dc(this, this.setStyle, true);
-    proto.setVisible = dc(this, this.setVisible, true);
-    proto.setWidth = dc(this, this.setWidth, true);
-    proto.setX = dc(this, this.setX, true);
-    proto.setY = dc(this, this.setY, true);
-    proto.toggle = dc(this, this.toggle, true);
-    proto.toggleClass = dc(this, this.toggleClass, true);
+    ArtJs.ObjectUtils.prototypify(this, Element);
   }
 };
