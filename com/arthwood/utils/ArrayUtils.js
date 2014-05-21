@@ -402,7 +402,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   
   compact: function(arr) {
-    return this.reject(arr, ArtJs.ObjectUtils.isNullLike, this);
+    return this.reject(arr, ArtJs.ObjectUtils.isNull, this);
   },
 
   isEmpty: function(arr) {
@@ -442,7 +442,7 @@ ArtJs.ArrayUtils = com.arthwood.utils.Array = {
   },
   
   _stringifyCallback: function(i) {
-    return ArtJs.ObjectUtils.isNullLike(i) ? '' : i.toString();
+    return ArtJs.ObjectUtils.isNull(i) ? '' : i.toString();
   },
 
   _indexOf: function(arr, item) {

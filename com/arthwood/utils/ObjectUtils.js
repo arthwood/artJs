@@ -349,16 +349,16 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     this.removeValue(obj, val);
   },
   
-  isNullLike: function(i) {
-    return i === null || i === undefined;
+  isNull: function(i) {
+    return i == null;
   },
   
   isPresent: function(i) {
-    return !this.isNullLike(i);
+    return !this.isNull(i);
   },
   
   getDefault: function(i, defaultValue) {
-    return this.isNullLike(i) ? defaultValue : i;
+    return this.isNull(i) ? defaultValue : i;
   },
 
   doInjection: function() {
@@ -378,6 +378,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     proto.isArray = dc(this, this.isArray, true);
     proto.isEmpty = dc(this, this.isEmpty, true);
     proto.isNotEmpty = dc(this, this.isNotEmpty, true);
+    proto.isNull = dc(this, this.isNull, true);
     proto.map = dc(this, this.map, true);
     proto.mapKey = dc(this, this.mapKey, true);
     proto.mapValue = dc(this, this.mapValue, true);
