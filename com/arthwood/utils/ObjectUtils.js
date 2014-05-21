@@ -170,7 +170,7 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   
   reject: function(obj, func, context) {
     var result = {};
-
+    
     this.eachPair(obj, function(i, j) {
       if (!func.call(context, j)) {
         result[i] = j;
@@ -179,9 +179,9 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
     
     return result;
   },
-
+  
   isArray: function(obj) {
-    return typeof obj === 'object' && typeof obj.length === 'number';
+    return obj.constructor === Array;
   },
   
   isEmpty: function(obj) {
@@ -197,32 +197,32 @@ ArtJs.ObjectUtils = com.arthwood.utils.Object = {
   isNotEmpty: function(obj) {
     return !this.isEmpty(obj);
   },
-
+  
   build: function(arr, func, context) {
     var result = {};
     var item;
-
+    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         result[item] = func.call(context, item);
       }
     }
-
+    
     return result;
   },
   
   fromPoints: function(arr) {
     var result = {};
     var item;
-
+    
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         result[item.x] = item.y;
       }
     }
-
+    
     return result;
   },
   
