@@ -15,6 +15,15 @@ artjs.Component = artjs.dom.Component = artjs.Class(
       artjs.ArrayUtils.each(this.dependees, this._eachDependee, this);
     },
     
+    onFound: function(i) {
+      this._element = i;
+      
+      var classnames = artjs.ElementUtils.getClasses(i);
+      
+      artjs.ArrayUtils.removeItem(classnames, 'art');
+      artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+    },
+    
     _onExtended: function() {
       this.super(arguments);
       
@@ -47,16 +56,7 @@ artjs.Component = artjs.dom.Component = artjs.Class(
     },
     
     _scan: function(element) {
-      artjs.ArrayUtils.each(artjs.$find(element, '.art'), this._onFound, this);
-    },
-    
-    _onFound: function(i) {
-      this._element = i;
-      
-      var classnames = artjs.ElementUtils.getClasses(i);
-      
-      artjs.ArrayUtils.removeItem(classnames, 'art');
-      artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+      artjs.ArrayUtils.each(artjs.$find(element, '.art'), this.onFound, this);
     },
     
     _eachClassName: function(i) {

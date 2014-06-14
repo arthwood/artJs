@@ -26,7 +26,7 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
     },
     
     open: function() {
-      this._expandNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
+      this._toggleNode(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._nodes)));
       this._leafAction(artjs.ElementUtils.firstElement(artjs.ArrayUtils.first(this._leaves)));
     },
     
@@ -45,26 +45,24 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
     _eachNode: function(i) {
       artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onNodeDelegate);
       artjs.ElementUtils.hide(artjs.ArrayUtils.first(artjs.Selector.find(i, 'ul')));
-
-      i.style.listStyleImage = this.ctor.FOLDED;
     },
     
     _onNode: function(originalEvent, elementEvent) {
       originalEvent.preventDefault();
       
-      this._expandNode(elementEvent.element);
+      this._toggleNode(elementEvent.element);
     },
     
-    _expandNode: function(a) {
+    _toggleNode: function(a) {
       var ul = artjs.ElementUtils.next(a);
       
       artjs.ElementUtils.toggle(ul);
-      artjs.Selector.parent(a).style.listStyleImage = artjs.ElementUtils.isHidden(ul) ? this.ctor.FOLDED : this.ctor.UNFOLDED;
+      artjs.ElementUtils.setClass(artjs.Selector.parent(a), 'expanded', !artjs.ElementUtils.isHidden(ul));
     },
     
     _eachLeaf: function(i) {
       artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onLeafDelegate);
-      i.style.listStyleImage = this.ctor.LEAF;
+      artjs.ElementUtils.addClass(i, 'leaf');
     },
     
     _onLeaf: function(originalEvent, elementEvent) {
@@ -78,10 +76,5 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
       
       this.onLeaf.fire(element);
     }
-  },
-  {
-    FOLDED: 'url(../images/plus.png)',
-    UNFOLDED: 'url(../images/minus.png)',
-    LEAF: 'url(../images/leaf.png)'
   }
 );

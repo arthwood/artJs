@@ -45,7 +45,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
       var body = document.body;
       
       artjs.ElementUtils.show(body);
-      artjs.TemplateBase.renderInto(body, body.innerHTML);
+      artjs.TemplateBase.renderElement(body);
       artjs.onLibraryLoad.fire(this);
     }
   }

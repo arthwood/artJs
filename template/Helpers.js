@@ -17,6 +17,38 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return value ? this[method](value) : '';
   },
   
+  renderSelect: function(options, selected) {
+    this._selectedOption = selected;
+    
+    return artjs.$B('select', null, artjs.ArrayUtils.map(options, this._renderOption, this).join()).toString();
+  },
+  
+  renderTable: function(table) {
+    return artjs.$B('table', null, artjs.ArrayUtils.map(table, this._renderTableRow, this).join()).toString();
+  },
+  
+  _renderOption: function(i) {
+    var attrs = {value: i.value};
+    
+    if (i.value == this._selectedOption) {
+      attrs.selected = 'selected';
+    }
+    
+    return artjs.$B('option', attrs, i.text).toString();
+  },
+  
+  _renderTableRow: function(i) {
+    return artjs.$B('tr', null, artjs.ArrayUtils.map(i, this._renderTableCell, this).join()).toString();
+  },
+  
+  _renderTableCell: function(i) {
+    return artjs.$B('td', null, i).toString();
+  },
+  
+  bindable: function(i) {
+    return i;
+  },
+  
   registerAll: function(helpers) {
     artjs.ObjectUtils.eachPair(helpers, this.register, this);
   },

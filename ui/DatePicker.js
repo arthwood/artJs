@@ -31,7 +31,7 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
       
       var img = e.currentTarget;
       var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
-      var position = imgRT.add(new artjs.Point(4, 2));
+      var position = imgRT.add(new artjs.Point(2, 2));
       
       this.calendar.toggle(this, position);
     }
@@ -41,52 +41,57 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
 );
 
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(
-  function(dp) {
+  function(element) {
     this.super(arguments);
-    var au = artjs.ArrayUtils;
-    var eu = artjs.ElementUtils;
-    var eb = artjs.ElementBuilder;
-    var s = artjs.Selector;
+    console.log('hello');
+    this.years = [];
+    this.months = [];
+    artjs.TemplateBase.renderElement(element, this);
     
-    artjs.$BA(this, '_buildYearSpan');
-    
-    var selectMonthOptions = au.map(this.ctor.MONTHS, this.ctor._monthToOption).join('');
-    
-    var headElement = artjs.$B('th', null, '&nbsp;');
-    var headRow = artjs.$B('tr', null, eb.getCollection(7, headElement));
-    var cellElement = artjs.$B('td', null, '&nbsp;');
-    var row = artjs.$B('tr', null, eb.getCollection(7, cellElement));
-    var rows = eb.getCollection(5, row);
-    
-    var nav = s.first(this.element, '.nav');
-    var arrows = s.find(nav, 'a');
-    var selects = s.find(nav, 'select');
-    var table = s.first(this.element, 'table');
-    var monthSelect = selects[0];
-    
-    eu.setContent(table, headRow + rows);
-    eu.setContent(monthSelect, selectMonthOptions);
-    
-    this.prevMonth = arrows[0];
-    this.nextMonth = arrows[1];
-    
-    eu.onClick(this.prevMonth, this._onPrevMonth.delegate);
-    eu.onClick(this.nextMonth, this._onNextMonth.delegate);
-    
-    this.monthSelect = selects[0];
-    this.yearSelect = selects[1];
-    
-//    eu.onChange(this.monthSelect, this._onMonthSelect.delegate);
-//    eu.onChange(this.yearSelect, this._onYearSelect.delegate);
-    this.monthSelect.onchange = this._onMonthSelect;
-    this.yearSelect.onchange = this._onYearSelect;
-    
-    this.headers = s.find(this.element, 'th');
-    this.rows = s.find(this.element, 'tr').slice(1);
-    this.items = s.find(this.element, 'td');
-    this.field = null;
-    
-    au.each(this.items, this._initItem, this);
+//    var au = artjs.ArrayUtils;
+//    var eu = artjs.ElementUtils;
+//    var eb = artjs.ElementBuilder;
+//    var s = artjs.Selector;
+//    
+//    artjs.$BA(this, '_buildYearSpan');
+//    
+//    var selectMonthOptions = au.map(this.ctor.MONTHS, this.ctor._monthToOption).join('');
+//    
+//    var headElement = artjs.$B('th', null, '&nbsp;');
+//    var headRow = artjs.$B('tr', null, eb.getCollection(7, headElement));
+//    var cellElement = artjs.$B('td', null, '&nbsp;');
+//    var row = artjs.$B('tr', null, eb.getCollection(7, cellElement));
+//    var rows = eb.getCollection(5, row);
+//    
+//    var nav = s.first(this.element, '.nav');
+//    var arrows = s.find(nav, 'a');
+//    var selects = s.find(nav, 'select');
+//    var table = s.first(this.element, 'table');
+//    var monthSelect = selects[0];
+//    
+//    eu.setContent(table, headRow + rows);
+//    eu.setContent(monthSelect, selectMonthOptions);
+//    
+//    this.prevMonth = arrows[0];
+//    this.nextMonth = arrows[1];
+//    
+//    eu.onClick(this.prevMonth, this._onPrevMonth.delegate);
+//    eu.onClick(this.nextMonth, this._onNextMonth.delegate);
+//    
+//    this.monthSelect = selects[0];
+//    this.yearSelect = selects[1];
+//    
+////    eu.onChange(this.monthSelect, this._onMonthSelect.delegate);
+////    eu.onChange(this.yearSelect, this._onYearSelect.delegate);
+//    this.monthSelect.onchange = this._onMonthSelect;
+//    this.yearSelect.onchange = this._onYearSelect;
+//    
+//    this.headers = s.find(this.element, 'th');
+//    this.rows = s.find(this.element, 'tr').slice(1);
+//    this.items = s.find(this.element, 'td');
+//    this.field = null;
+//    
+//    au.each(this.items, this._initItem, this);
   },
   {
     toggle: function(datePicker, position) {
@@ -259,7 +264,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _init: function() {
-      artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
+      //artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
     },
     
     _onLibraryLoad: function() {
@@ -267,7 +272,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       var element = artjs.ElementBuilder.parse(content);
       var result = artjs.ElementUtils.insert(document.body, element);
       
-      artjs.Component._onFound(result);
+      this.onFound(result);
     }
   },
   artjs.Component

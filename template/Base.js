@@ -12,27 +12,29 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(
     },
     
     _eachTag: function(i) {
-      this.METHOD_RE.lastIndex = 0;
-      
-      var expression = artjs.StringUtils.sub(i, 2, -2);
-      var exec = this.METHOD_RE.exec(expression);
-      var result;
-      
-      if (exec) {
-        exec.shift();
-        
-        var action = exec.shift();
-        var argsStr = artjs.ArrayUtils.first(exec);
-        var args = artjs.ArrayUtils.map(argsStr.split(','), this._stripArg, this);
-        var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
-        
-        result = artjs.TemplateHelpers.perform(action, argsValues);
-      }
-      else {
-        result = this._fromScope(expression);
-      }
+      var expression = artjs.StringUtils.sub(i, 2, -2);      
+      var result = this._parseExpression(expression);
       
       this.content = this.content.replace(i, result);
+    },
+    
+    _parseExpression: function(expression) {
+      this.METHOD_RE.lastIndex = 0;
+      
+      var exec = this.METHOD_RE.exec(expression);
+      
+      return exec ? this._parseMethod(exec) : this._fromScope(expression);
+    },
+    
+    _parseMethod: function(exec) {
+      exec.shift();
+      
+      var action = exec.shift();
+      var argsStr = artjs.ArrayUtils.first(exec);
+      var args = artjs.ArrayUtils.map(argsStr.split(','), this._stripArg, this);
+      var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+      
+      return artjs.TemplateHelpers.perform(action, argsValues);
     },
     
     _parseArg: function(i) {
@@ -41,11 +43,11 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(
       str = artjs.StringUtils.trim(str, "'");
       str = artjs.StringUtils.trim(str, '"');
       
-      return (str == i) ? this.scope[i] || '' : str;
+      return str == i ? this._parseExpression(i) : str;
     },
     
     _fromScope: function(i) {
-      return this.scope[i];
+      return this.scope[i] || '';
     },
     
     _stripArg: function(i) {
@@ -72,11 +74,23 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(
      * @param element (Element) - container for rendered content
      * @param content (String) - Html that can contain expressions that can be compiled
      * @param scope (Object) - data that will be compiled into the content
+     * @description Renders content into the element with the scope
      */
     renderInto: function(element, content, scope) {
       this.render(element, this.renderContent(content, scope));
     },
 
+    /**
+     * 
+     * @param element (Element) - container for rendered content
+     * @param scope (Object) - data that will be compiled into the content
+     * 
+     * @description Renders interials of the element into itself with scope
+     */
+    renderElement: function(element, scope) {
+      this.renderInto(element, element.innerHTML, scope);
+    },
+      
     /**
      * 
      * @param templateId (String) - id of the template to render
