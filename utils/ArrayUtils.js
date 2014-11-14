@@ -1,9 +1,9 @@
 artjs.ArrayUtils = artjs.utils.Array = {
   _name: 'ArrayUtils',
   
-  _init: function() {
-    this._areItemsEqualCallback = artjs.$DC(this, this.areItemsEqual);
-    this._invokeCallback = artjs.$DC(this, this._invoke);
+  init: function() {
+    this._areItemsEqualCallback = artjs.$DC(this, 'areItemsEqual');
+    this._invokeCallback = artjs.$DC(this, '_invoke');
   },
   
   build: function(n, func) {

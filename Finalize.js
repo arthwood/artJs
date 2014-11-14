@@ -10,11 +10,11 @@ window.addEventListener('load', function() {
   artjs.onWindowLoad.fire();
 }, false);
 
-artjs.ArrayUtils._init();
-artjs.Component._init();
-artjs.ObjectUtils._init();
-artjs.ElementBuilder._init();
-artjs.ElementUtils._init();
-artjs.Selector._init();
-artjs.TemplateLibrary._init();
-artjs.Calendar._init();
+artjs.ArrayUtils.init();
+artjs.ComponentSweeper.init();
+artjs.ObjectUtils.init();
+artjs.ElementBuilder.init();
+artjs.ElementUtils.init();
+artjs.Selector.init();
+artjs.TemplateLibrary.init();
+artjs.Calendar.init();

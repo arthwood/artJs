@@ -2,8 +2,8 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
   function(data, element) {
     this.data = data;
     
-    this._onNodeDelegate = artjs.$D(this, this._onNode);
-    this._onLeafDelegate = artjs.$D(this, this._onLeaf);
+    this._onNodeDelegate = artjs.$D(this, '_onNode');
+    this._onLeafDelegate = artjs.$D(this, '_onLeaf');
     this._leafClassToggler = new artjs.ClassToggler('selected');
     
     this.onLeaf = new artjs.CustomEvent('onLeaf');
@@ -74,7 +74,11 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
     _leafAction: function(element) {
       this._leafClassToggler.toggle(element);
       
-      this.onLeaf.fire(element);
+      this.onLeaf.fire(this);
+    },
+    
+    getCurrent: function() {
+      return this._leafClassToggler.getCurrent();
     }
   }
 );

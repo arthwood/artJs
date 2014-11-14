@@ -46,13 +46,14 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
       forField: 'for'
     },
     
-    _init: function() {
-      artjs.$B = artjs.$DC(this, this.build);
-      artjs.$C = artjs.$DC(this, this.create);
-      artjs.$E = artjs.$DC(this, this.getElement);
-      artjs.$P = artjs.$DC(this, this.parse);
+    init: function() {
+      artjs.$B = artjs.$DC(this, 'build');
+      artjs.$C = artjs.$DC(this, 'create');
+      artjs.$E = artjs.$DC(this, 'getElement');
+      artjs.$P = artjs.$DC(this, 'parse');
     },
     
+    // Shorthand method to return new instance
     build: function(name, attributes, value, empty) {
       return new this(name, attributes, value, empty);
     },
@@ -66,7 +67,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
     },
     
     create: function(name, attributes, value, empty) {
-      return this.parse(this.build(name, attributes, value, empty));
+      return this.parse(this.build(name, attributes, value, empty).toString());
     },
     
     getElement: function(name, attributes, value, empty) {

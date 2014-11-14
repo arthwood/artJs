@@ -1,8 +1,9 @@
 artjs.Selector = artjs.dom.Selector = {
-  _init: function() {
-    artjs.$ = artjs.$DC(this, this.getElements);
-    artjs.$find = artjs.$DC(this, this.find);
-    artjs.$parent = artjs.$DC(this, this.parent);
+  init: function() {
+    artjs.$ = artjs.$DC(this, 'getElements');
+    artjs.$find = artjs.$DC(this, 'find');
+    artjs.$first = artjs.$DC(this, 'first');
+    artjs.$parent = artjs.$DC(this, 'parent');
   },
   
   find: function(element, selector) {

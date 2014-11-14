@@ -6,9 +6,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
   
-  _init: function() {
-    this.detectHiddenElementDC = artjs.$DC(this, this.detectHiddenElement);
-    artjs.$insert = artjs.$DC(this, this.insert);
+  init: function() {
+    this.detectHiddenElementDC = artjs.$DC(this, 'detectHiddenElement');
+    artjs.$insert = artjs.$DC(this, 'insert');
   },
   
   show: function(e) {
@@ -371,7 +371,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   getAttributes: function(e) {
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this.mapAttribute, this));
+    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this._mapAttribute, this));
   },
   
   getData: function(e) {
@@ -389,7 +389,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     return k.replace(/^data\-/, '');
   },
   
-  mapAttribute: function(i) {
+  _mapAttribute: function(i) {
     return [i.name, i.value];
   },
 

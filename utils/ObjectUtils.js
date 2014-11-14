@@ -3,13 +3,13 @@ artjs.ObjectUtils = artjs.utils.Object = {
   
   QUERY_DELIMITER: '&',
 
-  _init: function() {
-    this._invertedRemoveValueDC = artjs.$DC(this, this._invertedRemoveValue);
-    this._eachPairDeleteValueDC = artjs.$DC(this, this._eachPairDeleteValue);
-    this._eachKeyDeleteKeyDC = artjs.$DC(this, this._eachKeyDeleteKey);
-    this._invertedIncludesDC = artjs.$DC(this, this._invertedIncludes);
-    this._pairToQueryStringDC = artjs.$DC(this, this._pairToQueryString);
-    this._parseArrayValueDC = artjs.$DC(this, this._parseArrayValue);
+  init: function() {
+    this._invertedRemoveValueDC = artjs.$DC(this, '_invertedRemoveValue');
+    this._eachPairDeleteValueDC = artjs.$DC(this, '_eachPairDeleteValue');
+    this._eachKeyDeleteKeyDC = artjs.$DC(this, '_eachKeyDeleteKey');
+    this._invertedIncludesDC = artjs.$DC(this, '_invertedIncludes');
+    this._pairToQueryStringDC = artjs.$DC(this, '_pairToQueryString');
+    this._parseArrayValueDC = artjs.$DC(this, '_parseArrayValue');
   },
   
   copy: function(obj) {
@@ -146,36 +146,51 @@ artjs.ObjectUtils = artjs.utils.Object = {
   
   select: function(obj, func, context) {
     var result = {};
+    var j;
     
-    this.eachPair(obj, function(i, j) {
-      if (func.call(context, j)) {
-        result[i] = j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        
+        if (func.call(context, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
     
     return result;
   },
   
   selectWithKey: function(obj, func, context) {
     var result = {};
-
-    this.eachPair(obj, function(k, v) {
-      if (func.call(context, k, v)) {
-        result[k] = v;
+    var j;
+    
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        
+        if (func.call(context, i, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
 
     return result;
   },
   
   reject: function(obj, func, context) {
     var result = {};
+    var j;
     
-    this.eachPair(obj, function(i, j) {
-      if (!func.call(context, j)) {
-        result[i] = j;
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        j = obj[i];
+        
+        if (!func.call(context, j)) {
+          result[i] = j;
+        }
       }
-    });
+    }
     
     return result;
   },

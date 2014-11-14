@@ -12,20 +12,21 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
     this.firstDay = parseInt(data['first-day']) || 0;
     
     var img = artjs.ElementUtils.putAfter(
-      artjs.$C('img', {src: '../images/cal.png', alt: 'calendar_icon', className: 'artjs-DatepickerImg'}), this.element
+      artjs.$C('img', {
+        src: '../images/cal.png', 
+        alt: 'calendar_icon', 
+        className: 'artjs-DatepickerImg'
+      }), 
+      this.element
     );
     
     this.element.editable = false;
     
     artjs.ElementUtils.onClick(img, this._onImg.delegate);
+    
+    this.calendar = artjs.$first(this.element, '.artjs-Calendar');
   },
   {
-    onDependency: function(calendar) {
-      this.super(arguments);
-      
-      this.calendar = calendar;
-    },
-    
     _onImg: function(e) {
       e.preventDefault();
       
@@ -33,6 +34,7 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
       var imgRT = artjs.ElementUtils.getBounds(img).getRightTop();
       var position = imgRT.add(new artjs.Point(2, 2));
       
+      this.calendar.source = this;
       this.calendar.toggle(this, position);
     }
   },
@@ -43,10 +45,15 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(
   function(element) {
     this.super(arguments);
-    console.log('hello');
-    this.years = [];
-    this.months = [];
-    artjs.TemplateBase.renderElement(element, this);
+    
+    this.years = [{value: 1999, text: '1999'}, {value: 2000, text: '2000'}];
+    this.year = 2000;
+    this.months = [{value: 'October', text: 'October'}, {value: 'November', text: 'November'}];
+    this.month = 'November';
+    this.table = [[1], [2]];
+    
+    artjs.ComponentScanner.addListener('artjs-Calendar-years', artjs.$D(this, '_onYearsLoaded'));
+    artjs.ComponentScanner.addListener('artjs-Calendar-months', artjs.$D(this, '_onMonthsLoaded'));
     
 //    var au = artjs.ArrayUtils;
 //    var eu = artjs.ElementUtils;
@@ -94,6 +101,24 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
 //    au.each(this.items, this._initItem, this);
   },
   {
+    _onYearsLoaded: function(component) {
+      component.setOptions(this.years);
+      component.setSelected(this.year);
+    },
+    
+    _onMonthsLoaded: function(component) {
+      component.setOptions(this.months);
+      component.setSelected(this.month);
+    },
+    
+    getYear: function() {
+      return this._year;
+    },
+    
+    setYear: function(v) {
+      this._year = v;
+    },
+    
     toggle: function(datePicker, position) {
       if (this._isHidden()) {
         this._show(datePicker, position);
@@ -255,6 +280,10 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     SEPARATOR: '-',
     CELL_BG: {valid: 'none', weekend: '#CFFFDF', invalid: '#AAAAAA'},
     
+    init: function() {
+      artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
+    },
+    
     _monthToOption: function(i, idx) {
       return new artjs.ElementBuilder('option', {value: idx + 1}, i);
     },
@@ -263,19 +292,9 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       return new artjs.ElementBuilder('option', {value: i}, i);
     },
     
-    _init: function() {
-      //artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
-    },
-    
     _onLibraryLoad: function() {
-      var content = artjs.TemplateLibrary.getTemplate('calendar');
-      var element = artjs.ElementBuilder.parse(content);
-      var result = artjs.ElementUtils.insert(document.body, element);
-      
-      this.onFound(result);
+      artjs.TemplateLibrary.loadTemplate('artjs/calendar');
     }
   },
   artjs.Component
 );
-
-artjs.DatePicker.dependsOn(artjs.Calendar);

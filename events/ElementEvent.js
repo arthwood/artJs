@@ -83,11 +83,18 @@ artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(
   }, null, null, artjs.MouseEvent
 );
 
+artjs.ChangeEvent = artjs.events.Change = artjs.Class(
+  function(element, delegate) {
+    this.super(arguments, element, 'change', delegate, false);
+  }, null, null, artjs.ElementEvent
+);
+
 artjs.EventMapping = {
   mousemove: artjs.MouseMoveEvent,
   mouseover: artjs.MouseOverEvent,
   mouseout: artjs.MouseOutEvent,
-  click: artjs.ClickEvent
+  click: artjs.ClickEvent,
+  change: artjs.ChangeEvent
 };
 
 artjs.on = function(target, eventName, delegate) {

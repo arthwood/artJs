@@ -1,6 +1,8 @@
 artjs.TemplateHelpers = artjs.template.Helpers = {
   render: function(templateId, scope) {
-    return artjs.TemplateBase.renderTemplate(templateId, scope);
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
+    
+    return artjs.TemplateBase.render(template, scope);
   },
   
   renderInto: function(element, templateId, scope) {
@@ -10,7 +12,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   renderCollection: function(templateId, collection) {
     var callback = artjs.$DC(this, this._renderCollectionItem, false, templateId);
     
-    return artjs.ArrayUtils.map(collection, callback).join('');
+    return this._map(collection, callback);
   },
   
   renderIf: function(value, method) {
@@ -20,11 +22,19 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   renderSelect: function(options, selected) {
     this._selectedOption = selected;
     
-    return artjs.$B('select', null, artjs.ArrayUtils.map(options, this._renderOption, this).join()).toString();
+    return this._renderElement('select', options, this.renderOptions(options));
+  },
+  
+  renderOptions: function(options) {
+    return this._map(options, this._renderOption);
   },
   
   renderTable: function(table) {
-    return artjs.$B('table', null, artjs.ArrayUtils.map(table, this._renderTableRow, this).join()).toString();
+    return this._renderElement('table', null, this._map(table, this._renderTableRow));
+  },
+  
+  _map: function(coll, func) {
+    return artjs.ArrayUtils.map(coll, func, this).join('');
   },
   
   _renderOption: function(i) {
@@ -34,19 +44,19 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
       attrs.selected = 'selected';
     }
     
-    return artjs.$B('option', attrs, i.text).toString();
+    return this._renderElement('option', attrs, i.text);
   },
   
   _renderTableRow: function(i) {
-    return artjs.$B('tr', null, artjs.ArrayUtils.map(i, this._renderTableCell, this).join()).toString();
+    return this._renderElement('tr', null, this._map(i, this._renderTableCell));
   },
   
   _renderTableCell: function(i) {
-    return artjs.$B('td', null, i).toString();
+    return this._renderElement('td', null, i);
   },
   
-  bindable: function(i) {
-    return i;
+  _renderElement: function(name, attrs, value) {
+    return artjs.$B(name, attrs, value).toString();
   },
   
   registerAll: function(helpers) {
@@ -57,8 +67,8 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     this[name] = method;
   },
   
-  perform: function(action, args) {
-    return this[action].apply(this, args);
+  perform: function(action, args, scope) {
+    return this[action].apply(this, args.concat(scope));
   },
   
   _renderCollectionItem: function(scope, idx, arr, templateId) {

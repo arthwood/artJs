@@ -1,27 +1,30 @@
-artjs.TemplateBase = artjs.template.Base = artjs.Class(
+artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
   function(content, scope) {
-    this.content = content;
-    this.scope = scope;
+    this._tagRegEx = /\{\{.+\}\}/g;
+    this._methodRegEx = /^(\w+)\((.*)\)$/;
+    this._content = content;
+    this._scope = scope;
   },
   {
-    TAG_RE: /\{\{.+\}\}/g,
-    METHOD_RE: /^(\w+)\((.*)\)$/,
-    
     compile: function() {
-      artjs.ArrayUtils.each(this.content.match(this.TAG_RE), this._eachTag, this);
+      var tags = this._content.match(this._tagRegEx);
+      
+      artjs.ArrayUtils.each(tags, this._eachTag, this);
+      
+      return this._content;
     },
     
     _eachTag: function(i) {
       var expression = artjs.StringUtils.sub(i, 2, -2);      
       var result = this._parseExpression(expression);
       
-      this.content = this.content.replace(i, result);
+      this._content = this._content.replace(i, result);
     },
     
     _parseExpression: function(expression) {
-      this.METHOD_RE.lastIndex = 0;
+      this._methodRegEx.lastIndex = 0;
       
-      var exec = this.METHOD_RE.exec(expression);
+      var exec = this._methodRegEx.exec(expression);
       
       return exec ? this._parseMethod(exec) : this._fromScope(expression);
     },
@@ -34,7 +37,7 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(
       var args = artjs.ArrayUtils.map(argsStr.split(','), this._stripArg, this);
       var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
       
-      return artjs.TemplateHelpers.perform(action, argsValues);
+      return artjs.TemplateHelpers.perform(action, argsValues, this._scope);
     },
     
     _parseArg: function(i) {
@@ -47,93 +50,70 @@ artjs.TemplateBase = artjs.template.Base = artjs.Class(
     },
     
     _fromScope: function(i) {
-      return this.scope[i] || '';
+      return this._scope[i] || '';
     },
     
     _stripArg: function(i) {
       return artjs.StringUtils.strip(i);
     }
-  },
-  {
-    /**
-     * 
-     * @param content (String) - Html that can contain expressions that can be compiled
-     * @param scope (Object) - data that will be compiled into the content
-     * @returns {string} - compiled content
-     */
-    renderContent: function(content, scope) {
-      var instance = new this(content, scope);
-      
-      instance.compile();
-      
-      return instance.content;
-    },
-
-    /**
-     * 
-     * @param element (Element) - container for rendered content
-     * @param content (String) - Html that can contain expressions that can be compiled
-     * @param scope (Object) - data that will be compiled into the content
-     * @description Renders content into the element with the scope
-     */
-    renderInto: function(element, content, scope) {
-      this.render(element, this.renderContent(content, scope));
-    },
-
-    /**
-     * 
-     * @param element (Element) - container for rendered content
-     * @param scope (Object) - data that will be compiled into the content
-     * 
-     * @description Renders interials of the element into itself with scope
-     */
-    renderElement: function(element, scope) {
-      this.renderInto(element, element.innerHTML, scope);
-    },
-      
-    /**
-     * 
-     * @param templateId (String) - id of the template to render
-     * @param scope (Object) - data that will be compiled into the template
-     * @returns {string} - compiled template
-     */
-    renderTemplate: function(templateId, scope) {
-      var template = artjs.TemplateLibrary.getTemplate(templateId);
-    
-      return this.renderContent(template, scope);
-    },
-
-    /**
-     * 
-     * @param element (Element) - container for rendered content
-     * @param templateId (String) - id of the template to render
-     * @param scope (Object) - data that will be compiled into the template
-     * @description Compiles and renders template into the element.
-     */
-    renderTemplateInto: function(element, templateId, scope) {
-      this.render(element, this.renderTemplate(templateId, scope));
-    },
-
-    /**
-     * 
-     * @param element (Element) - container for rendered content
-     * @param content (String) - compiled Html content
-     * @description Inserts the content into element, evaluates the scripts and initializes any components inside the element.
-     */
-    render: function(element, content) {
-      artjs.ElementUtils.setContent(element, content);
-      
-      this._evalScripts(element);
-      
-      artjs.Component._scan(element);
-    },
-    
-    _evalScripts: function(element) {
-      artjs.ArrayUtils.each(artjs.Selector.find(element, 'script'), this._evalScript, this);
-    },
-    
-    _evalScript: function(script) {
-      eval(artjs.ElementUtils.getContent(script));
-    }
   }
 );
+
+artjs.TemplateBase = artjs.template.Base = {
+  /**
+   * @param content (String) - Html that can contain expressions that can be compiled
+   * @param scope (Object) - data that will be compiled into the content
+   * @description Renders content into the element with the scope
+   */
+  render: function(content, scope) {
+    var compiler = new artjs.TemplateCompiler(content, scope);
+    
+    return compiler.compile(content, scope);
+  },
+  
+  /**
+   * @param element (Element) - container for rendered content
+   * @param content (String) - Html that can contain expressions that can be compiled
+   * @param scope (Object) - data that will be compiled into the content
+   * @description Renders content into the element with the scope
+   */
+  renderInto: function(element, content, scope) {
+    artjs.ElementUtils.setContent(element, this.render(content, scope));
+    
+    this.evalScripts(element);
+    
+    artjs.ComponentScanner.scan(element);
+  },
+
+  /**
+   * 
+   * @param element (Element) - container for rendered content
+   * @param scope (Object) - data that will be compiled into the content
+   * 
+   * @description Renders internals of the element into itself with scope
+   */
+  renderElement: function(element, scope) {
+    this.renderInto(element, element.innerHTML, scope);
+  },
+  
+  /**
+   * 
+   * @param element (Element) - container for rendered content
+   * @param templateId (String) - id of the template to render
+   * @param scope (Object) - data that will be compiled into the template
+   * @description Compiles and renders template into the element.
+   */
+  renderTemplateInto: function(element, templateId, scope) {
+    var template = artjs.TemplateLibrary.getTemplate(templateId);
+    
+    this.renderInto(element, template, scope);
+  },
+  
+  evalScripts: function(element) {
+    artjs.ArrayUtils.each(artjs.Selector.find(element, 'script'), this.evalScript, this);
+  },
+  
+  evalScript: function(script) {
+    eval(artjs.ElementUtils.getContent(script));
+  }
+};
