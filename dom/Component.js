@@ -16,6 +16,17 @@ artjs.Component = artjs.dom.Component = artjs.Class(
     
     find: function(id) {
       return this.idToComponent[id];
+    },
+    
+    onLoad: function(id, delegate) {
+      var component = this.find(id);
+      
+      if (component) {
+        delegate.invoke(component);
+      }
+      else {
+        artjs.ComponentScanner.addListener(id, delegate);
+      }
     }
   }
 );

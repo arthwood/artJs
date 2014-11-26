@@ -97,6 +97,6 @@ artjs.EventMapping = {
   change: artjs.ChangeEvent
 };
 
-artjs.on = function(target, eventName, delegate) {
+artjs.on = function(eventName, target, delegate) {
   return new artjs.EventMapping[eventName](target, delegate);
 };

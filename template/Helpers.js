@@ -29,8 +29,12 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return this._map(options, this._renderOption);
   },
   
-  renderTable: function(table) {
-    return this._renderElement('table', null, this._map(table, this._renderTableRow));
+  renderTable: function(data) {
+    var head = data.head ? this._renderElement('thead', null, this._map(data.head || [], this._renderTableHead)) : '';
+    var foot = data.foot ? this._renderElement('tfoot', null, this._map(data.foot, this._renderTableFoot)) : '';
+    var body = data.body ? this._renderElement('tbody', null, this._map(data.body || [], this._renderTableRow)) : '';
+    
+    return this._renderElement('table', null, head + foot + body);
   },
   
   _map: function(coll, func) {
@@ -47,12 +51,24 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return this._renderElement('option', attrs, i.text);
   },
   
-  _renderTableRow: function(i) {
-    return this._renderElement('tr', null, this._map(i, this._renderTableCell));
+  _renderTableHead: function(i) {
+    return this._renderTableCell('th', i);
   },
   
-  _renderTableCell: function(i) {
-    return this._renderElement('td', null, i);
+  _renderTableFoot: function(i) {
+    return this._renderTableElement(i);
+  },
+  
+  _renderTableRow: function(i) {
+    return this._renderElement('tr', null, this._map(i, this._renderTableElement));
+  },
+  
+  _renderTableElement: function(i) {
+    return this._renderTableCell('td', i);
+  },
+  
+  _renderTableCell: function(type, content) {
+    return this._renderElement(type, null, content);
   },
   
   _renderElement: function(name, attrs, value) {

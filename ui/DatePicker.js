@@ -6,10 +6,14 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
     
     var now = new Date();
     var year = now.getFullYear();
+    var month = now.getMonth();
     var data = artjs.ElementUtils.getData(this.element);
+    var firstDay = parseInt(data['first-day']);
     
-    this.yearSpan = new artjs.Point(parseInt(data['year-from']) || year - 100, parseInt(data['year-to']) || year + 20);
-    this.firstDay = parseInt(data['first-day']) || 0;
+    this.year = year;
+    this.month = month;
+    this.yearsRange = new artjs.Point(parseInt(data['year-from']) || year - 100, parseInt(data['year-to']) || year + 20);
+    this.firstDay = isNaN(firstDay) ? 1 : firstDay;
     
     var img = artjs.ElementUtils.putAfter(
       artjs.$C('img', {
@@ -24,9 +28,17 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
     
     artjs.ElementUtils.onClick(img, this._onImg.delegate);
     
-    this.calendar = artjs.$first(this.element, '.artjs-Calendar');
+    this.calendar = artjs.$('#artjs-Calendar');
+
+    if (artjs.ArrayUtils.isEmpty(this.calendar)) {
+      artjs.ComponentScanner.addListener('artjs-Calendar', artjs.$D(this, '_onCalendarLoad'));
+    }
   },
   {
+    _onCalendarLoad: function(component) {
+      this.calendar = component;
+    },
+    
     _onImg: function(e) {
       e.preventDefault();
       
@@ -35,7 +47,8 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
       var position = imgRT.add(new artjs.Point(2, 2));
       
       this.calendar.source = this;
-      this.calendar.toggle(this, position);
+      this.calendar.setPosition(position);
+      this.calendar.toggle();
     }
   },
   null,
@@ -43,115 +56,80 @@ artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
 );
 
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(
-  function(element) {
+  function() {
     this.super(arguments);
+
+    artjs.$BA(this);
+
+    this._hide();
     
-    this.years = [{value: 1999, text: '1999'}, {value: 2000, text: '2000'}];
-    this.year = 2000;
-    this.months = [{value: 'October', text: 'October'}, {value: 'November', text: 'November'}];
-    this.month = 'November';
-    this.table = [[1], [2]];
-    
-    artjs.ComponentScanner.addListener('artjs-Calendar-years', artjs.$D(this, '_onYearsLoaded'));
-    artjs.ComponentScanner.addListener('artjs-Calendar-months', artjs.$D(this, '_onMonthsLoaded'));
-    
-//    var au = artjs.ArrayUtils;
-//    var eu = artjs.ElementUtils;
-//    var eb = artjs.ElementBuilder;
-//    var s = artjs.Selector;
-//    
-//    artjs.$BA(this, '_buildYearSpan');
-//    
-//    var selectMonthOptions = au.map(this.ctor.MONTHS, this.ctor._monthToOption).join('');
-//    
-//    var headElement = artjs.$B('th', null, '&nbsp;');
-//    var headRow = artjs.$B('tr', null, eb.getCollection(7, headElement));
-//    var cellElement = artjs.$B('td', null, '&nbsp;');
-//    var row = artjs.$B('tr', null, eb.getCollection(7, cellElement));
-//    var rows = eb.getCollection(5, row);
-//    
-//    var nav = s.first(this.element, '.nav');
-//    var arrows = s.find(nav, 'a');
-//    var selects = s.find(nav, 'select');
-//    var table = s.first(this.element, 'table');
-//    var monthSelect = selects[0];
-//    
-//    eu.setContent(table, headRow + rows);
-//    eu.setContent(monthSelect, selectMonthOptions);
-//    
-//    this.prevMonth = arrows[0];
-//    this.nextMonth = arrows[1];
-//    
-//    eu.onClick(this.prevMonth, this._onPrevMonth.delegate);
-//    eu.onClick(this.nextMonth, this._onNextMonth.delegate);
-//    
-//    this.monthSelect = selects[0];
-//    this.yearSelect = selects[1];
-//    
-////    eu.onChange(this.monthSelect, this._onMonthSelect.delegate);
-////    eu.onChange(this.yearSelect, this._onYearSelect.delegate);
-//    this.monthSelect.onchange = this._onMonthSelect;
-//    this.yearSelect.onchange = this._onYearSelect;
-//    
-//    this.headers = s.find(this.element, 'th');
-//    this.rows = s.find(this.element, 'tr').slice(1);
-//    this.items = s.find(this.element, 'td');
-//    this.field = null;
-//    
-//    au.each(this.items, this._initItem, this);
+    artjs.Component.onLoad('artjs-Calendar-years', this._onYearsSelectLoaded.delegate);
+    artjs.Component.onLoad('artjs-Calendar-months', this._onMonthsSelectLoaded.delegate);
+    artjs.Component.onLoad('artjs-Calendar-days', this._onDaysTableLoaded.delegate);
+    artjs.Component.onLoad('artjs-Calendar-prev', this._onPrevLoaded.delegate);
+    artjs.Component.onLoad('artjs-Calendar-next', this._onNextLoaded.delegate);
   },
   {
-    _onYearsLoaded: function(component) {
-      component.setOptions(this.years);
-      component.setSelected(this.year);
+    _onYearsSelectLoaded: function(select) {
+      this._years = select;
+      this._years.onChange.add(this._onYearSelect.delegate);
     },
     
-    _onMonthsLoaded: function(component) {
-      component.setOptions(this.months);
-      component.setSelected(this.month);
+    _onMonthsSelectLoaded: function(select) {
+      this._months = select;
+      this._months.onChange.add(this._onMonthSelect.delegate);
+      this._months.setOptions(artjs.ArrayUtils.map(this.ctor.MONTHS, this.ctor._toMonthOption));
     },
     
-    getYear: function() {
-      return this._year;
+    _onDaysTableLoaded: function(table) {
+      this._days = table;
+      this._days.setData({
+        head: this._getDaysRow(),
+        body: artjs.ArrayUtils.build(this.ctor.ROWS_NUM, this._getDaysRow)
+      });
+      this._days.onItem.add(this._onItem.delegate);
     },
     
-    setYear: function(v) {
-      this._year = v;
+    _onPrevLoaded: function(prev) {
+      prev.onClick.add(this._onPrevMonth.delegate);
     },
     
-    toggle: function(datePicker, position) {
-      if (this._isHidden()) {
-        this._show(datePicker, position);
-      }
-      else {
-        this._hide();
-      }
+    _onNextLoaded: function(next) {
+      next.onClick.add(this._onNextMonth.delegate);
     },
     
-    _show: function(datePicker, position) {
-      this.firstDay = datePicker.firstDay;
-      this._setYearSpan(datePicker.yearSpan);
-      this.field = datePicker.element;
+    _getDaysRow: function() {
+      return artjs.ArrayUtils.build(7, artjs.StringUtils.blank);
+    },
+    
+    toggle: function() {
+      this._isHidden() ? this._show() : this._hide();
+    },
+    
+    _show: function() {
+      this._years.setOptions(artjs.ArrayUtils.map(artjs.ArrayUtils.fromRange(this.source.yearsRange), this.ctor._toYearOption));
+      this._years.setSelected(this.source.year);
+      this._months.setSelected(this.source.month);
       
-      var value = this.field.value;
-      var nav = artjs.Selector.first(datePicker.element, '.nav');
-      var selectYearOptions = artjs.ArrayUtils.map(this.years, this.ctor._yearToOption).join('');
-      var selects = artjs.Selector.find(nav, 'select');
-      var yearSelect = selects[1];
+      this.firstDay = this.source.firstDay;
       
-      artjs.ElementUtils.setContent(yearSelect, selectYearOptions);
+      var value = this.source.element.value;
       
-      this.selectedDate = artjs.StringUtils.isEmpty(value) ? new Date() : artjs.DateUtils.fromYMD(value, this.ctor.SEPARATOR);
+      this.selectedDate = artjs.StringUtils.isEmpty(value) 
+        ? new Date() 
+        : artjs.DateUtils.fromYMD(value, this.ctor.SEPARATOR);
       this.currentDate = new Date(this.selectedDate);
       
       this._update();
       
-      artjs.ElementUtils.setPosition(this.element, position);
       artjs.ElementUtils.show(this.element);
     },
     
+    setPosition: function(position) {
+      artjs.ElementUtils.setPosition(this.element, position);
+    },
+    
     _hide: function() {
-      this.field = null;
       artjs.ElementUtils.hide(this.element);
     },
     
@@ -160,34 +138,31 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _update: function() {
-      var au = artjs.ArrayUtils;
-      var du = artjs.DateUtils;
-      var mu = artjs.MathUtils;
-      var monthFirstDate = du.firstDate(this.currentDate);
+      var monthFirstDate = artjs.DateUtils.firstDate(this.currentDate);
       var monthFirstDay = monthFirstDate.getDay();
-      var monthDaysNum = du.monthDaysNum(this.currentDate);
+      var monthDaysNum = artjs.DateUtils.monthDaysNum(this.currentDate);
       
-      this.startIndex = mu.sawtooth(monthFirstDay - this.firstDay, 0, 7);
-      this.rowsNum = mu.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
-      this.monthSelect.value = this.currentDate.getMonth() + 1;
-      this.yearSelect.value = this.currentDate.getFullYear();
+      this._months.setSelected(this.currentDate.getMonth() + 1);
+      this._years.setSelected(this.currentDate.getFullYear());
+      this.startIndex = artjs.MathUtils.sawtooth(monthFirstDay - this.firstDay, 0, 7);
       
-      au.each(this.rows, this._updateRowVisibility, this);
-      au.each(this.headers, this._updateHeader, this);
-      au.each(this.items, this._updateItem, this);
+      var rowsNum = artjs.MathUtils.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
+      
+      for (var i = 0; i < this.ctor.ROWS_NUM; i++) {
+        this._days.setRowVisible(i, i < rowsNum);
+      }
+
+      this._days.updateHead(artjs.ArrayUtils.build(7, this._eachHeadData, this));
+      this._days.iterate(this._onEachDay.delegate);
     },
     
-    _updateRowVisibility: function(row, idx) {
-      artjs.ElementUtils.setVisible(row, idx < this.rowsNum);
-    },
-    
-    _updateHeader: function(header, idx) {
+    _eachHeadData: function(idx) {
       var index = artjs.MathUtils.sawtooth(this.firstDay + idx, 0, 7);
       
-      artjs.ElementUtils.setContent(header, this.ctor.DAYS[index]);
+      return this.ctor.DAYS[index];
     },
     
-    _updateItem: function(item, idx) {
+    _onEachDay: function(item, idx) {
       var date = new Date(this.currentDate);
       
       date.setDate(idx - this.startIndex + 1);
@@ -204,12 +179,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       artjs.ElementUtils.setContent(item, value);
     },
     
-    _initItem: function(item) {
-      artjs.ElementUtils.onClick(item, this._onItem.delegate);
-    },
-    
-    _onItem: function(e) {
-      var item = e.currentTarget;
+    _onItem: function(item) {
       var value = artjs.ElementUtils.getContent(item);
       var valid = !artjs.ElementUtils.hasClass(item, 'invalid');
       
@@ -218,7 +188,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
         this.selectedDate.setMonth(this.currentDate.getMonth());
         this.selectedDate.setDate(parseInt(value, 10));
         this._update();
-        this.field.value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
+        this.source.element.value = artjs.DateUtils.toYMD(this.selectedDate, this.ctor.SEPARATOR);
         this._hide();
       }
       
@@ -240,24 +210,17 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     _onMonth: function(v) {
       this.currentDate.setMonth(this.currentDate.getMonth() + v);
       
-      this.monthSelect.value = this.currentDate.getMonth() + 1;
-      this.yearSelect.value = this.currentDate.getFullYear();
+      this._update();
+    },
+    
+    _onMonthSelect: function(select) {
+      this.currentDate.setMonth(parseInt(select.getValue(), 10) - 1);
       
       this._update();
     },
     
-    _onMonthSelect: function(e) {
-      var select = e.currentTarget;
-      
-      this.currentDate.setMonth(parseInt(select.value, 10) - 1);
-      
-      this._update();
-    },
-    
-    _onYearSelect: function(e) {
-      var select = e.currentTarget;
-      
-      this.currentDate.setFullYear(parseInt(select.value, 10));
+    _onYearSelect: function(select) {
+      this.currentDate.setFullYear(parseInt(select.getValue(), 10));
       
       this._update();
     },
@@ -277,6 +240,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     ],
     DAYS: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'],
     WEEKEND_DAYS: [6, 0],
+    ROWS_NUM: 7,
     SEPARATOR: '-',
     CELL_BG: {valid: 'none', weekend: '#CFFFDF', invalid: '#AAAAAA'},
     
@@ -284,12 +248,12 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
     },
     
-    _monthToOption: function(i, idx) {
-      return new artjs.ElementBuilder('option', {value: idx + 1}, i);
+    _toMonthOption: function(i, idx) {
+      return {value: idx + 1, text: i};
     },
     
-    _yearToOption: function(i, idx) {
-      return new artjs.ElementBuilder('option', {value: i}, i);
+    _toYearOption: function(i, idx) {
+      return {value: i, text: i};
     },
     
     _onLibraryLoad: function() {

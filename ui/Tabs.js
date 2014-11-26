@@ -21,9 +21,9 @@ artjs.Tabs = artjs.ui.Tabs = artjs.Class(
     eachTab: function(tab) {
       var mc = new artjs.MouseController(tab);
       
-      artjs.on(tab, 'mouseover', this.onTabOverD);
-      artjs.on(tab, 'mouseout', this.onTabOutD);
-      artjs.on(tab, 'click', this.onTabClickD);
+      artjs.on('mouseover', tab, this.onTabOverD);
+      artjs.on('mouseout', tab, this.onTabOutD);
+      artjs.on('click', tab, this.onTabClickD);
     },
     
     onTabOver: function(e, mc) {

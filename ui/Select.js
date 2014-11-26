@@ -1,5 +1,11 @@
 artjs.Select = artjs.ui.Select = artjs.Class(
-  null,
+  function() {
+    this.super(arguments);
+    
+    this.onChange = new artjs.CustomEvent('artjs.Select::onChange');
+    
+    artjs.on('change', this.element, artjs.$D(this, '_onChange'));
+  },
   {
     setOptions: function(options) {
       this._options = options;
@@ -19,8 +25,16 @@ artjs.Select = artjs.ui.Select = artjs.Class(
       newOption.setAttribute('selected', 'selected');
     },
     
+    getValue: function() {
+      return this.element.value;
+    },
+    
     _update: function() {
       artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderOptions(this._options));
+    },
+    
+    _onChange: function(e) {
+      this.onChange.fire(this);
     }
   },
   null,

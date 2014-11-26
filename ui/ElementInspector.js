@@ -1,6 +1,6 @@
 artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(
   function() {
-    artjs.on(document, 'mousemove', artjs.$D(this, this._onMouseMove));
+    artjs.on('mousemove', document, artjs.$D(this, this._onMouseMove));
 
     this._toggler = new artjs.Toggler(true);
     this._toggler.onActivate.add(artjs.$D(this, this._onActivate));

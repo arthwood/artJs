@@ -447,7 +447,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
 
   onClick: function(e, delegate) {
-    return artjs.on(e, 'click', delegate);
+    return artjs.on('click', e, delegate);
   },
   
   toString: function(e) {

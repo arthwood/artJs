@@ -1,28 +1,27 @@
 artjs.Tree = artjs.ui.Tree = artjs.Class(
-  function(data, element) {
-    this.data = data;
+  function() {
+    this.super(arguments);
     
-    this._onNodeDelegate = artjs.$D(this, '_onNode');
-    this._onLeafDelegate = artjs.$D(this, '_onLeaf');
+    artjs.$BA(this);
+    
     this._leafClassToggler = new artjs.ClassToggler('selected');
-    
-    this.onLeaf = new artjs.CustomEvent('onLeaf');
-
-    artjs.ElementUtils.insert(element, this.render());
-    
-    var point = artjs.ArrayUtils.partition(artjs.Selector.find(element, 'li'), function(item, idx) {
-      return artjs.ArrayUtils.isNotEmpty(artjs.Selector.find(item, 'ul'));
-    });
-    
-    this._nodes = point.x;
-    this._leaves = point.y;
-    
-    artjs.ArrayUtils.each(this._nodes, artjs.$DC(this, this._eachNode));
-    artjs.ArrayUtils.each(this._leaves, artjs.$DC(this, this._eachLeaf));
+    this.onLeaf = new artjs.CustomEvent('artjs.Tree::onLeaf');
   },
   {
-    render: function() {
-      return artjs.$P(this._renderNode(this.data));
+    setData: function(data) {
+      var content = artjs.$P(this._renderNode(data));
+      
+      artjs.ElementUtils.insert(this.element, content);
+      
+      var point = artjs.ArrayUtils.partition(artjs.Selector.find(this.element, 'li'), function(item, idx) {
+        return artjs.ArrayUtils.isNotEmpty(artjs.Selector.find(item, 'ul'));
+      });
+      
+      this._nodes = point.x;
+      this._leaves = point.y;
+      
+      artjs.ArrayUtils.each(this._nodes, this._eachNode, this);
+      artjs.ArrayUtils.each(this._leaves, this._eachLeaf, this);
     },
     
     open: function() {
@@ -43,8 +42,8 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
     },
     
     _eachNode: function(i) {
-      artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onNodeDelegate);
-      artjs.ElementUtils.hide(artjs.ArrayUtils.first(artjs.Selector.find(i, 'ul')));
+      artjs.on('click', artjs.ElementUtils.firstElement(i), this._onNode.delegate);
+      artjs.ElementUtils.hide(artjs.$first(i, 'ul'));
     },
     
     _onNode: function(originalEvent, elementEvent) {
@@ -57,11 +56,11 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
       var ul = artjs.ElementUtils.next(a);
       
       artjs.ElementUtils.toggle(ul);
-      artjs.ElementUtils.setClass(artjs.Selector.parent(a), 'expanded', !artjs.ElementUtils.isHidden(ul));
+      artjs.ElementUtils.setClass(artjs.$parent(a), 'expanded', !artjs.ElementUtils.isHidden(ul));
     },
     
     _eachLeaf: function(i) {
-      artjs.ElementUtils.onClick(artjs.ElementUtils.firstElement(i), this._onLeafDelegate);
+      artjs.on('click', artjs.ElementUtils.firstElement(i), this._onLeaf.delegate);
       artjs.ElementUtils.addClass(i, 'leaf');
     },
     
@@ -80,5 +79,7 @@ artjs.Tree = artjs.ui.Tree = artjs.Class(
     getCurrent: function() {
       return this._leafClassToggler.getCurrent();
     }
-  }
+  },
+  null,
+  artjs.Component
 );

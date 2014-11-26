@@ -6,14 +6,25 @@ artjs.ArrayUtils = artjs.utils.Array = {
     this._invokeCallback = artjs.$DC(this, '_invoke');
   },
   
-  build: function(n, func) {
+  build: function(n, func, context) {
     var arr = new Array(n);
     
     for (var i = 0; i < n; i++) {
-      arr[i] = func(i);
+      arr[i] = func.call(context, i, arr);
     }
     
     return arr;
+  },
+  
+  fromRange: function(point) {
+    var n = point.y - point.x;
+    var result = new Array(n);
+    
+    for (var i = 0; i < n; i++) {
+      result[i] = point.x + i;
+    }
+    
+    return result;
   },
   
   first: function(arr) {

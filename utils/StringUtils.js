@@ -10,7 +10,7 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   strip: function(str) {
-    return str.replace(/\s/g, '');
+    return str.replace(/\s/g, this.blank());
   },
 
   isBlank: function(str) {
@@ -18,7 +18,7 @@ artjs.StringUtils = artjs.utils.String = {
   },
 
   isEmpty: function(str) {
-    return this.strip(str) == '';
+    return this.strip(str) == this.blank();
   },
   
   nullifyEmpty: function(str) {
@@ -26,7 +26,11 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   toS: function(str) {
-    return str || '';
+    return str || this.blank();
+  },
+  
+  blank: function() {
+    return '';
   },
   
   countPattern: function(str, pattern) {
@@ -40,7 +44,7 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   getMultiPattern: function (pattern, n) {
-    var str = '';
+    var str = this.blank();
     
     while (n-- > 0) {
       str += pattern;
@@ -98,7 +102,7 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   singularOrPlural: function(text, n) {
-    return text + ((n == 1) ? '' : 's');
+    return text + ((n == 1) ? this.blank() : 's');
   },
   
   capitalize: function(str) {
