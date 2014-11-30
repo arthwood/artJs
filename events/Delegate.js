@@ -31,8 +31,6 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     }
   },
   {
-    injected: false,
-    
     callback: function(object, method, withSource) {
       var delegate = new this(object, method);
       var callback = delegate.callback(withSource);
@@ -52,21 +50,20 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     
     bindAll: function(context) {
       var container = context.ctor ? context.ctor.prototype : context;
-      var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.selectWithKey(container, this._isCallback, this));
+      var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
       var all = callbacks.concat(artjs.$A(arguments, 1));
       
-      this._bindEach.context = context;
-      this._bindEach.container = container;
+      this._bindContext = context;
       
       artjs.ArrayUtils.each(all, this._bindEach, this);
     },
     
-    _isCallback: function(k, v) {
+    _isCallback: function(v, k) {
       return artjs.StringUtils.startsWith(k, '_on') && (v instanceof Function);
     },
     
     _bindEach: function(i) {
-      arguments.callee.container[i] = this.callback(arguments.callee.context, i);
+      this._bindContext[i] = this.callback(this._bindContext, i);
     }
   }
 );

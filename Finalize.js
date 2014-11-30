@@ -18,3 +18,4 @@ artjs.ElementUtils.init();
 artjs.Selector.init();
 artjs.TemplateLibrary.init();
 artjs.Calendar.init();
+artjs.SpecView.init();

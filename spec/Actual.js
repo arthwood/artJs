@@ -7,7 +7,7 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(
       var value = matcher.resolve(this);
   
       if (typeof value == 'boolean')  {
-        runner.pushResult(new artjs.SpecResult(this, matcher, value));
+        artjs.SpecRunner.pushResult(new artjs.SpecResult(this, matcher, value));
       }
       
       return value;

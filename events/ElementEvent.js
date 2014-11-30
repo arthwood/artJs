@@ -3,13 +3,13 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
     this.element = element;
     this.delegate = delegate;
     
-    var on = artjs.$DC(this, this._on, false);
-    
+    artjs.$BA(this);
+
     if (element.addEventListener) {
-      element.addEventListener(name, on, false);
+      element.addEventListener(name, this._onEvent, false);
     }
     else {
-      element.attachEvent('on' + name, on);
+      element.attachEvent('on' + name, this._onEvent);
     }
   },
   {
@@ -26,7 +26,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
       }
     },
     
-    _on: function(e) {
+    _onEvent: function(e) {
       this.delegate.invoke(e, this);
     }
   }
@@ -40,7 +40,7 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
     this.on = on;
   },
   {
-    _on: function(e) {
+    _onEvent: function(e) {
       if (this._edge(e) && !(this.on == this.over)) {
         this.over = this.on;
         this.super(arguments, e);
@@ -79,24 +79,24 @@ artjs.MouseOverEvent = artjs.events.MouseOver = artjs.Class(
 
 artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'mouseout', delegate, false);
+    this.super(arguments, element, 'mouseout', delegate);
   }, null, null, artjs.MouseEvent
 );
 
 artjs.ChangeEvent = artjs.events.Change = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'change', delegate, false);
+    this.super(arguments, element, 'change', delegate);
   }, null, null, artjs.ElementEvent
 );
 
 artjs.EventMapping = {
-  mousemove: artjs.MouseMoveEvent,
-  mouseover: artjs.MouseOverEvent,
-  mouseout: artjs.MouseOutEvent,
-  click: artjs.ClickEvent,
-  change: artjs.ChangeEvent
+  mousemove: 'MouseMoveEvent',
+  mouseover: 'MouseOverEvent',
+  mouseout: 'MouseOutEvent',
+  click: 'ClickEvent',
+  change: 'ChangeEvent'
 };
 
 artjs.on = function(eventName, target, delegate) {
-  return new artjs.EventMapping[eventName](target, delegate);
+  return new artjs[artjs.EventMapping[eventName]](target, delegate);
 };

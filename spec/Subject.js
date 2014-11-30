@@ -1,3 +1,3 @@
 function subject() {
-  return runner.subject;
+  return artjs.SpecRunner.getSubject();
 }

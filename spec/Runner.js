@@ -1,111 +1,98 @@
-artjs.SpecRunner = artjs.spec.Runner = artjs.Class(
-  function() {
-    this.timeline = new artjs.Timeline();
-    
-    this.init();
-  },
-  {
-    runnerTemplate: artjs.ElementBuilder.create('div', {className: 'runner'}),
-    testTemplate: artjs.ElementBuilder.create('span'),
-    resultsTemplate: artjs.ElementBuilder.create('div'),
+artjs.SpecRunner = artjs.spec.Runner = {
+  _specs: [],
+  _duration: null,
+  _it: null,
+  _subject: null,
+  _path: [],
+  _results: [],
+  _receivers: [],
+  _timeline: new artjs.Timeline(),
+  onComplete: new artjs.CustomEvent('artjs.SpecRunner::onComplete'),
+  onResult: new artjs.CustomEvent('artjs.SpecRunner::onResult'),
   
-    init: function() {
-      this.specs = [];
-      this.path = [];
-      this.results = [];
-      this.receivers = [];
-    },
+  run: function() {
+    this._timeline.mark();
     
-    run: function() {
-      this.timeline.mark();
-      
-      this.runnerElement = artjs.$insert(document.body, this.runnerTemplate);
-      
-      artjs.ArrayUtils.invoke(this.specs, 'execute');
-      
-      var duration = this.timeline.mark();
-      var failures = artjs.ArrayUtils.select(this.results, this._isFailure, this);
-      var success = artjs.ArrayUtils.isEmpty(failures);
-      var classNames = ['results'];
-      var n = this.results.length;
-      var k = failures.length;
-      
-      classNames.push(success ? 'success' : 'failure');
-      
-      this.resultsTemplate.className = classNames.join(' ');
-      this.resultsElement = artjs.$insert(document.body, this.resultsTemplate);
-      
-      var resultText = success ? 'Success!' : 'Failure!';
-      var statsText = success
-        ? n + ' assertions in total.'
-        : k + ' assertions failed of ' + n + ' total.';
-      var durationText = 'Duration: ' + artjs.DateUtils.miliToHMSM(duration);
-      var resultElement = artjs.$E('p', {className: 'result'}, resultText);
-      var statElement = artjs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
-      
-      artjs.$insert(this.resultsElement, resultElement);
-      artjs.$insert(this.resultsElement, statElement);
-      
-      if (!success) {
-        var list = artjs.$E('ul');
-        
-        this._getFailureHtml.list = list;
-        
-        artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
-        
-        artjs.$insert(this.resultsElement, list);
-      }
-    },
+    artjs.ArrayUtils.invoke(this._specs, 'execute');
     
-    alreadyFailed: function() {
-      var lastResult = artjs.ArrayUtils.last(this.results);
+    this._duration = this._timeline.mark();
+    
+    this.onComplete.fire(this);
+  },
+  
+  pushSpec: function(spec) {
+    this._specs.push(spec);
+  },
+  
+  pushNode: function(node) {
+    this._path.push(node);
+  },
+  
+  popNode: function(node) {
+    this._path.pop()
+  },
+  
+  setSubject: function(subject) {
+    this._subject = subject;
+  },
+  
+  setIt: function(it) {
+    this._it = it;
+  },
+  
+  getDuration: function() {
+    return this._duration;
+  },
+  
+  getSubject: function() {
+    return this._subject;
+  },
+  
+  getPath: function() {
+    return this._path;
+  },
+  
+  getResults: function() {
+    return this._results;
+  },
+  
+  getLastResult: function() {
+    return artjs.ArrayUtils.last(this._results);
+  },
+  
+  alreadyFailed: function() {
+    var lastResult = this.getLastResult();
+    
+    return lastResult && lastResult.it == this._it && !lastResult.value;
+  },
+  
+  pushReceiver: function(receiver) {
+    this._receivers.push(receiver);
+  },
+  
+  resetReceivers: function() {
+    this._receivers = [];
+  },
+  
+  testReceivers: function() {
+    artjs.ArrayUtils.each(this._receivers, this.testReceiver, this);
+  },
+  
+  testReceiver: function(receiver) {
+    var result = receiver.getResult();
+    
+    this.pushResult(result);
+    
+    receiver.rollback();
+  },
+  
+  pushResult: function(result) {
+    if (!this.alreadyFailed()) {
+      result.it = this._it;
       
-      return lastResult && lastResult.it == this.it && !lastResult.value;
-    },
-    
-    pushResult: function(result) {
-      if (!this.alreadyFailed()) {
-        result.it = this.it;
-        this.results.push(result);
-        
-        artjs.ElementUtils.setContent(this.testTemplate, result.value ? '.' : 'F');
-        this.testTemplate.className = result.value ? 'success' : 'failure';
-        artjs.ElementUtils.insert(this.runnerElement, this.testTemplate);
-      }
-    },
-    
-    _testReceivers: function() {
-      artjs.ArrayUtils.each(this.receivers, this.testReceiver, this);
-    },
-    
-    testReceiver: function(receiver) {
-      var result = receiver.getResult();
+      this._results.push(result);
       
-      this.pushResult(result);
-      
-      receiver.rollback();
-    },
-    
-    _getFailureHtml: function(i) {
-      var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(' ');
-      var info = i.failureText();
-      var pathElement = artjs.$E('p', {className: 'path'}, path);
-      var infoElement = artjs.$E('p', {className: 'info'}, info);
-      var item = artjs.$E('li');
-      
-      artjs.$insert(item, pathElement);
-      artjs.$insert(item, infoElement);
-      artjs.$insert(arguments.callee.list, item);
-    },
-    
-    _nodeToString: function(i) {
-      var facet = i.facet;
-      
-      return typeof(facet) == 'string' ? facet : facet._name;
-    },
-    
-    _isFailure: function(i) {
-      return !i.value;
+      this.onResult.fire(this);
     }
   }
-);
+};

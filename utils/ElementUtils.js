@@ -376,12 +376,12 @@ artjs.ElementUtils = artjs.utils.Element = {
   
   getData: function(e) {
     var attrs = this.getAttributes(e);
-    var data = artjs.ObjectUtils.selectWithKey(attrs, this._isDataAttribute, this);
+    var data = artjs.ObjectUtils.select(attrs, this._isDataAttribute, this);
     
     return artjs.ObjectUtils.mapKey(data, this._removeDataPrefix, this);
   },
   
-  _isDataAttribute: function(k, v) {
+  _isDataAttribute: function(v, k) {
     return artjs.StringUtils.startsWith(k, 'data-');
   },
   

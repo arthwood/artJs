@@ -152,24 +152,7 @@ artjs.ObjectUtils = artjs.utils.Object = {
       if (obj.hasOwnProperty(i)) {
         j = obj[i];
         
-        if (func.call(context, j)) {
-          result[i] = j;
-        }
-      }
-    }
-    
-    return result;
-  },
-  
-  selectWithKey: function(obj, func, context) {
-    var result = {};
-    var j;
-    
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        j = obj[i];
-        
-        if (func.call(context, i, j)) {
+        if (func.call(context, j, i)) {
           result[i] = j;
         }
       }

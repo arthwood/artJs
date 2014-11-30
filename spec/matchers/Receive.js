@@ -6,7 +6,7 @@ artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(
     resolve: function(actual) {
       this.receiver = new artjs.SpecReceiver(this, actual);
       
-      runner.receivers.push(this.receiver);
+      artjs.SpecRunner.pushReceiver(this.receiver);
       
       return this.receiver;
     },

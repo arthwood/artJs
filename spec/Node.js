@@ -5,18 +5,18 @@ artjs.SpecNode = artjs.spec.Node = artjs.Class(
   },
   {
     execute: function() {
-      runner.path.push(this);
+      artjs.SpecRunner.pushNode(this);
       
       this.body();
       
-      runner.path.pop();
+      artjs.SpecRunner.popNode();
     }
   }
 );
 
 artjs.Spec = artjs.Class(null, {
   execute: function() {
-    runner.subject = this.facet;
+    artjs.SpecRunner.setSubject(this.facet);
     
     this.super(arguments);
   }
@@ -28,19 +28,19 @@ artjs.Context = artjs.Class(null, null, null, artjs.SpecNode);
 
 artjs.It = artjs.Class(null, {
   execute: function() {
-    runner.it = this;
-    runner.receivers = [];
+    artjs.SpecRunner.setIt(this);
+    artjs.SpecRunner.resetReceivers();
     
     this.super(arguments);
     
-    runner._testReceivers();
+    artjs.SpecRunner.testReceivers();
   }
 }, null, artjs.SpecNode);
 
 function spec(facet, body) {
   var node = new artjs.Spec(facet, body);
   
-  runner.specs.push(node);
+  artjs.SpecRunner.pushSpec(node);
 }
 
 function _executeNode(type, facet, body) {
