@@ -1,6 +1,6 @@
 {
   "name": "artjs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "Artur Bilski",
     "email": "admin@arturbilski.pl",
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "https://github.com/arthwood/artJs.git"
   },
-  "main": "./node/index.js",
+  "main": "node/index.js",
   "files": [
     "data", 
     "events", 
