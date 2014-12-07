@@ -53,17 +53,35 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
       var all = callbacks.concat(artjs.$A(arguments, 1));
       
-      this._bindContext = context;
+      this._bindSource = context;
+      this._bindTarget = context;
       
       artjs.ArrayUtils.each(all, this._bindEach, this);
     },
     
+    delegateTo: function(source, target) {
+      var functions = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(source, this._isPublicMethod, this));
+      
+      this._bindSource = source;
+      this._bindTarget = target;
+      
+      artjs.ArrayUtils.each(functions, this._bindEach, this);
+    },
+    
     _isCallback: function(v, k) {
-      return artjs.StringUtils.startsWith(k, '_on') && (v instanceof Function);
+      return artjs.StringUtils.startsWith(k, '_on') && this._isFunction(v, k);
+    },
+    
+    _isPublicMethod: function(v, k) {
+      return !artjs.StringUtils.startsWith(k, '_') && this._isFunction(v, k);
+    },
+    
+    _isFunction: function(v, k) {
+      return v instanceof Function;
     },
     
     _bindEach: function(i) {
-      this._bindContext[i] = this.callback(this._bindContext, i);
+      this._bindTarget[i] = this.callback(this._bindSource, i);
     }
   }
 );
@@ -71,3 +89,4 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
 artjs.$DC = artjs.Delegate.callback(artjs.Delegate, 'callback');
 artjs.$D = artjs.Delegate.callback(artjs.Delegate, 'create');
 artjs.$BA = artjs.Delegate.callback(artjs.Delegate, 'bindAll');
+artjs.$DT = artjs.Delegate.callback(artjs.Delegate, 'delegateTo');

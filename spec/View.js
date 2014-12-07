@@ -6,6 +6,7 @@ artjs.SpecView = artjs.spec.View = {
     
     artjs.SpecRunner.onResult.add(artjs.$D(this, '_onResult'));
     artjs.SpecRunner.onComplete.add(artjs.$D(this, '_onComplete'));
+    artjs.$DT(artjs.SpecApi, window);
   },
   
   run: function() {
