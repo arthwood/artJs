@@ -1,6 +1,6 @@
 {
   "name": "artjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Artur Bilski",
     "email": "admin@arturbilski.pl",
@@ -16,5 +16,18 @@
     "url": "https://github.com/arthwood/artJs.git"
   },
   "main": "./node/index.js",
+  "files": [
+    "data", 
+    "events", 
+    "math", 
+    "spec", 
+    "utils/ArrayUtils.js", 
+    "utils/Class.js", 
+    "utils/DateUtils.js", 
+    "utils/MathUtils.js", 
+    "utils/ObjectUtils.js", 
+    "utils/StringUtils.js", 
+    "utils/Toggler.js"
+  ],
   "license": "MIT"
 }
