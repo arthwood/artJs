@@ -90,7 +90,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(
     },
   
     _onProgress: function(request, event) {
-      var r = event.position / event.totalSize;
+      var r = event.loaded / event.total;
   
       this.onProgress.fire(this, r);
     },

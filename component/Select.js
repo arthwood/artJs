@@ -1,4 +1,4 @@
-artjs.Select = artjs.ui.Select = artjs.Class(
+artjs.Select = artjs.component.Select = artjs.Class(
   function() {
     this.super(arguments);
     

@@ -1,4 +1,4 @@
-artjs.DatePicker = artjs.ui.DatePicker = artjs.Class(
+artjs.DatePicker = artjs.component.DatePicker = artjs.Class(
   function() {
     this.super(arguments);
     

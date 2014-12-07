@@ -1,4 +1,4 @@
-var artjs = {
+module.exports = {
   VERSION: '0.0.1',
   
   component: {},

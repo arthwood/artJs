@@ -1,0 +1,20 @@
+{
+  "name": "artjs",
+  "version": "0.0.1",
+  "author": {
+    "name": "Artur Bilski",
+    "email": "admin@arturbilski.pl",
+    "url": "http://arturbilski.pl/"
+  },
+  "description": "ArtJs framework.",
+  "keywords": [
+    "artjs",
+    "framework" 
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arthwood/artJs.git"
+  },
+  "main": "./node/index.js",
+  "license": "MIT"
+}

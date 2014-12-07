@@ -1,4 +1,4 @@
-artjs.Tree = artjs.ui.Tree = artjs.Class(
+artjs.Tree = artjs.component.Tree = artjs.Class(
   function() {
     this.super(arguments);
     

@@ -1,4 +1,4 @@
-artjs.Table = artjs.ui.Table = artjs.Class(
+artjs.Table = artjs.component.Table = artjs.Class(
   function() {
     this.super(arguments);
     

@@ -1,4 +1,4 @@
-artjs.Link = artjs.ui.Link = artjs.Class(
+artjs.Link = artjs.component.Link = artjs.Class(
   function() {
     this.super(arguments);
     
