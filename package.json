@@ -1,6 +1,6 @@
 {
   "name": "artjs",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Artur Bilski",
     "email": "admin@arturbilski.pl",
@@ -20,6 +20,7 @@
     "data", 
     "events", 
     "math", 
+    "node", 
     "spec", 
     "utils/ArrayUtils.js", 
     "utils/Class.js", 
