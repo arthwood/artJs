@@ -1,4 +1,4 @@
-artjs.QueuedClock = artjs.events.QueuedClock = artjs.class(
+artjs.QueuedClock = artjs.events.QueuedClock = artjs.Class(
   function(interval) {
     this.interval = interval;
     this.queue = new artjs.Queue();

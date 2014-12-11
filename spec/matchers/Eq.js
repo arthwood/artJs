@@ -15,7 +15,3 @@ artjs.EqMatcher = artjs.spec.matchers.Eq = artjs.Class(
   null,
   artjs.BaseMatcher
 );
-
-function eq(expected) {
-  return new artjs.EqMatcher(expected);
-}

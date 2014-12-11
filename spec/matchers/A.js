@@ -10,7 +10,3 @@ artjs.AMatcher = artjs.spec.matchers.A = artjs.Class(
   null,
   artjs.BaseMatcher
 );
-
-function beA(expected) {
-  return new artjs.AMatcher(expected);
-}

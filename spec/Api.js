@@ -21,5 +21,41 @@ artjs.SpecApi = artjs.spec.Api = {
 
   it: function(facet, body) {
     this._executeNode(artjs.It, facet, body);
+  },
+  
+  eq: function(expected) {
+    return new artjs.EqMatcher(expected);
+  },
+  
+  beA: function(expected) {
+    return new artjs.AMatcher(expected);
+  },
+
+  beFalse: function() {
+    return new artjs.FalseMatcher();
+  },
+  
+  beNull: function() {
+    return new artjs.NullMatcher();
+  },
+
+  receive: function(expected) {
+    return new artjs.ReceiveMatcher(expected);
+  },
+
+  beTrue: function() {
+    return new artjs.TrueMatcher();
+  },
+  
+  expect: function(value) {
+    return new artjs.Actual(value);
+  },
+  
+  mock: function() {
+    return new artjs.Mock();
+  },
+
+  subject: function() {
+    return artjs.SpecRunner.getSubject();
   }
 };

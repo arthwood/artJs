@@ -6,7 +6,3 @@ artjs.TrueMatcher = artjs.spec.matchers.True = artjs.Class(
   null,
   artjs.BaseMatcher
 );
-
-function beTrue() {
-  return new artjs.TrueMatcher();
-}

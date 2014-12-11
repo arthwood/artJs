@@ -7,7 +7,3 @@ artjs.Mock = artjs.spec.Mock = artjs.Class(
     }
   }
 );
-
-function mock() {
-  return new artjs.Mock();
-}

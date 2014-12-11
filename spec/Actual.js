@@ -14,7 +14,3 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(
     }
   }
 );
-
-function expect(value) {
-  return new artjs.Actual(value);
-}

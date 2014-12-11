@@ -40,7 +40,3 @@ artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(
   null,
   artjs.BaseMatcher
 );
-
-function receive(expected) {
-  return new artjs.ReceiveMatcher(expected);
-}

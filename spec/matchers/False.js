@@ -6,7 +6,3 @@ artjs.FalseMatcher = artjs.spec.matchers.False = artjs.Class(
   null,
   artjs.BaseMatcher
 );
-
-function beFalse() {
-  return new artjs.FalseMatcher();
-}

@@ -1,5 +1,5 @@
-module.exports = {
-  VERSION: '0.0.2',
+var artjs = {
+  VERSION: '0.0.5',
   
   data: {},
   events: {},
@@ -9,6 +9,3 @@ module.exports = {
   },
   utils: {}
 };
-
-artjs.ArrayUtils.init();
-artjs.ObjectUtils.init();
