@@ -94,5 +94,9 @@ artjs.SpecRunner = artjs.spec.Runner = {
       
       this.onResult.fire(this);
     }
+  },
+  
+  getTotalSpecsNum: function() {
+    return this._specs.length;
   }
 };
