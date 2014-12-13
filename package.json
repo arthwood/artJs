@@ -1,12 +1,13 @@
 {
   "name": "artjs",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": {
     "name": "Artur Bilski",
     "email": "admin@arturbilski.pl",
     "url": "http://arturbilski.pl/"
   },
   "description": "ArtJs framework.",
+  "homepage": "http://artjs.org",
   "keywords": [
     "artjs",
     "framework"
