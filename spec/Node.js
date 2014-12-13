@@ -26,13 +26,18 @@ artjs.Describe = artjs.Class(null, null, null, artjs.SpecNode);
 
 artjs.Context = artjs.Class(null, null, null, artjs.SpecNode);
 
-artjs.It = artjs.Class(null, {
-  execute: function() {
-    artjs.SpecRunner.setIt(this);
-    artjs.SpecRunner.resetReceivers();
-    
-    this.super(arguments);
-    
-    artjs.SpecRunner.testReceivers();
-  }
-}, null, artjs.SpecNode);
+artjs.It = artjs.Class(
+  null, 
+  {
+    execute: function() {
+      artjs.SpecRunner.setIt(this);
+      artjs.SpecRunner.resetReceivers();
+      
+      this.super(arguments);
+      
+      artjs.SpecRunner.testReceivers();
+    }
+  }, 
+  null, 
+  artjs.SpecNode
+);
