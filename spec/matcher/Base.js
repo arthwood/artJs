@@ -1,4 +1,4 @@
-artjs.BaseMatcher = artjs.spec.matchers.Base = artjs.Class(
+artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(
   function(expected, toText) {
     this.expected = expected;
     this.toText = toText || 'be';

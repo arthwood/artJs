@@ -9,6 +9,8 @@ artjs.SpecApi = artjs.spec.Api = {
     var node = new type(facet, body);
   
     node.execute();
+    
+    return node;
   },
 
   describe: function(facet, body) {

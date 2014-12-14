@@ -1,4 +1,4 @@
-artjs.FalseMatcher = artjs.spec.matchers.False = artjs.Class(
+artjs.FalseMatcher = artjs.spec.matcher.False = artjs.Class(
   function() {
     this.super(arguments, false);
   },

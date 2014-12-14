@@ -1,4 +1,4 @@
-artjs.TrueMatcher = artjs.spec.matchers.True = artjs.Class(
+artjs.TrueMatcher = artjs.spec.matcher.True = artjs.Class(
   function() {
     this.super(arguments, true);
   },

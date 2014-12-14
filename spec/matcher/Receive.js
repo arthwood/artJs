@@ -1,4 +1,4 @@
-artjs.ReceiveMatcher = artjs.spec.matchers.Receive = artjs.Class(
+artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(
   function(expected) {
     this.super(arguments, expected, 'receive');
   },

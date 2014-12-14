@@ -1,4 +1,4 @@
-artjs.AMatcher = artjs.spec.matchers.A = artjs.Class(
+artjs.AMatcher = artjs.spec.matcher.A = artjs.Class(
   function(expected) {
     this.super(arguments, expected);
   },

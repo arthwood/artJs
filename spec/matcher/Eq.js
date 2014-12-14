@@ -1,4 +1,4 @@
-artjs.EqMatcher = artjs.spec.matchers.Eq = artjs.Class(
+artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(
   function(expected) {
     this.super(arguments, expected, 'equal');
   },

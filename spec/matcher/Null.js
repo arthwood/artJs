@@ -1,4 +1,4 @@
-artjs.NullMatcher = artjs.spec.matchers.Null = artjs.Class(
+artjs.NullMatcher = artjs.spec.matcher.Null = artjs.Class(
   function() {
     this.super(arguments, null);
   },

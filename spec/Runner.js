@@ -1,8 +1,10 @@
 artjs.SpecRunner = artjs.spec.Runner = {
   _specs: [],
-  _duration: null,
+  _duration: undefined,
   _it: null,
-  _subject: null,
+  _subject: undefined,
+  _itsCount: undefined,
+  _countMode: undefined,
   _path: [],
   _results: [],
   _receivers: [],
@@ -20,6 +22,35 @@ artjs.SpecRunner = artjs.spec.Runner = {
     this.onComplete.fire(this);
   },
   
+  count: function() {
+    this._itsCount = 0;
+    this._countMode = true;
+    
+    artjs.ArrayUtils.invoke(this._specs, 'execute');
+    
+    this._countMode = false;
+    
+    var result = this._itsCount;
+    
+    this._itsCount = undefined;
+    
+    return result;
+  },
+  
+  executeIt: function(it, itsArguments) {
+    if (this._countMode) {
+      this._itsCount++;
+    }
+    else {
+      this._it = it;
+      this._receivers = [];
+      
+      it.super(itsArguments);
+      
+      artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+    }
+  },
+    
   pushSpec: function(spec) {
     this._specs.push(spec);
   },
@@ -34,10 +65,6 @@ artjs.SpecRunner = artjs.spec.Runner = {
   
   setSubject: function(subject) {
     this._subject = subject;
-  },
-  
-  setIt: function(it) {
-    this._it = it;
   },
   
   getDuration: function() {
@@ -70,22 +97,6 @@ artjs.SpecRunner = artjs.spec.Runner = {
     this._receivers.push(receiver);
   },
   
-  resetReceivers: function() {
-    this._receivers = [];
-  },
-  
-  testReceivers: function() {
-    artjs.ArrayUtils.each(this._receivers, this.testReceiver, this);
-  },
-  
-  testReceiver: function(receiver) {
-    var result = receiver.getResult();
-    
-    this.pushResult(result);
-    
-    receiver.rollback();
-  },
-  
   pushResult: function(result) {
     if (!this.alreadyFailed()) {
       result.it = this._it;
@@ -98,5 +109,17 @@ artjs.SpecRunner = artjs.spec.Runner = {
   
   getTotalSpecsNum: function() {
     return this._specs.length;
+  },
+  
+  getTotalItsNum: function() {
+    return this._itsCount;
+  },
+  
+  _testReceiver: function(receiver) {
+    var result = receiver.getResult();
+    
+    this.pushResult(result);
+    
+    receiver.rollback();
   }
 };

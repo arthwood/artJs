@@ -146,6 +146,8 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   startsWith: function(str, substr) {
-    return str.match(new RegExp('^' + substr));
+    var re = new RegExp('^' + substr);
+    
+    return re.test(str);
   }
 };

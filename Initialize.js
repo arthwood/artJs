@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: '0.0.1',
+  VERSION: '0.0.9',
   
   component: {},
   data: {},
@@ -9,7 +9,8 @@ var artjs = {
   module: {},
   net: {},
   spec: {
-    matchers: {}
+    matcher: {},
+    node: {}
   },
   template: {},
   transition: {},

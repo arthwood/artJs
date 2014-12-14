@@ -4,6 +4,7 @@ artjs.SpecResult = artjs.spec.Result = artjs.Class(
     this.actual = actual;
     this.matcher = matcher;
     this.value = value;
+    this.it = undefined;
   },
   {
     failureText: function() {
