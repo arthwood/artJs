@@ -1,9 +1,8 @@
 artjs.ArrayUtils = artjs.utils.Array = {
   _name: 'ArrayUtils',
   
-  init: function() {
-    this._areItemsEqualCallback = artjs.$DC(this, 'areItemsEqual');
-    this._invokeCallback = artjs.$DC(this, '_invoke');
+  toString: function() {
+    return this._name;
   },
   
   build: function(n, func, context) {
@@ -116,9 +115,9 @@ artjs.ArrayUtils = artjs.utils.Array = {
   },
 
   invoke: function(arr, meth) {
-    this._invokeCallback.delegate.args = [meth, this.arrify(arguments, 2)];
+    var delegate = artjs.$D(this, '_invoke', meth, this.arrify(arguments, 2));
     
-    return this.map(arr, this._invokeCallback);
+    return this.map(arr, delegate.callback());
   },
   
   _invoke: function(i, idx, arr, meth, args) {
@@ -277,9 +276,9 @@ artjs.ArrayUtils = artjs.utils.Array = {
   },
 
   equal: function(arr, func, context) {
-    this._areItemsEqualCallback.delegate.args = [func, context];
+    var delegate = artjs.$D(this, 'areItemsEqual', func, context);
     
-    return this.all(this.transpose(arr), this._areItemsEqualCallback, this);
+    return this.all(this.transpose(arr), delegate.callback(), this);
   },
 
   areItemsEqual: function(i, idx, arr, func, context) {

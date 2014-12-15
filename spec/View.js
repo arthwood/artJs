@@ -4,7 +4,7 @@ artjs.SpecView = artjs.spec.View = {
     this._testTemplate = artjs.$C('span');
     this._resultsTemplate = artjs.$C('div');
     
-    artjs.SpecRunner.onResult.add(artjs.$D(this, '_onResult'));
+    artjs.SpecRunner.onItComplete.add(artjs.$D(this, '_onItComplete'));
     artjs.SpecRunner.onComplete.add(artjs.$D(this, '_onComplete'));
     artjs.$DT(artjs.SpecApi, window);
   },
@@ -12,24 +12,25 @@ artjs.SpecView = artjs.spec.View = {
   run: function() {
     this._element = artjs.$insert(document.body, this._runnerTemplate);
 
+    artjs.SpecRunner.count();
     artjs.SpecRunner.run();
   },
   
-  _onResult: function(runner) {
-    var result = runner.getLastResult();
+  _onItComplete: function(runner) {
+    var success = runner.getCurrentTest().isSuccess();
     
-    artjs.ElementUtils.setContent(this._testTemplate, result.value ? '.' : 'F');
-    this._testTemplate.className = result.value ? 'success' : 'failure';
+    artjs.ElementUtils.setContent(this._testTemplate, success ? '.' : 'F');
+    this._testTemplate.className = success ? 'success' : 'failure';
     artjs.ElementUtils.insert(this._element, this._testTemplate);
   },
   
   _onComplete: function(runner) {
-    var results = runner.getResults();
+    var its = runner.getIts();
     var duration = runner.getDuration();
-    var failures = artjs.ArrayUtils.select(results, this._isFailure, this);
+    var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.pluck(its, 'success'));
     var success = artjs.ArrayUtils.isEmpty(failures);
     var classNames = ['results'];
-    var n = results.length;
+    var n = its.length;
     var k = failures.length;
     
     classNames.push(success ? 'success' : 'failure');
@@ -39,8 +40,8 @@ artjs.SpecView = artjs.spec.View = {
     
     var resultText = success ? 'Success!' : 'Failure!';
     var statsText = success
-      ? n + ' assertions in total.'
-      : k + ' assertions failed of ' + n + ' total.';
+      ? n + ' tests in total.'
+      : k + ' tests failed of ' + n + ' total.';
     var durationText = 'Duration: ' + artjs.DateUtils.miliToHMSM(duration);
     var resultElement = artjs.$E('p', {className: 'result'}, resultText);
     var statElement = artjs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
@@ -75,9 +76,5 @@ artjs.SpecView = artjs.spec.View = {
     var facet = i.facet;
     
     return typeof(facet) == 'string' ? facet : facet._name;
-  },
-  
-  _isFailure: function(i) {
-    return !i.value;
   }
 };

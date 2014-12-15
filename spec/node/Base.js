@@ -10,6 +10,10 @@ artjs.SpecNode = artjs.spec.node.Base = artjs.Class(
       this.body();
       
       artjs.SpecRunner.popNode();
+    },
+    
+    toString: function() {
+      return this.facet.toString();
     }
   }
 );

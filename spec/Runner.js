@@ -3,14 +3,14 @@ artjs.SpecRunner = artjs.spec.Runner = {
   _duration: undefined,
   _it: null,
   _subject: undefined,
-  _itsCount: undefined,
+  _itsPreCount: undefined,
   _countMode: undefined,
   _path: [],
-  _results: [],
+  _its: [],
   _receivers: [],
   _timeline: new artjs.Timeline(),
   onComplete: new artjs.CustomEvent('artjs.SpecRunner::onComplete'),
-  onResult: new artjs.CustomEvent('artjs.SpecRunner::onResult'),
+  onItComplete: new artjs.CustomEvent('artjs.SpecRunner::onItComplete'),
   
   run: function() {
     this._timeline.mark();
@@ -23,31 +23,31 @@ artjs.SpecRunner = artjs.spec.Runner = {
   },
   
   count: function() {
-    this._itsCount = 0;
+    this._itsPreCount = 0;
     this._countMode = true;
     
     artjs.ArrayUtils.invoke(this._specs, 'execute');
     
     this._countMode = false;
     
-    var result = this._itsCount;
-    
-    this._itsCount = undefined;
-    
-    return result;
+    return this._itsPreCount;
   },
   
   executeIt: function(it, itsArguments) {
     if (this._countMode) {
-      this._itsCount++;
+      this._itsPreCount++;
     }
     else {
       this._it = it;
       this._receivers = [];
+      this._it.setPath(this._path.concat());
+      this._its.push(this._it);
       
       it.super(itsArguments);
       
       artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+      
+      this.onItComplete.fire(this);
     }
   },
     
@@ -75,44 +75,24 @@ artjs.SpecRunner = artjs.spec.Runner = {
     return this._subject;
   },
   
-  getPath: function() {
-    return this._path;
-  },
-  
-  getResults: function() {
-    return this._results;
-  },
-  
-  getLastResult: function() {
-    return artjs.ArrayUtils.last(this._results);
-  },
-  
-  alreadyFailed: function() {
-    var lastResult = this.getLastResult();
-    
-    return lastResult && lastResult.it == this._it && !lastResult.value;
-  },
-  
   pushReceiver: function(receiver) {
     this._receivers.push(receiver);
   },
   
   pushResult: function(result) {
-    if (!this.alreadyFailed()) {
-      result.it = this._it;
-      
-      this._results.push(result);
-      
-      this.onResult.fire(this);
-    }
+    this._it.pushResult(result);
   },
   
   getTotalSpecsNum: function() {
     return this._specs.length;
   },
   
-  getTotalItsNum: function() {
-    return this._itsCount;
+  getIts: function() {
+    return this._its;
+  },
+  
+  getCurrentTest: function() {
+    return this._it;
   },
   
   _testReceiver: function(receiver) {

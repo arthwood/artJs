@@ -3,6 +3,10 @@ artjs.ObjectUtils = artjs.utils.Object = {
   
   QUERY_DELIMITER: '&',
 
+  toString: function() {
+    return this._name;
+  },
+  
   init: function() {
     this._invertedRemoveValueDC = artjs.$DC(this, '_invertedRemoveValue');
     this._eachPairDeleteValueDC = artjs.$DC(this, '_eachPairDeleteValue');

@@ -10,7 +10,6 @@ window.addEventListener('load', function() {
   artjs.onWindowLoad.fire();
 }, false);
 
-artjs.ArrayUtils.init();
 artjs.ComponentSweeper.init();
 artjs.ObjectUtils.init();
 artjs.ElementBuilder.init();

@@ -29,6 +29,10 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(
     }
   },
   {
-    _name: 'ClassToggler'
+    _name: 'ClassToggler',
+    
+    toString: function() {
+      return this._name; 
+    }
   }
 );

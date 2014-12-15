@@ -1,6 +1,10 @@
 artjs.StringUtils = artjs.utils.String = {
   _name: 'StringUtils',
   
+  toString: function() {
+    return this._name;
+  },
+  
   first: function(str) {
     return str.substr(0, 1);
   },

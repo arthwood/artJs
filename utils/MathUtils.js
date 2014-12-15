@@ -1,6 +1,10 @@
 artjs.MathUtils = artjs.utils.Math = {
   _name: 'MathUtils',
   
+  toString: function() {
+    return this._name;
+  },
+  
   sgn: function(x) {
     return x === 0 ? 0 : Math.abs(x) / x;
   },

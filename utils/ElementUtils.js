@@ -6,6 +6,12 @@ artjs.ElementUtils = artjs.utils.Element = {
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
   
+  _name: 'ElementUtils',
+  
+  toString: function() {
+    return this._name; 
+  },
+  
   init: function() {
     this.detectHiddenElementDC = artjs.$DC(this, 'detectHiddenElement');
     artjs.$insert = artjs.$DC(this, 'insert');
@@ -450,7 +456,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     return artjs.on('click', e, delegate);
   },
   
-  toString: function(e) {
+  render: function(e) {
     var classes = this.getClasses(e);
     var attr = this.getAttributes(e);
     

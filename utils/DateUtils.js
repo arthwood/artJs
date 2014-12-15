@@ -1,6 +1,10 @@
 artjs.DateUtils = artjs.utils.Date = {
   _name: 'DateUtils',
   
+  toString: function() {
+    return this._name; 
+  },
+  
   getTime: function() {
     return (new Date()).getTime();
   },

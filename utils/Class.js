@@ -6,6 +6,10 @@ artjs.Class = artjs.utils.Class = function(ctor, proto, stat, superclass) {
 
 artjs.Class._name = 'Class';
 
+artjs.Class.toString = function() {
+  return this._name;
+};
+
 artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor = ctor || this._defaultConstructor();
   this.ctor._onCreated = this._defaultOnCreated;
