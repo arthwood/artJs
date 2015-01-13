@@ -4,17 +4,10 @@ artjs.onLibraryLoad = new artjs.CustomEvent('library:load');
 
 document.addEventListener('DOMContentLoaded', function() {
   artjs.onDocumentLoad.fire();
+  artjs.TemplateLibrary.init();
+  artjs.Calendar.init();
 }, false);
 
 window.addEventListener('load', function() {
   artjs.onWindowLoad.fire();
 }, false);
-
-artjs.ComponentSweeper.init();
-artjs.ObjectUtils.init();
-artjs.ElementBuilder.init();
-artjs.ElementUtils.init();
-artjs.Selector.init();
-artjs.TemplateLibrary.init();
-artjs.Calendar.init();
-artjs.SpecView.init();

@@ -10,7 +10,9 @@ var artjs = {
   net: {},
   spec: {
     matcher: {},
-    node: {}
+    node: {},
+    runner: {},
+    view: {}
   },
   template: {},
   transition: {},

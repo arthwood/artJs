@@ -12,11 +12,6 @@ artjs.ElementUtils = artjs.utils.Element = {
     return this._name; 
   },
   
-  init: function() {
-    this.detectHiddenElementDC = artjs.$DC(this, 'detectHiddenElement');
-    artjs.$insert = artjs.$DC(this, 'insert');
-  },
-  
   show: function(e) {
     var hidden = this.getHidden(e);
     
@@ -55,9 +50,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   getHidden: function(e) {
-    this.detectHiddenElementDC.delegate.args = [e];
+    var delegate = artjs.$D(this, 'detectHiddenElement', e);
     
-    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, this.detectHiddenElementDC);
+    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
   
   detectHiddenElement: function(i, e) {

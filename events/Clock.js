@@ -4,7 +4,7 @@ artjs.Clock = artjs.events.Clock = artjs.Class(
     this._repeat = repeat;
     this._id = null;
     this._counter = 0;
-    this._tickDC = artjs.$DC(this, this._tick); 
+    this._tickDC = artjs.Delegate.callback(this, '_tick'); 
     this.onChange = new artjs.CustomEvent('Clock:onChange');
     this.onComplete = new artjs.CustomEvent('Clock:onComplete');
   }, 

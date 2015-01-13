@@ -8,12 +8,6 @@ artjs.TemplateLibrary = artjs.template.Library = {
   
   _templates: {},
   
-  init: function() {
-    artjs.$BA(this);
-    
-    artjs.onDocumentLoad.add(this._onLoadAll.delegate);
-  },
-  
   // Returns template as a String
   getTemplate: function(id) {
     return this._templates[id];
@@ -29,7 +23,9 @@ artjs.TemplateLibrary = artjs.template.Library = {
     );
   },
   
-  _onLoadAll: function() {
+  init: function() {
+    artjs.$BA(this);
+    
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
     artjs.ElementUtils.hide(document.body);

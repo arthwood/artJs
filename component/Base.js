@@ -1,4 +1,4 @@
-artjs.Component = artjs.dom.Component = artjs.Class(
+artjs.Component = artjs.component.Base = artjs.Class(
   function(element) {
     this.element = element;
   },
@@ -93,7 +93,7 @@ artjs.ComponentSweeper = {
   init: function() {
     var clock = new artjs.Clock(2000);
     
-    clock.onChange.add(artjs.$D(this, '_onSweep'));
+    clock.onChange.add(artjs.Delegate(this, '_onSweep'));
     
     clock.start();
   },
@@ -110,3 +110,5 @@ artjs.ComponentSweeper = {
     return artjs.Selector.isDescendantOf(i.element);
   }
 };
+
+artjs.ComponentSweeper.init();

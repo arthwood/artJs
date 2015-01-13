@@ -18,12 +18,12 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   if (superclass) {
     var _super_ = function() {
       var ctor = arguments.callee.ctor;
-      var _arguments_ = artjs.$A(arguments);
+      var _arguments_ = artjs.ArrayUtils.arrify(arguments);
       var __arguments__ = _arguments_.shift();
       var _callee_ = __arguments__.callee;
       var _super_ = _callee_.superclass || _callee_.super;
       
-      return _super_.apply(this, _arguments_.concat(artjs.$A(__arguments__)));
+      return _super_.apply(this, _arguments_.concat(artjs.ArrayUtils.arrify(__arguments__)));
     };
     
     _super_.ctor = this.ctor;

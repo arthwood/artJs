@@ -7,15 +7,6 @@ artjs.ObjectUtils = artjs.utils.Object = {
     return this._name;
   },
   
-  init: function() {
-    this._invertedRemoveValueDC = artjs.$DC(this, '_invertedRemoveValue');
-    this._eachPairDeleteValueDC = artjs.$DC(this, '_eachPairDeleteValue');
-    this._eachKeyDeleteKeyDC = artjs.$DC(this, '_eachKeyDeleteKey');
-    this._invertedIncludesDC = artjs.$DC(this, '_invertedIncludes');
-    this._pairToQueryStringDC = artjs.$DC(this, '_pairToQueryString');
-    this._parseArrayValueDC = artjs.$DC(this, '_parseArrayValue');
-  },
-  
   copy: function(obj) {
     var copy = {};
 
@@ -47,21 +38,21 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
 
   removeValue: function(obj, val) {
-    this._eachPairDeleteValueDC.delegate.args = [obj, val];
+    var delegate = artjs.$D(this, '_eachPairDeleteValue', obj, val);
     
-    this.eachPair(obj, this._eachPairDeleteValueDC);
+    this.eachPair(obj, delegate.callback());
   },
   
   removeKeys: function(obj, keys) {
-    this._eachKeyDeleteKeyDC.delegate.args = [obj];
+    var delegate = artjs.$D(this, '_eachKeyDeleteKey', obj);
     
-    artjs.ArrayUtils.each(keys, this._eachKeyDeleteKeyDC);
+    artjs.ArrayUtils.each(keys, delegate.callback());
   },
   
   removeValues: function(obj, values) {
-    this._invertedRemoveValueDC.delegate.args = [obj];
+    var delegate = artjs.$D(this, '_invertedRemoveValue', obj);
     
-    artjs.ArrayUtils.eachItem(values, this._invertedRemoveValueDC);
+    artjs.ArrayUtils.eachItem(values, delegate.callback());
   },
 
   keys: function(obj) {
@@ -265,9 +256,9 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
   
   includesAll: function(obj, subset) {
-    this._invertedIncludesDC.delegate.args = [obj];
+    var delegate = artjs.$D(this, '_invertedIncludes', obj);
     
-    return this.all(subset, this._invertedIncludesDC);
+    return this.all(subset, delegate.callback());
   },
   
   all: function(obj, func) {
@@ -285,9 +276,9 @@ artjs.ObjectUtils = artjs.utils.Object = {
   },
   
   _toQueryStringWithPrefix: function(obj, prefix) {
-    this._pairToQueryStringDC.delegate.args = [prefix];
+    var delegate = artjs.$D(this, '_pairToQueryString', prefix);
     
-    return this.map(obj, this._pairToQueryStringDC).join(this.QUERY_DELIMITER);
+    return this.map(obj, delegate.callback()).join(this.QUERY_DELIMITER);
   },
   
   _pairToQueryString: function(key, value, prefix) {
@@ -300,9 +291,9 @@ artjs.ObjectUtils = artjs.utils.Object = {
         result = this._toQueryStringWithPrefix(value, prefix);
       }
       else {
-        this._parseArrayValueDC.delegate.args = [prefix + '[]'];
+        var delegate = artjs.$D(this, '_parseArrayValue', prefix + '[]');
         
-        result = artjs.ArrayUtils.map(value, this._parseArrayValueDC).join(this.QUERY_DELIMITER);
+        result = artjs.ArrayUtils.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
       }
     }
     else {

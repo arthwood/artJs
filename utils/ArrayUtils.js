@@ -465,5 +465,3 @@ artjs.ArrayUtils = artjs.utils.Array = {
     return -1;
   }
 };
-
-artjs.$A = artjs.ArrayUtils.arrify;

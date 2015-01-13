@@ -1,11 +1,4 @@
 artjs.Selector = artjs.dom.Selector = {
-  init: function() {
-    artjs.$ = artjs.$DC(this, 'getElements');
-    artjs.$find = artjs.$DC(this, 'find');
-    artjs.$first = artjs.$DC(this, 'first');
-    artjs.$parent = artjs.$DC(this, 'parent');
-  },
-  
   find: function(element, selector) {
     return this.getElements(selector, element);
   },

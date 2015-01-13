@@ -2,11 +2,11 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
   function(object, method) {
     this.object = object;
     this.method = artjs.ObjectUtils.isString(method) ? this.object[method] : method;
-    this.args = artjs.$A(arguments, 2);
+    this.args = artjs.ArrayUtils.arrify(arguments, 2);
   },
   {
     invoke: function() {
-      var args = artjs.$A(arguments).concat(this.args);
+      var args = artjs.ArrayUtils.arrify(arguments).concat(this.args);
       
       return this.method.apply(this.object, args);
     },
@@ -15,7 +15,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       var result = function() {
         var callee = arguments.callee;
         var delegate = callee.delegate;
-        var args = artjs.$A(arguments);
+        var args = artjs.ArrayUtils.arrify(arguments);
         
         if (callee.withSource) {
           args.unshift(this); 
@@ -35,7 +35,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       var delegate = new this(object, method);
       var callback = delegate.callback(withSource);
       
-      delegate.args = artjs.$A(arguments, 3);
+      delegate.args = artjs.ArrayUtils.arrify(arguments, 3);
       
       return callback;
     },
@@ -43,7 +43,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     create: function(object, method) {
       var delegate = new this(object, method);
       
-      delegate.args = artjs.$A(arguments, 2);
+      delegate.args = artjs.ArrayUtils.arrify(arguments, 2);
       
       return delegate;
     },
@@ -51,7 +51,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     bindAll: function(context) {
       var container = context.ctor ? context.ctor.prototype : context;
       var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
-      var all = callbacks.concat(artjs.$A(arguments, 1));
+      var all = callbacks.concat(artjs.ArrayUtils.arrify(arguments, 1));
       
       this._bindSource = context;
       this._bindTarget = context;
@@ -85,8 +85,3 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     }
   }
 );
-
-artjs.$DC = artjs.Delegate.callback(artjs.Delegate, 'callback');
-artjs.$D = artjs.Delegate.callback(artjs.Delegate, 'create');
-artjs.$BA = artjs.Delegate.callback(artjs.Delegate, 'bindAll');
-artjs.$DT = artjs.Delegate.callback(artjs.Delegate, 'delegateTo');

@@ -3,7 +3,7 @@ artjs.QueuedClock = artjs.events.QueuedClock = artjs.Class(
     this.interval = interval;
     this.queue = new artjs.Queue();
     this.clock = new artjs.Clock(this.interval);
-    this.clock.onChange.add(artjs.$D(this, this.start));
+    this.clock.onChange.add(artjs.Delegate(this, 'start'));
   }, 
   {
     start: function() {

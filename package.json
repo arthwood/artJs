@@ -18,11 +18,14 @@
   },
   "main": "node/index.js",
   "files": [
+    "data",
+    "dom",
     "events",
     "math",
     "node",
     "spec",
-    "utils"
+    "utils",
+    "Shortcuts.js"
   ],
   "license": "MIT"
 }
