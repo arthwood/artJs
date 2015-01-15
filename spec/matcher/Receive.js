@@ -1,6 +1,6 @@
 artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(
   function(expected) {
-    this.super(arguments, expected, 'receive');
+    this.super(expected, 'receive');
   },
   {
     resolve: function(actual) {
@@ -12,7 +12,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(
     },
     
     _failureData: function(actual) {
-      var result = this.super(arguments, actual);
+      var result = this.super(actual);
       var expectedArgs = this.receiver.args();
       
       if (expectedArgs) {

@@ -17,16 +17,11 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   
   if (superclass) {
     var _super_ = function() {
-      var ctor = arguments.callee.ctor;
-      var _arguments_ = artjs.ArrayUtils.arrify(arguments);
-      var __arguments__ = _arguments_.shift();
-      var _callee_ = __arguments__.callee;
-      var _super_ = _callee_.superclass || _callee_.super;
+      var _caller_ = arguments.callee.caller;
+      var _super_ = _caller_.superclass || _caller_.super;
       
-      return _super_.apply(this, _arguments_.concat(artjs.ArrayUtils.arrify(__arguments__)));
+      return _super_.apply(this, arguments);
     };
-    
-    _super_.ctor = this.ctor;
     
     artjs.ObjectUtils.extend(this.ctor, superclass);
     artjs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
@@ -68,7 +63,7 @@ artjs.ClassBuilder.prototype = {
   _defaultConstructor: function() {
     return function() {
       if (arguments.callee.superclass) {
-        this.super(arguments);
+        this.super.apply(this, arguments);
       }
     };
   },

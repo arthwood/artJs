@@ -1,6 +1,6 @@
 artjs.Tree = artjs.component.Tree = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     artjs.$BA(this);
     

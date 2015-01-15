@@ -34,7 +34,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
 
 artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
   function(element, name, delegate, on) {
-    this.super(arguments, element, name, delegate);
+    this.super(element, name, delegate);
 
     this.over = false;
     this.on = on;
@@ -43,7 +43,7 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
     _onEvent: function(e) {
       if (this._edge(e) && !(this.on == this.over)) {
         this.over = this.on;
-        this.super(arguments, e);
+        this.super(e);
       }
     },
     
@@ -61,31 +61,31 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
 
 artjs.ClickEvent = artjs.events.Click = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'click', delegate);
+    this.super(element, 'click', delegate);
   }, null, null, artjs.ElementEvent
 );
 
 artjs.MouseMoveEvent = artjs.events.MouseMove = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'mousemove', delegate);
+    this.super(element, 'mousemove', delegate);
   }, null, null, artjs.ElementEvent
 );
 
 artjs.MouseOverEvent = artjs.events.MouseOver = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'mouseover', delegate, true);
+    this.super(element, 'mouseover', delegate, true);
   }, null, null, artjs.MouseEvent
 );
 
 artjs.MouseOutEvent = artjs.events.MouseOut = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'mouseout', delegate);
+    this.super(element, 'mouseout', delegate);
   }, null, null, artjs.MouseEvent
 );
 
 artjs.ChangeEvent = artjs.events.Change = artjs.Class(
   function(element, delegate) {
-    this.super(arguments, element, 'change', delegate);
+    this.super(element, 'change', delegate);
   }, null, null, artjs.ElementEvent
 );
 

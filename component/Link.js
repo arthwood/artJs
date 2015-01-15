@@ -1,6 +1,6 @@
 artjs.Link = artjs.component.Link = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     this.onClick = new artjs.CustomEvent('artjs.Link::onClick');
     

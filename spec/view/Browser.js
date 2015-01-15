@@ -1,6 +1,6 @@
 artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
   function() {
-    this.super(arguments);
+    this.super();
     
     this._runnerTemplate = artjs.$C('div', {className: 'runner'});
     this._testTemplate = artjs.$C('span');
@@ -8,7 +8,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
   },
   {
     beforeRun: function() {
-      this.super(arguments);
+      this.super();
       
       this._element = artjs.$I(document.body, this._runnerTemplate);
     },

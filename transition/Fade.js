@@ -1,6 +1,6 @@
 artjs.Fade = artjs.transition.Fade = artjs.Class(
-  function() {
-    this.super(arguments, 'opacity');
+  function(element, value, duration, type, delay, from) {
+    this.super('opacity', element, value, duration, type, delay, from);
   },
   null,
   null,

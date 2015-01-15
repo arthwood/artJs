@@ -10,7 +10,7 @@ artjs.RealSpecRunner = artjs.spec.runner.Real = artjs.Class(
     run: function () {
       this._timeline.mark();
 
-      this.super(arguments);
+      this.super();
 
       this._duration = this._timeline.mark();
 

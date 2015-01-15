@@ -2,7 +2,7 @@ artjs.AutoExecNode = artjs.spec.node.AutoExec = artjs.Class(
   null, 
   {
     register: function() {
-      this.super(arguments);
+      this.super();
       
       this.execute();
     }

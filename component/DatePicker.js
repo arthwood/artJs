@@ -1,6 +1,6 @@
 artjs.DatePicker = artjs.component.DatePicker = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     artjs.$BA(this);
     
@@ -56,8 +56,8 @@ artjs.DatePicker = artjs.component.DatePicker = artjs.Class(
 );
 
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
 
     artjs.$BA(this);
 

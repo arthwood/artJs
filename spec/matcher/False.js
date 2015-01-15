@@ -1,6 +1,6 @@
 artjs.FalseMatcher = artjs.spec.matcher.False = artjs.Class(
   function() {
-    this.super(arguments, false);
+    this.super(false);
   },
   null,
   null,

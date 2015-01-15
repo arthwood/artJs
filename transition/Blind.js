@@ -1,10 +1,10 @@
 artjs.Blind = artjs.transition.Blind = artjs.Class(
-  function() {
-    this.super(arguments, 'height');
+  function(element, value, duration, type, delay, from) {
+    this.super('height', element, value, duration, type, delay, from);
   },
   {
     _setStyle: function(value) {
-      this.super(arguments, value + 'px');
+      this.super(value + 'px');
       
       artjs.ElementUtils.setStyle(this.element, 'overflow', 'hidden');
     }

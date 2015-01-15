@@ -40,7 +40,7 @@ artjs.Clock = artjs.events.Clock = artjs.Class(
     _tick: function() {
       this._counter++;
       this.onChange.fire(this);
-    
+      
       if (this._counter == this._repeat) {
         this.stop();
         this.onComplete.fire(this);

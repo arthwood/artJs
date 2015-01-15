@@ -1,6 +1,6 @@
 artjs.Select = artjs.component.Select = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     this.onChange = new artjs.CustomEvent('artjs.Select::onChange');
     

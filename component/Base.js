@@ -9,7 +9,7 @@ artjs.Component = artjs.component.Base = artjs.Class(
     idToComponent: {},
     
     _onExtended: function() {
-      this.super(arguments);
+      this.super();
       
       this.instances = [];
     },
@@ -93,7 +93,7 @@ artjs.ComponentSweeper = {
   init: function() {
     var clock = new artjs.Clock(2000);
     
-    clock.onChange.add(artjs.Delegate(this, '_onSweep'));
+    clock.onChange.add(new artjs.Delegate(this, '_onSweep'));
     
     clock.start();
   },

@@ -2,7 +2,7 @@ artjs.Specify = artjs.spec.node.Specify = artjs.Class(
   null, 
   {
     register: function() {
-      this.super(arguments);
+      this.super();
       
       this.ctor.instances.push(this);
     },
@@ -10,7 +10,7 @@ artjs.Specify = artjs.spec.node.Specify = artjs.Class(
     execute: function() {
       artjs.Spec.setSubject(this.facet);
       
-      this.super(arguments);
+      this.super();
     }
   },
   {

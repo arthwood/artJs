@@ -7,7 +7,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(
     this.type = type || this.ctor.LINEAR;
     this.delay = delay || 0;
     this.from = from;
-    this._deferredD = artjs.$D(this, this._deferred);
+    this._deferredD = artjs.$D(this, '_deferred');
   },
   {
     run: function() {

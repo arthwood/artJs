@@ -1,12 +1,12 @@
 artjs.It = artjs.spec.node.It = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(facet, body, focus) {
+    this.super(facet, body, focus);
     
     this._results = [];
   }, 
   {
     register: function() {
-      this.super(arguments);
+      this.super();
       
       this.ctor.instances.push(this);
     },
@@ -20,7 +20,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(
         if (!artjs.Spec.hasFocus() || this.hasFocus()) {
           this._receivers = [];
           
-          this.super(arguments);
+          this.super();
           
           artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
           

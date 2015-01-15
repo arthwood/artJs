@@ -1,6 +1,6 @@
 artjs.Table = artjs.component.Table = artjs.Class(
-  function() {
-    this.super(arguments);
+  function(element) {
+    this.super(element);
     
     artjs.$BA(this);
     

@@ -1,6 +1,6 @@
 artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(
   function(expected) {
-    this.super(arguments, expected, 'equal');
+    this.super(expected, 'equal');
   },
   {
     resolve: function(actual) {
@@ -8,7 +8,7 @@ artjs.EqMatcher = artjs.spec.matcher.Eq = artjs.Class(
         return artjs.ArrayUtils.equal([actual.value, this.expected]);
       }
       else {
-        return this.super(arguments, actual);
+        return this.super(actual);
       }
     }
   },

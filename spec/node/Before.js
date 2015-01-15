@@ -1,6 +1,6 @@
 artjs.Before = artjs.spec.node.Before = artjs.Class(
   function(body) {
-    this.super(arguments, 'before', body, false);
+    this.super('before', body, false);
   }, 
   {
     execute: function() {
