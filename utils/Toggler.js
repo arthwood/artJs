@@ -2,8 +2,8 @@ artjs.Toggler = artjs.utils.Toggler = artjs.Class(
   function(unique) {
     this.unique = unique;
     this.current = null;
-    this.onActivate = new artjs.CustomEvent('Toggler::onActivate');
-    this.onDeactivate = new artjs.CustomEvent('Toggler::onDeactivate');
+    this.onActivate = new artjs.Event('Toggler::onActivate');
+    this.onDeactivate = new artjs.Event('Toggler::onDeactivate');
   },
   {
     toggle: function(item) {

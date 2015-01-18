@@ -35,14 +35,14 @@ artjs.ComponentScanner = {
   _events: {},
   
   scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$find(element, '.art'), this._onFound, this);
+    artjs.ArrayUtils.each(artjs.$findAll(element, '.art'), this._onFound, this);
   },
   
   addListener: function(id, delegate) {
     var event = this._events[id];
     
     if (!event) {
-      event = this._events[id] = new artjs.CustomEvent('Component::Load::' + id);
+      event = this._events[id] = new artjs.Event('Component::Load::' + id);
     }
     
     event.add(delegate);

@@ -1,7 +1,7 @@
 artjs.Flash = artjs.ui.Flash = function(element, path, delay, yPosition) {
   this.element = element;
-  this.image = artjs.ArrayUtils.first(artjs.Selector.find(this.element, 'img'));
-  this.span = artjs.ArrayUtils.first(artjs.Selector.find(this.element, 'span'));
+  this.image = artjs.Selector.find(this.element, 'img');
+  this.span = artjs.Selector.find(this.element, 'span');
   this.path = path;
   this.fade = new artjs.Fade(this.element, - 0.05);
   this.fade.onComplete.add(artjs.$D(this, this.onFadeComplete));
@@ -36,7 +36,7 @@ artjs.Flash.prototype = {
     eu.setY(this.element, eu.getScrollPosition().y + this.yPosition);
     eu.setAlpha(this.element, 1);
     
-    var code = 'Flash.find(' + this.id + ').hide()';
+    var code = 'Flash.findA(' + this.id + ').hide()';
     
     this.intervalId = setInterval(code, this.delay);
   },

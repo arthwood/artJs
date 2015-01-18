@@ -3,8 +3,8 @@ artjs.RealSpecRunner = artjs.spec.runner.Real = artjs.Class(
     this._duration = undefined;
     this._timeline = new artjs.Timeline();
     this._subject = undefined;
-    this.onComplete = new artjs.CustomEvent('artjs.SpecRunner::onComplete');
-    this.onItComplete = new artjs.CustomEvent('artjs.SpecRunner::onItComplete');
+    this.onComplete = new artjs.Event('artjs.SpecRunner::onComplete');
+    this.onItComplete = new artjs.Event('artjs.SpecRunner::onItComplete');
   },
   {
     run: function () {

@@ -2,7 +2,7 @@ artjs.Select = artjs.component.Select = artjs.Class(
   function(element) {
     this.super(element);
     
-    this.onChange = new artjs.CustomEvent('artjs.Select::onChange');
+    this.onChange = new artjs.Event('artjs.Select::onChange');
     
     artjs.on('change', this.element, artjs.$D(this, '_onChange'));
   },
@@ -14,13 +14,13 @@ artjs.Select = artjs.component.Select = artjs.Class(
     },
     
     setSelected: function(selected) {
-      var oldOption = artjs.$first(this.element, 'option[selected=selected]');
+      var oldOption = artjs.$find(this.element, 'option[selected=selected]');
       
       if (oldOption) {
         oldOption.removeAttribute('selected');
       }
       
-      var newOption = artjs.$first(this.element, 'option[value=' + selected + ']');
+      var newOption = artjs.$find(this.element, 'option[value=' + selected + ']');
       
       newOption.setAttribute('selected', 'selected');
     },

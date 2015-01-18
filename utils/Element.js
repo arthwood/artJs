@@ -279,12 +279,12 @@ artjs.ElementUtils = artjs.utils.Element = {
   serialize: function(e) {
     var s = artjs.Selector;
     var au = artjs.ArrayUtils;
-    var textfields = s.find(e, 'input[type=text]');
-    var checkboxes = au.select(s.find(e, 'input[type=checkbox]'), this.selectChecked, this);
-    var radios = au.select(s.down(e, 'input[type=radio]'), this.selectChecked, this);
-    var selects = s.down(e, 'select');
-    var textareas = s.down(e, 'textarea');
-    var hiddenfields = s.down(e, 'input[type=hidden]');
+    var textfields = s.findAll(e, 'input[type=text]');
+    var checkboxes = au.select(s.findAll(e, 'input[type=checkbox]'), this.selectChecked, this);
+    var radios = au.select(s.findAll(e, 'input[type=radio]'), this.selectChecked, this);
+    var selects = s.findAll(e, 'select');
+    var textareas = s.findAll(e, 'textarea');
+    var hiddenfields = s.findAll(e, 'input[type=hidden]');
     var inputs = au.flatten([textfields, checkboxes, radios, selects, textareas, hiddenfields]);
     
     return au.inject(inputs, {}, this.serializeInject, this);

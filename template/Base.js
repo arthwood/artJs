@@ -110,7 +110,7 @@ artjs.TemplateBase = artjs.template.Base = {
   },
   
   evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.find(element, 'script'), this.evalScript, this);
+    artjs.ArrayUtils.each(artjs.Selector.findAll(element, 'script'), this.evalScript, this);
   },
   
   evalScript: function(script) {

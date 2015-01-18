@@ -1,6 +1,6 @@
-artjs.onDocumentLoad = new artjs.CustomEvent('document:load');
-artjs.onWindowLoad = new artjs.CustomEvent('window:load');
-artjs.onLibraryLoad = new artjs.CustomEvent('library:load');
+artjs.onDocumentLoad = new artjs.Event('document:load');
+artjs.onWindowLoad = new artjs.Event('window:load');
+artjs.onLibraryLoad = new artjs.Event('library:load');
 
 document.addEventListener('DOMContentLoaded', function() {
   artjs.onDocumentLoad.fire();

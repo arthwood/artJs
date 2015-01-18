@@ -10,5 +10,5 @@ artjs.$E = artjs.Delegate.callback(artjs.ElementBuilder, 'getElement');
 artjs.$P = artjs.Delegate.callback(artjs.ElementBuilder, 'parse');
 artjs.$ = artjs.Delegate.callback(artjs.Selector, 'getElements');
 artjs.$find = artjs.Delegate.callback(artjs.Selector, 'find');
-artjs.$first = artjs.Delegate.callback(artjs.Selector, 'first');
+artjs.$findAll = artjs.Delegate.callback(artjs.Selector, 'findAll');
 artjs.$parent = artjs.Delegate.callback(artjs.Selector, 'parent');

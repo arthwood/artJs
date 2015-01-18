@@ -5,7 +5,7 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     artjs.$BA(this);
     
     this._leafClassToggler = new artjs.ClassToggler('selected');
-    this.onLeaf = new artjs.CustomEvent('artjs.Tree::onLeaf');
+    this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
   },
   {
     setData: function(data) {
@@ -13,8 +13,8 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
       
       artjs.ElementUtils.insert(this.element, content);
       
-      var point = artjs.ArrayUtils.partition(artjs.Selector.find(this.element, 'li'), function(item, idx) {
-        return artjs.ArrayUtils.isNotEmpty(artjs.Selector.find(item, 'ul'));
+      var point = artjs.ArrayUtils.partition(artjs.Selector.findAll(this.element, 'li'), function(item, idx) {
+        return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(item, 'ul'));
       });
       
       this._nodes = point.x;
@@ -43,7 +43,7 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     
     _eachNode: function(i) {
       artjs.on('click', artjs.ElementUtils.firstElement(i), this._onNode.delegate);
-      artjs.ElementUtils.hide(artjs.$first(i, 'ul'));
+      artjs.ElementUtils.hide(artjs.$find(i, 'ul'));
     },
     
     _onNode: function(originalEvent, elementEvent) {

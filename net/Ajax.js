@@ -3,9 +3,9 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(
     this._onReadyStateChangeDC = artjs.$DC(this, this._onReadyStateChange, true);
     this._onProgressDC = artjs.$DC(this, this._onProgress, true);
     this._onErrorDC = artjs.$DC(this, this._onError, true);
-    this.onSuccess = new artjs.CustomEvent('Ajax:onSuccess');
-    this.onFailure = new artjs.CustomEvent('Ajax:onFailure');
-    this.onProgress = new artjs.CustomEvent('Ajax:onProgress');
+    this.onSuccess = new artjs.Event('Ajax:onSuccess');
+    this.onFailure = new artjs.Event('Ajax:onFailure');
+    this.onProgress = new artjs.Event('Ajax:onProgress');
     
     var methods = artjs.Ajax.Methods;
     

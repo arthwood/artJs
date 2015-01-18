@@ -2,7 +2,7 @@ artjs.List = artjs.data.List = artjs.Class(
   function(items) {
     this.items = items || {};
     this.i = 0;
-    this.onChange = new artjs.CustomEvent('List::onChange');
+    this.onChange = new artjs.Event('List::onChange');
     this.allowDuplicates = true;
     this.loop = false;
   },

@@ -1,31 +1,22 @@
 artjs.Selector = artjs.dom.Selector = {
-  find: function(element, selector) {
+  findAll: function(element, selector) {
     return this.getElements(selector, element);
   },
-
-  first: function(element, selector) {
-    return artjs.ArrayUtils.first(this.find(element, selector));
+  
+  find: function(element, selector) {
+    return this.getElement(selector, element);
   },
 
-  last: function(element, selector) {
-    return artjs.ArrayUtils.last(this.find(element, selector));
+  parent: function(element) {
+    return element.parentNode;
   },
   
-  parent: function(element, selector) {
-    this._signature = new artjs.Signature(selector || '');
-
-    return artjs.ArrayUtils.detect(this._getDescendants(element), this._signature.checkNode, this._signature);
+  getElement: function(selector, element) {
+    return element.querySelector(selector);
   },
   
   getElements: function(selector, element) {
-    this._root = element;
-    
-    var elements = this._findBySignature(new artjs.Signature(selector));
-    var descendants = artjs.ArrayUtils.map(elements, this._elementToDescendants, this);
-    
-    descendants = artjs.ArrayUtils.select(descendants, this._hasElementDescendants, this);
-    
-    return artjs.ArrayUtils.pluck(descendants, 'x');
+    return artjs.$A(element.querySelectorAll(selector));
   },
   
   isDescendantOf: function(element, root) {
@@ -46,24 +37,10 @@ artjs.Selector = artjs.dom.Selector = {
     return artjs.$A(document.getElementsByTagName(v));
   },
   
-  getElementsByClassName: function(v) {
-    return document.getElementsByClassName
-      ? artjs.$A(document.getElementsByClassName(v))
-      : this._findByClassName(v);
-  },
-  
-  _elementToDescendants: function(element) {
-    return new artjs.Point(element, this._toDescendants(element));
-  },
-  
-  _toDescendants: function(i) {
-    return this._getDescendants(i, this._root);
-  },
-  
   _getDescendants: function(e, root) {
     var result = [];
     
-    while (e = e.parentNode) {
+    while (e = this.parent(e)) {
       result.push(e);
     }
     
@@ -71,89 +48,4 @@ artjs.Selector = artjs.dom.Selector = {
     
     return root && index == -1 ? null : result.slice(0, index);
   },
-  
-  _hasElementDescendants: function(point) {
-    return !(point.y === null);
-  },
-  
-  _findBySignature: function(signature) {
-    var elements = [];
-    
-    if (signature.id) {
-      var elementById = this.getElementById(signature.id);
-      
-      if (elementById) {
-        elements.push(elementById);
-      }
-      else {
-        return [];
-      }
-    }
-    
-    if (signature.tag) {
-      var elementsByTag = this.getElementsByTagName(signature.tag);
-      
-      if (artjs.ArrayUtils.isEmpty(elementsByTag)) {
-        return [];
-      }
-      else {
-        /* no id given */
-        if (artjs.ArrayUtils.isEmpty(elements)) {
-          elements = elementsByTag;
-        }
-        else {
-          elements = artjs.ArrayUtils.intersection([elements, elementsByTag]);
-          
-          if (artjs.ArrayUtils.isEmpty(elements)) {
-            return [];
-          }
-        }
-      }
-    }
-    
-    if (!artjs.ArrayUtils.isEmpty(signature.classes)) {
-      var elementsByClass = this._findByClassNames(signature.classes);
-      
-      if (artjs.ArrayUtils.isEmpty(elementsByClass)) {
-        return [];
-      }
-      
-      if (artjs.ArrayUtils.isEmpty(elements)) {
-        elements = elementsByClass;
-      }
-      else {
-        elements = artjs.ArrayUtils.intersection([elements, elementsByClass]);
-        
-        if (artjs.ArrayUtils.isEmpty(elements)) {
-          return [];
-        }
-      }
-    }
-    
-    this._filterByAttributes.attributes = signature.attributes;
-    
-    return artjs.ArrayUtils.compact(artjs.ArrayUtils.select(elements, this._filterByAttributes, this));
-  },
-  
-  _findByClassNames: function(v) {
-    return artjs.ArrayUtils.intersection(artjs.ArrayUtils.map(v, this.getElementsByClassName, this));
-  },
-
-  _elementHasClassName: function(e) {
-    return artjs.ElementUtils.hasClass(e, arguments.callee.className);
-  },
-
-  _filterByAttributes: function(i) {
-    var attributes = arguments.callee.attributes;
-    
-    return artjs.ObjectUtils.includesAll(artjs.ElementUtils.getAttributes(i), attributes);
-  },
-  
-  _findByClassName: function(v) {
-    var elements = artjs.ElementUtils.filterElements(artjs.$A(document.all));
-
-    this._elementHasClassName.className = v;
-
-    return artjs.ArrayUtils.select(elements, this._elementHasClassName);
-  }
 };

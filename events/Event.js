@@ -1,4 +1,4 @@
-artjs.CustomEvent = artjs.events.CustomEvent = artjs.Class(
+artjs.Event = artjs.events.Event = artjs.Class(
   function(name) {
     this.name = name;
     this.collection = new artjs.DelegateCollection();

@@ -2,7 +2,7 @@ artjs.Timeout = artjs.events.Timeout = artjs.Class(
   function(delay) {
     this._delay = delay;
     this._onTimeoutDC = artjs.$DC(this, this._onTimeout);
-    this.onComplete = new artjs.CustomEvent('Timeout:onComplete');
+    this.onComplete = new artjs.Event('Timeout:onComplete');
   }, 
   {
     start: function() {

@@ -4,7 +4,7 @@ artjs.Table = artjs.component.Table = artjs.Class(
     
     artjs.$BA(this);
     
-    this.onItem = new artjs.CustomEvent('artjs.Table::onItem');
+    this.onItem = new artjs.Event('artjs.Table::onItem');
   },
   {
     setData: function(data) {
@@ -32,12 +32,12 @@ artjs.Table = artjs.component.Table = artjs.Class(
     _update: function() {
       artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderTable(this._data));
       
-      var head = artjs.$first(this.element, 'thead');
-      var body = artjs.$first(this.element, 'tbody');
+      var head = artjs.$find(this.element, 'thead');
+      var body = artjs.$find(this.element, 'tbody');
       
-      this._headCells = artjs.$find(head, 'th');
-      this._rows = artjs.$find(body, 'tr');
-      this._items = artjs.$find(body, 'td');
+      this._headCells = artjs.$findAll(head, 'th');
+      this._rows = artjs.$findAll(body, 'tr');
+      this._items = artjs.$findAll(body, 'td');
       
       artjs.ArrayUtils.each(this._items, this._initItem, this);
     },

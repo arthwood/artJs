@@ -5,8 +5,8 @@ artjs.Clock = artjs.events.Clock = artjs.Class(
     this._id = null;
     this._counter = 0;
     this._tickDC = artjs.Delegate.callback(this, '_tick'); 
-    this.onChange = new artjs.CustomEvent('Clock:onChange');
-    this.onComplete = new artjs.CustomEvent('Clock:onComplete');
+    this.onChange = new artjs.Event('Clock:onChange');
+    this.onComplete = new artjs.Event('Clock:onComplete');
   }, 
   {
     start: function(now) {
