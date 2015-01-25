@@ -3,9 +3,9 @@ artjs.Before = artjs.spec.node.Before = artjs.Class(
     this.super('before', body, false);
   }, 
   {
-    execute: function() {
+    register: function() {
       if (artjs.Spec.isRealRun()) {
-        this.body();
+        this.ctor.getPath().push(this);
       }
     }
   }, 

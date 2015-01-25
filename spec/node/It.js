@@ -20,6 +20,8 @@ artjs.It = artjs.spec.node.It = artjs.Class(
         if (!artjs.Spec.hasFocus() || this.hasFocus()) {
           this._receivers = [];
           
+          this._runBefores();
+          
           this.super();
           
           artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
@@ -55,6 +57,12 @@ artjs.It = artjs.spec.node.It = artjs.Class(
     
     hasFocus: function() {
       return artjs.ArrayUtils.any(artjs.ArrayUtils.pluck(this._path, 'focus')) || this.focus;
+    },
+    
+    _runBefores: function() {
+      var instances = artjs.ArrayUtils.select(this._path, this.ctor._isBefore);
+      
+      artjs.ArrayUtils.invoke(instances, 'execute');
     }
   }, 
   {
@@ -70,6 +78,10 @@ artjs.It = artjs.spec.node.It = artjs.Class(
     
     _hasFocus: function(instance) {
       return instance.hasFocus();
+    },
+    
+    _isBefore: function(i) {
+      return i.ctor == artjs.Before;
     }
   }, 
   artjs.AutoExecNode

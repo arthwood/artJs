@@ -27,7 +27,16 @@ artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(
     execute: function(node) {
       this._path.push(node);
       node.body();
+      this._cleanTrailingBefores();
       this._path.pop()
+    },
+    
+    _cleanTrailingBefores: function() {
+      var item;
+      
+      while ((item = artjs.ArrayUtils.last(this._path)) && (item.ctor == artjs.Before)) {
+        this._path.pop();
+      }
     }
   }
 );
