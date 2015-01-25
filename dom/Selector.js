@@ -12,11 +12,11 @@ artjs.Selector = artjs.dom.Selector = {
   },
   
   getElement: function(selector, element) {
-    return element.querySelector(selector);
+    return (element || document).querySelector(selector);
   },
   
   getElements: function(selector, element) {
-    return artjs.$A(element.querySelectorAll(selector));
+    return artjs.$A((element || document).querySelectorAll(selector));
   },
   
   isDescendantOf: function(element, root) {
@@ -47,5 +47,5 @@ artjs.Selector = artjs.dom.Selector = {
     var index = result.indexOf(root || document.body);
     
     return root && index == -1 ? null : result.slice(0, index);
-  },
+  }
 };
