@@ -24,7 +24,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
     resolve: function() {
       var args = artjs.$A(arguments);
       var returnValue;
-  
+      
       if (this._callOriginal) {
         this._original.args = args;
         returnValue = this._original.invoke();
@@ -43,7 +43,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
           this._successCounter++;
         }
       }
-  
+      
       if (this._inSeries) {
         if (!this._actualArgs) {
           this._actualArgs = [];
@@ -76,7 +76,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
   
       return this;
     },
-  
+    
     andCallOriginal: function() {
       var forMock = this._isForMock();
       
@@ -88,7 +88,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
       
       return this;
     },
-  
+    
     once: function() {
       this.times(1);
       
@@ -110,15 +110,15 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
     args: function() {
       return this._args;
     },
-  
+    
     actualArgs: function() {
       return this._actualArgs;
     },
-  
+    
     isInSeries: function() {
       return this._inSeries;
     },
-  
+    
     getResult: function() {
       var times = this._inSeries ? this._args.length : this._times;
       var n = this._successCounter;
@@ -126,7 +126,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
   
       return new artjs.SpecResult(this._actual, this._matcher, value);
     },
-  
+    
     rollback: function() {
       if (!this._isForMock()) {
         this._actual.value[this._matcher.expected] = this._original.method;

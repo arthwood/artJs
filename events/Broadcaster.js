@@ -1,8 +1,8 @@
 artjs.Broadcaster = artjs.events.Broadcaster = {
   _events: {},
   
-  register: function(id, event) {
-    this._events[id] = event;
+  register: function(id) {
+    this._events[id] = new artjs.Event(id);
   },
   
   addListener: function(id, delegate) {

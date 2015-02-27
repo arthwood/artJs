@@ -75,6 +75,13 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       return typeof(facet) == 'string' ? facet : facet._name;
     }
   },
-  null,
+  {
+    run: function() {
+      var view = new this();
+  
+      artjs.Spec.init(view);
+      artjs.Spec.run();
+    }
+  },
   artjs.BaseSpecView
 );

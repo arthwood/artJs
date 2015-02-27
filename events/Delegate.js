@@ -68,6 +68,10 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       artjs.ArrayUtils.each(functions, this._bindEach, this);
     },
     
+    func: function(method, withSource) {
+      return this.create(null, method, withSource);
+    },
+    
     _isCallback: function(v, k) {
       return artjs.StringUtils.startsWith(k, '_on') && this._isFunction(v, k);
     },

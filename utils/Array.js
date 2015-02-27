@@ -27,26 +27,26 @@ artjs.ArrayUtils = artjs.utils.Array = {
   },
   
   first: function(arr) {
-    return this.getItem(arr, 0);
+    return this.getItemAt(arr, 0);
   },
   
   second: function(arr) {
-    return this.getItem(arr, 1);
+    return this.getItemAt(arr, 1);
   },
   
   third: function(arr) {
-    return this.getItem(arr, 2);
+    return this.getItemAt(arr, 2);
   },
   
   last: function(arr) {
-    return this.getItem(arr, arr.length - 1);
+    return this.getItemAt(arr, arr.length - 1);
   },
   
   beforeLast: function(arr) {
-    return this.getItem(arr, arr.length - 2);
+    return this.getItemAt(arr, arr.length - 2);
   },
   
-  getItem: function(arr, i) {
+  getItemAt: function(arr, i) {
     return arr[i];
   },
   

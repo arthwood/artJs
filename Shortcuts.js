@@ -1,5 +1,6 @@
 artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, 'arrify');
 artjs.$DC = artjs.Delegate.callback(artjs.Delegate, 'callback');
+artjs.$F = artjs.Delegate.callback(artjs.Delegate, 'func');
 artjs.$D = artjs.Delegate.callback(artjs.Delegate, 'create');
 artjs.$BA = artjs.Delegate.callback(artjs.Delegate, 'bindAll');
 artjs.$DT = artjs.Delegate.callback(artjs.Delegate, 'delegateTo');

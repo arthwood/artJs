@@ -130,6 +130,10 @@ artjs.ElementUtils = artjs.utils.Element = {
     return this.filterElements(this.children(e));
   },
   
+  elementAt: function(e, i) {
+    return artjs.ArrayUtils.getItemAt(this.elements(e), i);
+  },
+  
   filterElements: function(items) {
     return artjs.ArrayUtils.select(items, this.isElement, this);
   },

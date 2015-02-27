@@ -68,7 +68,7 @@ artjs.TemplateBase = artjs.template.Base = {
   render: function(content, scope) {
     var compiler = new artjs.TemplateCompiler(content, scope);
     
-    return compiler.compile(content, scope);
+    return compiler.compile();
   },
   
   /**
