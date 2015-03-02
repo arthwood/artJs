@@ -90,8 +90,10 @@ artjs.ComponentScanner = {
 };
 
 artjs.ComponentSweeper = {
+  INTERVAL: 2000,
+  
   init: function() {
-    var clock = new artjs.Clock(2000);
+    var clock = new artjs.Clock(this.INTERVAL);
     
     clock.onChange.add(new artjs.Delegate(this, '_onSweep'));
     
