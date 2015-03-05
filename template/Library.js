@@ -18,7 +18,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
     artjs.TemplateBase.renderElement(
       artjs.ElementUtils.insert(
         this._templatesContainer, 
-        artjs.$E('div', null, artjs.TemplateLibrary.getTemplate(id))
+        artjs.$E('div', null, this.getTemplate(id))
       )
     );
   },

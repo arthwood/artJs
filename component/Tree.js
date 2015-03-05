@@ -21,12 +21,8 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
       artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
     },
     
-    getClicked: function() {
-      return this._clicked;
-    },
-    
     getCurrent: function() {
-      return this._leafClassToggler.getCurrent();
+      return this._current;
     },
     
     _openAt: function(i) {
@@ -66,9 +62,9 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _handleClick: function(a) {
-      this._clicked = a;
+      this._current = a;
       
-      if (this._isNode(this._clicked)) {
+      if (this._isNode(this._current)) {
         this._toggleNode();
       }
       else {
@@ -83,14 +79,14 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _toggleNode: function() {
-      var ul = artjs.ElementUtils.next(this._clicked);
+      var ul = artjs.ElementUtils.next(this._current);
       
       artjs.ElementUtils.toggle(ul);
-      artjs.ElementUtils.setClass(artjs.$parent(this._clicked), 'expanded', !artjs.ElementUtils.isHidden(ul));
+      artjs.ElementUtils.setClass(artjs.$parent(this._current), 'expanded', !artjs.ElementUtils.isHidden(ul));
     },
     
     _leafAction: function() {
-      this._leafClassToggler.toggle(this._clicked);
+      this._leafClassToggler.toggle(artjs.ElementUtils.parent(this._current));
       
       this.onLeaf.fire(this);
     }
