@@ -22,7 +22,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   renderSelect: function(options, selected) {
     this._selectedOption = selected;
     
-    return this._renderElement('select', options, this.renderOptions(options));
+    return this.renderElement('select', options, this.renderOptions(options));
   },
   
   renderOptions: function(options) {
@@ -30,11 +30,23 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   renderTable: function(data) {
-    var head = data.head ? this._renderElement('thead', null, this._map(data.head || [], this._renderTableHead)) : '';
-    var foot = data.foot ? this._renderElement('tfoot', null, this._map(data.foot, this._renderTableFoot)) : '';
-    var body = data.body ? this._renderElement('tbody', null, this._map(data.body || [], this._renderTableRow)) : '';
+    var head = data.head ? this.renderElement('thead', null, this._map(data.head || [], this._renderTableHead)) : '';
+    var foot = data.foot ? this.renderElement('tfoot', null, this._map(data.foot, this._renderTableFoot)) : '';
+    var body = data.body ? this.renderElement('tbody', null, this._map(data.body || [], this._renderTableRow)) : '';
     
-    return this._renderElement('table', null, head + foot + body);
+    return this.renderElement('table', null, head + foot + body);
+  },
+  
+  renderElement: function(name, attrs, value) {
+    return artjs.$B(name, attrs, value).toString();
+  },
+  
+  registerAll: function(helpers) {
+    artjs.ObjectUtils.eachPair(helpers, this.register, this);
+  },
+  
+  register: function(name, method) {
+    this[name] = method;
   },
   
   _map: function(coll, func) {
@@ -48,7 +60,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
       attrs.selected = 'selected';
     }
     
-    return this._renderElement('option', attrs, i.text);
+    return this.renderElement('option', attrs, i.text);
   },
   
   _renderTableHead: function(i) {
@@ -60,7 +72,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   _renderTableRow: function(i) {
-    return this._renderElement('tr', null, this._map(i, this._renderTableElement));
+    return this.renderElement('tr', null, this._map(i, this._renderTableElement));
   },
   
   _renderTableElement: function(i) {
@@ -68,23 +80,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   _renderTableCell: function(type, content) {
-    return this._renderElement(type, null, content);
-  },
-  
-  _renderElement: function(name, attrs, value) {
-    return artjs.$B(name, attrs, value).toString();
-  },
-  
-  registerAll: function(helpers) {
-    artjs.ObjectUtils.eachPair(helpers, this.register, this);
-  },
-  
-  register: function(name, method) {
-    this[name] = method;
-  },
-  
-  perform: function(action, args, scope) {
-    return this[action].apply(this, args.concat(scope));
+    return this.renderElement(type, null, content);
   },
   
   _renderCollectionItem: function(scope, idx, arr, templateId) {

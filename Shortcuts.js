@@ -1,3 +1,7 @@
+artjs.$get = artjs.Delegate.callback(artjs.Ajax, 'get');
+artjs.$post = artjs.Delegate.callback(artjs.Ajax, 'post');
+artjs.$put = artjs.Delegate.callback(artjs.Ajax, 'put');
+artjs.$del = artjs.Delegate.callback(artjs.Ajax, 'del');
 artjs.$A = artjs.Delegate.callback(artjs.ArrayUtils, 'arrify');
 artjs.$DC = artjs.Delegate.callback(artjs.Delegate, 'callback');
 artjs.$F = artjs.Delegate.callback(artjs.Delegate, 'func');

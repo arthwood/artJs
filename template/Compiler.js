@@ -36,8 +36,9 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
       var argsStr = artjs.ArrayUtils.first(exec);
       var args = artjs.ArrayUtils.map(argsStr.split(','), this._stripArg, this);
       var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+      var helpers = artjs.TemplateHelpers;
       
-      return artjs.TemplateHelpers.perform(action, argsValues, this._scope);
+      return helpers[action].apply(helpers, argsValues.concat(this._scope));
     },
     
     _parseArg: function(i) {

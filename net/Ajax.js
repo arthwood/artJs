@@ -150,8 +150,3 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(
 );
 
 artjs.Ajax.SupportedMethods = [artjs.Ajax.Methods.GET, artjs.Ajax.Methods.POST];
-  
-artjs.$get = artjs.Ajax.get;
-artjs.$post = artjs.Ajax.post;
-artjs.$put = artjs.Ajax.put;
-artjs.$del = artjs.Ajax.del;
