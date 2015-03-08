@@ -5,8 +5,8 @@ artjs.ModalBox = artjs.ui.ModalBox = function(element, size, draggable) {
   this.elementStyle.width = this.size.x + 'px';
   this.elementStyle.height = this.size.y + 'px';
   
-  this.content = artjs.ArrayUtils.first(artjs.$down(this.element, '.content'));
-  this.header = artjs.ArrayUtils.first(artjs.$down(this.element, '.header'));
+  this.content = artjs.Array.first(artjs.$down(this.element, '.content'));
+  this.header = artjs.Array.first(artjs.$down(this.element, '.header'));
   this.onDataLoadD = artjs.$D(this, this.onDataLoad);
   this.onHeaderMouseDownDC = artjs.$DC(this, this.onHeaderMouseDown);
   this.onHeaderMouseDownDC = artjs.$DC(this, this.onHeaderMouseDown);
@@ -31,11 +31,11 @@ artjs.ModalBox.prototype = {
   },
 
   onDataLoad: function(ajax) {
-    artjs.ElementUtils.setContent(this.content, ajax.getResponseText());
+    artjs.Element.setContent(this.content, ajax.getResponseText());
   },
 
   onResize: function() {
-    artjs.ElementUtils.center(this.element, this.size);
+    artjs.Element.center(this.element, this.size);
   },
 
   setDraggable: function(draggable) {
@@ -62,6 +62,6 @@ artjs.ModalBox.prototype = {
   },
 
   onMouseMove: function(event) {
-    artjs.ElementUtils.setPosition(new artjs.Point());
+    artjs.Element.setPosition(new artjs.Point());
   }
 };

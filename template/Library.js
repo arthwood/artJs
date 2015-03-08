@@ -16,7 +16,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   // Creates new div inside templates container then loads and initializes given template
   loadTemplate: function(id) {
     artjs.TemplateBase.renderElement(
-      artjs.ElementUtils.insert(
+      artjs.Element.insert(
         this._templatesContainer, 
         artjs.$E('div', null, this.getTemplate(id))
       )
@@ -28,9 +28,9 @@ artjs.TemplateLibrary = artjs.template.Library = {
     
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
-    artjs.ElementUtils.hide(document.body);
+    artjs.Element.hide(document.body);
     
-    artjs.ArrayUtils.each(this._templatesToLoad, this._load, this);
+    artjs.Array.each(this._templatesToLoad, this._load, this);
     
     this._loadCheck();
   },
@@ -48,7 +48,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   
   _loadCheck: function() {
-    if (artjs.ObjectUtils.keys(this._templates).length == this._templatesToLoad.length) {
+    if (artjs.Object.keys(this._templates).length == this._templatesToLoad.length) {
       this._onAllLoaded();
     }
   },
@@ -56,9 +56,9 @@ artjs.TemplateLibrary = artjs.template.Library = {
   _onAllLoaded: function() {
     var body = document.body;
     
-    artjs.ElementUtils.show(body);
+    artjs.Element.show(body);
     artjs.TemplateBase.renderElement(body, window);
-    this._templatesContainer = artjs.ElementUtils.insert(document.body, artjs.$E('div', {id: 'artjs-Templates'}));
+    this._templatesContainer = artjs.Element.insert(document.body, artjs.$E('div', {id: 'artjs-Templates'}));
     artjs.onLibraryLoad.fire(this);
   }
 };

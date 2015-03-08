@@ -6,7 +6,7 @@ artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(
     invoke: function() {
       this._args = artjs.$A(arguments);
       
-      return artjs.ArrayUtils.map(this._items, this._delegateToResult, this);
+      return artjs.Array.map(this._items, this._delegateToResult, this);
     },
   
     add: function(delegate) {
@@ -14,11 +14,11 @@ artjs.DelegateCollection = artjs.events.DelegateCollection = artjs.Class(
     },
     
     removeAt: function(i) {
-      artjs.ArrayUtils.removeAt(this._items, i);
+      artjs.Array.removeAt(this._items, i);
     },
     
     remove: function(delegate) {
-      artjs.ArrayUtils.removeItem(this._items, delegate);
+      artjs.Array.removeItem(this._items, delegate);
     },
     
     clear: function() {

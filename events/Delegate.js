@@ -1,12 +1,12 @@
 artjs.Delegate = artjs.events.Delegate = artjs.Class(
   function(object, method) {
     this.object = object;
-    this.method = artjs.ObjectUtils.isString(method) ? this.object[method] : method;
-    this.args = artjs.ArrayUtils.arrify(arguments, 2);
+    this.method = artjs.Object.isString(method) ? this.object[method] : method;
+    this.args = artjs.Array.arrify(arguments, 2);
   },
   {
     invoke: function() {
-      var args = artjs.ArrayUtils.arrify(arguments).concat(this.args);
+      var args = artjs.Array.arrify(arguments).concat(this.args);
       
       return this.method.apply(this.object, args);
     },
@@ -15,7 +15,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       var result = function() {
         var callee = arguments.callee;
         var delegate = callee.delegate;
-        var args = artjs.ArrayUtils.arrify(arguments);
+        var args = artjs.Array.arrify(arguments);
         
         if (callee.withSource) {
           args.unshift(this); 
@@ -35,7 +35,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       var delegate = new this(object, method);
       var callback = delegate.callback(withSource);
       
-      delegate.args = artjs.ArrayUtils.arrify(arguments, 3);
+      delegate.args = artjs.Array.arrify(arguments, 3);
       
       return callback;
     },
@@ -43,29 +43,29 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     create: function(object, method) {
       var delegate = new this(object, method);
       
-      delegate.args = artjs.ArrayUtils.arrify(arguments, 2);
+      delegate.args = artjs.Array.arrify(arguments, 2);
       
       return delegate;
     },
     
     bindAll: function(context) {
       var container = context.ctor ? context.ctor.prototype : context;
-      var callbacks = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(container, this._isCallback, this));
-      var all = callbacks.concat(artjs.ArrayUtils.arrify(arguments, 1));
+      var callbacks = artjs.Object.keys(artjs.Object.select(container, this._isCallback, this));
+      var all = callbacks.concat(artjs.Array.arrify(arguments, 1));
       
       this._bindSource = context;
       this._bindTarget = context;
       
-      artjs.ArrayUtils.each(all, this._bindEach, this);
+      artjs.Array.each(all, this._bindEach, this);
     },
     
     delegateTo: function(source, target) {
-      var functions = artjs.ObjectUtils.keys(artjs.ObjectUtils.select(source, this._isPublicMethod, this));
+      var functions = artjs.Object.keys(artjs.Object.select(source, this._isPublicMethod, this));
       
       this._bindSource = source;
       this._bindTarget = target;
       
-      artjs.ArrayUtils.each(functions, this._bindEach, this);
+      artjs.Array.each(functions, this._bindEach, this);
     },
     
     func: function(method, withSource) {
@@ -73,11 +73,11 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     },
     
     _isCallback: function(v, k) {
-      return artjs.StringUtils.startsWith(k, '_on') && this._isFunction(v, k);
+      return artjs.String.startsWith(k, '_on') && this._isFunction(v, k);
     },
     
     _isPublicMethod: function(v, k) {
-      return !artjs.StringUtils.startsWith(k, '_') && this._isFunction(v, k);
+      return !artjs.String.startsWith(k, '_') && this._isFunction(v, k);
     },
     
     _isFunction: function(v, k) {

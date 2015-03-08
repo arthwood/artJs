@@ -1,5 +1,5 @@
-artjs.MathUtils = artjs.utils.Math = {
-  _name: 'MathUtils',
+artjs.Math = artjs.utils.Math = {
+  _name: 'Math',
   
   toString: function() {
     return this._name;

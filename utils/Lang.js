@@ -1,4 +1,6 @@
 artjs.Lang = artjs.utils.Lang = {
+  _name: 'Lang',
+  
   setLang: function(lang) {
     this._lang = lang;
   },
@@ -12,7 +14,7 @@ artjs.Lang = artjs.utils.Lang = {
     
     this._node = this._translations[this._lang];
     
-    artjs.ArrayUtils.each(path, this._updateNode, this);
+    artjs.Array.each(path, this._updateNode, this);
     
     return this._node;
   },

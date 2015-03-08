@@ -1,5 +1,5 @@
-artjs.StringUtils = artjs.utils.String = {
-  _name: 'StringUtils',
+artjs.String = artjs.utils.String = {
+  _name: 'String',
   
   toString: function() {
     return this._name;
@@ -110,7 +110,7 @@ artjs.StringUtils = artjs.utils.String = {
   },
   
   capitalize: function(str) {
-    return artjs.ArrayUtils.map(str.split(' '), this.capitalizeWord).join(' ');
+    return artjs.Array.map(str.split(' '), this.capitalizeWord).join(' ');
   },
   
   capitalizeWord: function(str) {

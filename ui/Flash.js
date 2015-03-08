@@ -9,7 +9,7 @@ artjs.Flash = artjs.ui.Flash = function(element, path, delay, yPosition) {
   this.delay = (delay || 6) * 1000;
   this.yPosition = yPosition || 100;
   
-  var visible = !artjs.StringUtils.isEmpty(artjs.ElementUtils.getContent(this.span));
+  var visible = !artjs.String.isEmpty(artjs.Element.getContent(this.span));
   var instances = arguments.callee.instances;
   
   this.id = instances.length;
@@ -27,7 +27,7 @@ artjs.Flash.prototype = {
   },
   
   display: function() {
-    var eu = artjs.ElementUtils;
+    var eu = artjs.Element;
     
     this.fade.stop();
     this.clearDelay();
@@ -54,7 +54,7 @@ artjs.Flash.prototype = {
   },
   
   onFadeComplete: function() {
-    artjs.ElementUtils.hide(this.element);
+    artjs.Element.hide(this.element);
     this.span.innerHTML = null;
     this.image.src = this.path + '/blank.png';
   },

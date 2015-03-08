@@ -7,7 +7,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
   },
   {
     toString: function() {
-      var attributes = this.attributes && artjs.ObjectUtils.isNotEmpty(this.attributes) 
+      var attributes = this.attributes && artjs.Object.isNotEmpty(this.attributes) 
         ? (' ' + this.ctor._attributesString(this.attributes) + ' ') 
         : '';
       var part;
@@ -33,7 +33,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
       
       sa.e = e;
       
-      artjs.ObjectUtils.eachPair(this.attributes, sa);
+      artjs.Object.eachPair(this.attributes, sa);
       
       if (this.value && !this.isEmpty) { e.innerHTML = this.value; }
       
@@ -70,7 +70,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
     getCollection: function(n, element) {
       this._getElement.element = element;
       
-      return artjs.ArrayUtils.build(n, this._getElement).join('');
+      return artjs.Array.build(n, this._getElement).join('');
     },
     
     _getElement: function(i) {
@@ -78,7 +78,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
     },
     
     _attributesString: function(attrs) {
-      return artjs.ArrayUtils.map(artjs.ObjectUtils.toArray(attrs), this._attributePairToString, this).join(' ');
+      return artjs.Array.map(artjs.Object.toArray(attrs), this._attributePairToString, this).join(' ');
     },
     
     _setAttribute: function(k, v) {

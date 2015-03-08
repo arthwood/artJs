@@ -17,13 +17,13 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(
     },
     
     _onActivate: function(t) {
-      if (t.current) artjs.ElementUtils.addClass(t.current, this._className);
+      if (t.current) artjs.Element.addClass(t.current, this._className);
       
       this.onActivate.fire(this);
     },
     
     _onDeactivate: function(t) {
-      if (t.current) artjs.ElementUtils.removeClass(t.current, this._className);
+      if (t.current) artjs.Element.removeClass(t.current, this._className);
       
       this.onDeactivate.fire(this);
     }

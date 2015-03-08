@@ -19,7 +19,7 @@ artjs.List = artjs.data.List = artjs.Class(
     
     addItemAt: function(item, position, noEvent) {
       if (this.allowDuplicates || !this.hasItem(item)) {
-        this.items = artjs.ArrayUtils.insertAt(this.items, position, item);
+        this.items = artjs.Array.insertAt(this.items, position, item);
         
         if (!noEvent) { this.onChange.fire(this); }
       }
@@ -28,7 +28,7 @@ artjs.List = artjs.data.List = artjs.Class(
     },
     
     removeItem: function(item, onlyFirst, noEvent) {
-      artjs.ArrayUtils.removeItem(this.items, item, onlyFirst);
+      artjs.Array.removeItem(this.items, item, onlyFirst);
       
       if (!noEvent) { this.onChange.fire(this); }
       
@@ -36,7 +36,7 @@ artjs.List = artjs.data.List = artjs.Class(
     },
     
     removeItemAt: function(position, noEvent) {
-      artjs.ArrayUtils.removeAt(this.items, position);
+      artjs.Array.removeAt(this.items, position);
       
       if (!noEvent) { this.onChange.fire(this); }
       
@@ -50,7 +50,7 @@ artjs.List = artjs.data.List = artjs.Class(
     },
     
     getItemAt: function(position) {
-      position = this.loop ? (artjs.MathUtils.sawtooth(position, 0, this.getLength())) : position;
+      position = this.loop ? (artjs.Math.sawtooth(position, 0, this.getLength())) : position;
     
       return this.items[position];
     },
@@ -81,7 +81,7 @@ artjs.List = artjs.data.List = artjs.Class(
     },
     
     hasItem: function(item) {
-      return artjs.ArrayUtils.includes(this.items, item);
+      return artjs.Array.includes(this.items, item);
     },
     
     setPointerAtItem: function(item) {
@@ -126,15 +126,15 @@ artjs.List = artjs.data.List = artjs.Class(
     },
     
     getFirst: function() {
-      return artjs.ArrayUtils.first(this.items);
+      return artjs.Array.first(this.items);
     },
     
     getLast: function() {
-      return artjs.ArrayUtils.last(this.items);
+      return artjs.Array.last(this.items);
     },
   
     isEmpty: function() {
-      return artjs.ArrayUtils.isEmpty(this.items);
+      return artjs.Array.isEmpty(this.items);
     },
     
     isLast: function() {

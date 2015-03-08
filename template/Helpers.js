@@ -42,7 +42,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   registerAll: function(helpers) {
-    artjs.ObjectUtils.eachPair(helpers, this.register, this);
+    artjs.Object.eachPair(helpers, this.register, this);
   },
   
   register: function(name, method) {
@@ -50,7 +50,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   _map: function(coll, func) {
-    return artjs.ArrayUtils.map(coll, func, this).join('');
+    return artjs.Array.map(coll, func, this).join('');
   },
   
   _renderOption: function(i) {

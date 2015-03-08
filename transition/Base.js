@@ -2,7 +2,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(
   function(property, element, value, duration, type, delay, from) {
     this.property = property;
     this.element = element;
-    this.duration = artjs.ObjectUtils.getDefault(duration, 1);
+    this.duration = artjs.Object.getDefault(duration, 1);
     this.value = value;
     this.type = type || this.ctor.LINEAR;
     this.delay = delay || 0;
@@ -11,7 +11,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(
   },
   {
     run: function() {
-      if (artjs.ObjectUtils.isPresent(this.from)) {
+      if (artjs.Object.isPresent(this.from)) {
         this._setStyle(this.from);
         this._setEffectStyle('none');
       }
@@ -25,13 +25,13 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(
     },
     
     _setStyle: function(value) {
-      artjs.ElementUtils.setStyle(this.element, this.property, value);
+      artjs.Element.setStyle(this.element, this.property, value);
     },
     
     _setEffectStyle: function(prop) {
-      var effectStyle = artjs.ElementUtils.transitionStyle(prop, this.duration, this.type, this.delay);
+      var effectStyle = artjs.Element.transitionStyle(prop, this.duration, this.type, this.delay);
 
-      artjs.ElementUtils.extendStyle(this.element, effectStyle);
+      artjs.Element.extendStyle(this.element, effectStyle);
     }
   },
   {

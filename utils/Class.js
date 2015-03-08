@@ -23,8 +23,8 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
       return _super_.apply(this, arguments);
     };
     
-    artjs.ObjectUtils.extend(this.ctor, superclass);
-    artjs.ObjectUtils.extend(this.ctor.prototype, superclass.prototype);
+    artjs.Object.extend(this.ctor, superclass);
+    artjs.Object.extend(this.ctor.prototype, superclass.prototype);
     
     this.ctor.superclass = superclass;
     this.ctor.super = _super_;
@@ -37,11 +37,11 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor.prototype.ctor = this.ctor;
   
   if (proto) {
-    artjs.ObjectUtils.eachPair(proto, this._eachProto, this);
+    artjs.Object.eachPair(proto, this._eachProto, this);
   }
   
   if (stat) {
-    artjs.ObjectUtils.eachPair(stat, this._eachStat, this);
+    artjs.Object.eachPair(stat, this._eachStat, this);
   }
   
   this.ctor._onCreated();

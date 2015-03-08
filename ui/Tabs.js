@@ -13,7 +13,7 @@ artjs.Tabs = artjs.ui.Tabs = artjs.Class(
     this.onTabClickD = artjs.$D(this, this.onTabClick);
     this.updateTabCursorBind = artjs.$DC(this, this.updateTabCursor);
     
-    artjs.ArrayUtils.each(this.tabs, this.eachTab, this);
+    artjs.Array.each(this.tabs, this.eachTab, this);
     
     this.setTabAt(0);
   },
@@ -45,7 +45,7 @@ artjs.Tabs = artjs.ui.Tabs = artjs.Class(
     onTab: function(ct) {
       if (this.onTabOffCallback) this.onTabOffCallback(this);
       
-      this.tabScreenManager.setScreenAt(artjs.ArrayUtils.indexOf(this.tabs, ct.getCurrent()));
+      this.tabScreenManager.setScreenAt(artjs.Array.indexOf(this.tabs, ct.getCurrent()));
       
       if (this.onTabOnCallback) this.onTabOnCallback(this);
     },
@@ -88,11 +88,11 @@ artjs.Tabs = artjs.ui.Tabs = artjs.Class(
     
     setLocked: function(locked) {
       this.locked = locked;
-      artjs.ArrayUtils.each(this.tabs, this.updateTabCursorBind);
+      artjs.Array.each(this.tabs, this.updateTabCursorBind);
     },
     
     updateTabCursor: function(tab) {
-      artjs.ElementUtils.setStyle(tab, {cursor: this.locked ? 'wait' : ''});
+      artjs.Element.setStyle(tab, {cursor: this.locked ? 'wait' : ''});
     },
     
     lock: function() {

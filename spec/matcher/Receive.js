@@ -34,7 +34,7 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(
     },
     
     _argsString: function(args) {
-      return '(' + (this.receiver.isInSeries() ? artjs.ArrayUtils.map(args, this._mapArgs, this) : args).join(', ') + ')';
+      return '(' + (this.receiver.isInSeries() ? artjs.Array.map(args, this._mapArgs, this) : args).join(', ') + ')';
     }
   },
   null,

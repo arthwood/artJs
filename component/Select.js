@@ -30,7 +30,7 @@ artjs.Select = artjs.component.Select = artjs.Class(
     },
     
     _update: function() {
-      artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
+      artjs.Element.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
     },
     
     _onChange: function(e) {

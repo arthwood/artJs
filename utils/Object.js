@@ -1,5 +1,5 @@
-artjs.ObjectUtils = artjs.utils.Object = {
-  _name: 'ObjectUtils',
+artjs.Object = artjs.utils.Object = {
+  _name: 'Object',
   
   QUERY_DELIMITER: '&',
 
@@ -46,13 +46,13 @@ artjs.ObjectUtils = artjs.utils.Object = {
   removeKeys: function(obj, keys) {
     var delegate = artjs.$D(this, '_eachKeyDeleteKey', obj);
     
-    artjs.ArrayUtils.each(keys, delegate.callback());
+    artjs.Array.each(keys, delegate.callback());
   },
   
   removeValues: function(obj, values) {
     var delegate = artjs.$D(this, '_invertedRemoveValue', obj);
     
-    artjs.ArrayUtils.eachItem(values, delegate.callback());
+    artjs.Array.eachItem(values, delegate.callback());
   },
 
   keys: function(obj) {
@@ -284,7 +284,7 @@ artjs.ObjectUtils = artjs.utils.Object = {
   _pairToQueryString: function(key, value, prefix) {
     var result;
     
-    prefix = artjs.StringUtils.isBlank(prefix) ? key : prefix + '[' + key + ']';
+    prefix = artjs.String.isBlank(prefix) ? key : prefix + '[' + key + ']';
     
     if (typeof value == 'object') {
       if (isNaN(value.length)) {
@@ -293,7 +293,7 @@ artjs.ObjectUtils = artjs.utils.Object = {
       else {
         var delegate = artjs.$D(this, '_parseArrayValue', prefix + '[]');
         
-        result = artjs.ArrayUtils.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
+        result = artjs.Array.map(value, delegate.callback()).join(this.QUERY_DELIMITER);
       }
     }
     else {

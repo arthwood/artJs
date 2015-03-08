@@ -17,7 +17,7 @@ artjs.TemplateBase = artjs.template.Base = {
    * @description Renders content into the element with the scope
    */
   renderInto: function(element, content, scope) {
-    artjs.ElementUtils.setContent(element, this.render(content, scope));
+    artjs.Element.setContent(element, this.render(content, scope));
     
     this.evalScripts(element);
     
@@ -49,10 +49,10 @@ artjs.TemplateBase = artjs.template.Base = {
   },
   
   evalScripts: function(element) {
-    artjs.ArrayUtils.each(artjs.Selector.findAll(element, 'script'), this.evalScript, this);
+    artjs.Array.each(artjs.Selector.findAll(element, 'script'), this.evalScript, this);
   },
   
   evalScript: function(script) {
-    eval(artjs.ElementUtils.getContent(script));
+    eval(artjs.Element.getContent(script));
   }
 };

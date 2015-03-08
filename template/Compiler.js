@@ -9,13 +9,13 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     compile: function() {
       var tags = this._content.match(this._tagRegEx);
       
-      artjs.ArrayUtils.each(tags, this._eachTag, this);
+      artjs.Array.each(tags, this._eachTag, this);
       
       return this._content;
     },
     
     _eachTag: function(i) {
-      var expression = artjs.StringUtils.sub(i, 2, -2);      
+      var expression = artjs.String.sub(i, 2, -2);      
       var result = this._parseExpression(expression);
       
       this._content = this._content.replace(i, result);
@@ -33,9 +33,9 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
       exec.shift();
       
       var action = exec.shift();
-      var argsStr = artjs.ArrayUtils.first(exec);
-      var args = artjs.ArrayUtils.map(argsStr.split(','), this._stripArg, this);
-      var argsValues = artjs.ArrayUtils.map(args, this._parseArg, this);
+      var argsStr = artjs.Array.first(exec);
+      var args = artjs.Array.map(argsStr.split(','), this._stripArg, this);
+      var argsValues = artjs.Array.map(args, this._parseArg, this);
       var helpers = artjs.TemplateHelpers;
       
       return helpers[action].apply(helpers, argsValues.concat(this._scope));
@@ -44,8 +44,8 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     _parseArg: function(i) {
       var str = i;
       
-      str = artjs.StringUtils.trim(str, "'");
-      str = artjs.StringUtils.trim(str, '"');
+      str = artjs.String.trim(str, "'");
+      str = artjs.String.trim(str, '"');
       
       return str == i ? this._parseExpression(i) : str;
     },
@@ -55,7 +55,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     },
     
     _stripArg: function(i) {
-      return artjs.StringUtils.strip(i);
+      return artjs.String.strip(i);
     }
   }
 );

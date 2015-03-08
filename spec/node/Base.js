@@ -34,7 +34,7 @@ artjs.BaseSpecNode = artjs.spec.node.Base = artjs.Class(
     _cleanTrailingBefores: function() {
       var item;
       
-      while ((item = artjs.ArrayUtils.last(this._path)) && (item.ctor == artjs.Before)) {
+      while ((item = artjs.Array.last(this._path)) && (item.ctor == artjs.Before)) {
         this._path.pop();
       }
     }

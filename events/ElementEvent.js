@@ -73,7 +73,7 @@ artjs.ClickEvent = artjs.events.Click = artjs.Class(
       if (this._selector) {
         var elements = artjs.$findAll(this._element, this._selector);
         
-        if (artjs.ArrayUtils.contains(elements, e.target)) {
+        if (artjs.Array.contains(elements, e.target)) {
           this.super(e);
         }
       } 

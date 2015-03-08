@@ -22,7 +22,7 @@ artjs.Selector = artjs.dom.Selector = {
   isDescendantOf: function(element, root) {
     var descendants = this._getDescendants(element, root);
 
-    return !artjs.ArrayUtils.isEmpty(descendants);
+    return !artjs.Array.isEmpty(descendants);
   },
   
   isSelfOrDescendantOf: function(element, root) {

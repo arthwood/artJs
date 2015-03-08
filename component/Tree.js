@@ -12,15 +12,15 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     setData: function(data) {
       var content = artjs.$P(this._renderNode(data));
       
-      artjs.ElementUtils.insert(this.getElement(), content);
+      artjs.Element.insert(this.getElement(), content);
       
-      artjs.ArrayUtils.each(artjs.Selector.findAll(this.getElement(), 'li'), this._eachElement, this);
+      artjs.Array.each(artjs.Selector.findAll(this.getElement(), 'li'), this._eachElement, this);
     },
     
     clickAt: function() {
       this._openingNode = this.getElement();
       
-      artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
+      artjs.Array.each(artjs.$A(arguments), this._openAt, this);
     },
     
     getCurrent: function() {
@@ -28,12 +28,12 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _openAt: function(i) {
-      this._openingNode = artjs.ElementUtils.elementAt(artjs.Selector.find(this._openingNode, 'ul'), i);
-      this._handleClick(artjs.ElementUtils.firstElement(this._openingNode));
+      this._openingNode = artjs.Element.elementAt(artjs.Selector.find(this._openingNode, 'ul'), i);
+      this._handleClick(artjs.Element.firstElement(this._openingNode));
     },
     
     _renderNode: function(node) {
-      return artjs.$B('ul', null, artjs.ObjectUtils.map(node, this._mapNode, this).join('')).toString();
+      return artjs.$B('ul', null, artjs.Object.map(node, this._mapNode, this).join('')).toString();
     },
     
     _mapNode: function(k, v) {
@@ -45,13 +45,13 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _eachElement: function(i) {
-      var a = artjs.ElementUtils.firstElement(i);
+      var a = artjs.Element.firstElement(i);
       
       if (this._isNode(a)) {
-        artjs.ElementUtils.hide(artjs.$find(i, 'ul'));
+        artjs.Element.hide(artjs.$find(i, 'ul'));
       }
       else {
-        artjs.ElementUtils.addClass(i, 'leaf');
+        artjs.Element.addClass(i, 'leaf');
       }
     },
     
@@ -73,20 +73,20 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _isNode: function(a) {
-      var li = artjs.ElementUtils.parent(a);
+      var li = artjs.Element.parent(a);
       
-      return artjs.ArrayUtils.isNotEmpty(artjs.Selector.findAll(li, 'ul'));
+      return artjs.Array.isNotEmpty(artjs.Selector.findAll(li, 'ul'));
     },
     
     _toggleNode: function() {
-      var ul = artjs.ElementUtils.next(this._current);
+      var ul = artjs.Element.next(this._current);
       
-      artjs.ElementUtils.toggle(ul);
-      artjs.ElementUtils.setClass(artjs.$parent(this._current), 'expanded', !artjs.ElementUtils.isHidden(ul));
+      artjs.Element.toggle(ul);
+      artjs.Element.setClass(artjs.$parent(this._current), 'expanded', !artjs.Element.isHidden(ul));
     },
     
     _leafAction: function() {
-      this._leafClassToggler.toggle(artjs.ElementUtils.parent(this._current));
+      this._leafClassToggler.toggle(artjs.Element.parent(this._current));
       
       this.onLeaf.fire(this);
     }

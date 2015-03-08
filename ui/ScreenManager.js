@@ -39,7 +39,7 @@ artjs.ScreenManager.prototype = {
   },
   
   setScreenAt: function(i) {
-    this.index = artjs.MathUtils.limit(i, 0, this.screens.length);
+    this.index = artjs.Math.limit(i, 0, this.screens.length);
     this.switchScreens();
   },
   
@@ -53,10 +53,10 @@ artjs.ScreenManager.prototype = {
   },
   
   showScreen: function(screen) {
-    artjs.ElementUtils.show(screen);
+    artjs.Element.show(screen);
   },
   
   hideScreen: function(screen) {
-    artjs.ElementUtils.hide(screen);
+    artjs.Element.hide(screen);
   }
 };

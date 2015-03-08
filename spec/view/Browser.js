@@ -16,16 +16,16 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
     onItComplete: function(runner) {
       var success = runner.getCurrentTest().isSuccess();
       
-      artjs.ElementUtils.setContent(this._testTemplate, success ? '.' : 'F');
+      artjs.Element.setContent(this._testTemplate, success ? '.' : 'F');
       this._testTemplate.className = success ? 'success' : 'failure';
-      artjs.ElementUtils.insert(this._element, this._testTemplate);
+      artjs.Element.insert(this._element, this._testTemplate);
     },
     
     onComplete: function(runner) {
       var its = artjs.It.instances;
       var duration = runner.getDuration();
-      var failures = artjs.ArrayUtils.reject(artjs.ArrayUtils.invoke(its, 'isSuccess'));
-      var success = artjs.ArrayUtils.isEmpty(failures);
+      var failures = artjs.Array.reject(artjs.Array.invoke(its, 'isSuccess'));
+      var success = artjs.Array.isEmpty(failures);
       var classNames = ['results'];
       var n = its.length;
       var k = failures.length;
@@ -39,7 +39,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       var statsText = success
         ? n + ' tests in total.'
         : k + ' tests failed of ' + n + ' total.';
-      var durationText = 'Duration: ' + artjs.DateUtils.miliToHMSM(duration);
+      var durationText = 'Duration: ' + artjs.Date.miliToHMSM(duration);
       var resultElement = artjs.$E('p', {className: 'result'}, resultText);
       var statElement = artjs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
       
@@ -51,14 +51,14 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
         
         this._getFailureHtml.list = list;
         
-        artjs.ArrayUtils.each(failures, this._getFailureHtml, this);
+        artjs.Array.each(failures, this._getFailureHtml, this);
         
         artjs.$I(resultsElement, list);
       }
     },
     
     _getFailureHtml: function(i) {
-      var path = artjs.ArrayUtils.map(i.path, this._nodeToString).join(' ');
+      var path = artjs.Array.map(i.path, this._nodeToString).join(' ');
       var info = i.failureText();
       var pathElement = artjs.$E('p', {className: 'path'}, path);
       var infoElement = artjs.$E('p', {className: 'info'}, info);

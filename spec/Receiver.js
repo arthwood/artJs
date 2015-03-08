@@ -39,7 +39,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
       else {
         var expectedArgs = this._inSeries ? this._args[this._callCounter] : this._args;
         
-        if (artjs.ArrayUtils.equal([args, expectedArgs])) {
+        if (artjs.Array.equal([args, expectedArgs])) {
           this._successCounter++;
         }
       }

@@ -1,5 +1,5 @@
-artjs.DateUtils = artjs.utils.Date = {
-  _name: 'DateUtils',
+artjs.Date = artjs.utils.Date = {
+  _name: 'Date',
   
   toString: function() {
     return this._name; 
@@ -31,7 +31,7 @@ artjs.DateUtils = artjs.utils.Date = {
   },
   
   toHMS: function(date, separator) {
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     
     separator = separator || ':';
     
@@ -41,7 +41,7 @@ artjs.DateUtils = artjs.utils.Date = {
   },
   
   toYMD: function(date, separator) {
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     
     separator = separator || '-';
     
@@ -65,7 +65,7 @@ artjs.DateUtils = artjs.utils.Date = {
     separator = separator || '-';
     
     var arr = str.split(separator);
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
     
     return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
   },
@@ -74,7 +74,7 @@ artjs.DateUtils = artjs.utils.Date = {
     separator = separator || '-';
 
     var arr = str.split(separator);
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
 
     return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
@@ -82,7 +82,7 @@ artjs.DateUtils = artjs.utils.Date = {
   minutesToHM: function(minutes, separator) {
     separator = separator || ':';
     
-    return Math.floor(minutes / 60) + separator + artjs.StringUtils.addZeros((minutes % 60).toString(), 2);
+    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
   },
   
   hmToMinutes: function(hm, separator) {
@@ -96,7 +96,7 @@ artjs.DateUtils = artjs.utils.Date = {
   secondsToMS: function(s, separator) {
     var seconds = s % 60;
     var minutes = (s - seconds) / 60;
-    var su = artjs.StringUtils;
+    var su = artjs.String;
     
     separator = separator || ':';
     
@@ -117,7 +117,7 @@ artjs.DateUtils = artjs.utils.Date = {
     
     separator = (separator || ':');
     
-    return this.minutesToHM(minutes, separator) + separator + artjs.StringUtils.addZeros(seconds.toString(), 2);
+    return this.minutesToHM(minutes, separator) + separator + artjs.String.addZeros(seconds.toString(), 2);
   },
 
   miliToHMSM: function(v) {
@@ -131,11 +131,11 @@ artjs.DateUtils = artjs.utils.Date = {
 
     return hours.toString() +
       ':' +
-      artjs.StringUtils.addZeros(minutes.toString(), 2) +
+      artjs.String.addZeros(minutes.toString(), 2) +
       ':' +
-      artjs.StringUtils.addZeros(seconds.toString(), 2) +
+      artjs.String.addZeros(seconds.toString(), 2) +
       '.' +
-      artjs.StringUtils.addZeros(mili.toString(), 3);
+      artjs.String.addZeros(mili.toString(), 3);
   },
 
   miliToMSM: function(v) {
@@ -147,13 +147,13 @@ artjs.DateUtils = artjs.utils.Date = {
 
     return minutes.toString() +
       ':' +
-      artjs.StringUtils.addZeros(seconds.toString(), 2) +
+      artjs.String.addZeros(seconds.toString(), 2) +
       '.' +
-      artjs.StringUtils.addZeros(mili.toString(), 3);
+      artjs.String.addZeros(mili.toString(), 3);
   },
   
   /**
-   * Overrides ObjectUtils.copy if injected.
+   * Overrides Object.copy if injected.
    */
   copy: function(date) {
     return new Date(date);

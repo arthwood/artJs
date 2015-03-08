@@ -4,7 +4,7 @@ artjs.BaseSpecRunner = artjs.spec.runner.Base = artjs.Class(
   },
   {
     run: function() {
-      artjs.ArrayUtils.invoke(artjs.Specify.instances, 'execute');
+      artjs.Array.invoke(artjs.Specify.instances, 'execute');
     },
     
     setSubject: function(subject) {

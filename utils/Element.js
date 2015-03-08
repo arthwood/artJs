@@ -1,4 +1,4 @@
-artjs.ElementUtils = artjs.utils.Element = {
+artjs.Element = artjs.utils.Element = {
   HIDDEN_ELEMENTS: [],
   DEFAULT_DISPLAY: '',
   MAIN_OBJ_RE: /^\w+/,
@@ -6,7 +6,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   SIZE_STYLE_RE: /^(\d+)px$/,
   BROWSERS_STYLES: ['', '-o-', '-ms-', '-moz-', '-khtml-', '-webkit-'],
   
-  _name: 'ElementUtils',
+  _name: 'Element',
   
   toString: function() {
     return this._name; 
@@ -15,7 +15,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   show: function(e) {
     var hidden = this.getHidden(e);
     
-    artjs.ArrayUtils.removeItem(this.HIDDEN_ELEMENTS, hidden);
+    artjs.Array.removeItem(this.HIDDEN_ELEMENTS, hidden);
     
     var display = hidden && hidden.display || e.style.display;
     
@@ -52,7 +52,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   getHidden: function(e) {
     var delegate = artjs.$D(this, 'detectHiddenElement', e);
     
-    return artjs.ArrayUtils.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
+    return artjs.Array.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
   
   detectHiddenElement: function(i, e) {
@@ -91,7 +91,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
 
   extendStyle: function(e, style) {
-    artjs.ObjectUtils.extend(e.style, style);
+    artjs.Object.extend(e.style, style);
   },
   
   transitionStyle: function(prop, duration, type, delay) {
@@ -105,7 +105,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   _effectStyle: function(value) {
     this._browserMap.value = value;
 
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(this.BROWSERS_STYLES, this._browserMap, this));
+    return artjs.Object.fromArray(artjs.Array.map(this.BROWSERS_STYLES, this._browserMap, this));
   },
 
   _browserMap: function(browser) {
@@ -131,11 +131,11 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   elementAt: function(e, i) {
-    return artjs.ArrayUtils.getItemAt(this.elements(e), i);
+    return artjs.Array.getItemAt(this.elements(e), i);
   },
   
   filterElements: function(items) {
-    return artjs.ArrayUtils.select(items, this.isElement, this);
+    return artjs.Array.select(items, this.isElement, this);
   },
   
   isElement: function(e) {
@@ -155,11 +155,11 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   firstElement: function(e) {
-    return artjs.ArrayUtils.first(this.elements(e));
+    return artjs.Array.first(this.elements(e));
   },
   
   lastElement: function(e) {
-    return artjs.ArrayUtils.last(this.elements(e));
+    return artjs.Array.last(this.elements(e));
   },
   
   prev: function(e) {
@@ -201,7 +201,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
     
   putAtTop: function(e, ref) {
-    var first = artjs.ArrayUtils.first(this.children(ref));
+    var first = artjs.Array.first(this.children(ref));
     
     return first ? this.putBefore(e, first) : this.putAtBottom(e, ref);
   },
@@ -282,7 +282,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   
   serialize: function(e) {
     var s = artjs.Selector;
-    var au = artjs.ArrayUtils;
+    var au = artjs.Array;
     var textfields = s.findAll(e, 'input[type=text]');
     var checkboxes = au.select(s.findAll(e, 'input[type=checkbox]'), this.selectChecked, this);
     var radios = au.select(s.findAll(e, 'input[type=radio]'), this.selectChecked, this);
@@ -301,9 +301,9 @@ artjs.ElementUtils = artjs.utils.Element = {
   serializeInject: function(mem, i, idx) {
     var name = i.name;
     var value = i.value;
-    var main = artjs.ArrayUtils.first(name.match(this.MAIN_OBJ_RE));
+    var main = artjs.Array.first(name.match(this.MAIN_OBJ_RE));
     var subobjectMatches = name.match(this.SUB_OBJ_RE);
-    var props = subobjectMatches && artjs.ArrayUtils.map(artjs.$A(subobjectMatches), this.mapSub, this) || [];
+    var props = subobjectMatches && artjs.Array.map(artjs.$A(subobjectMatches), this.mapSub, this) || [];
     
     props.unshift(main);
     
@@ -323,7 +323,7 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   mapSub: function(i, idx) {
-    return artjs.StringUtils.sub(i, 1, -1);
+    return artjs.String.sub(i, 1, -1);
   },
   
   getContent: function(e) {
@@ -335,13 +335,13 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   hasClass: function(e, className) {
-    return artjs.ArrayUtils.includes(this.getClasses(e), className);
+    return artjs.Array.includes(this.getClasses(e), className);
   },
   
   getClasses: function(e) {
-    var className = artjs.StringUtils.trim(e.className);
+    var className = artjs.String.trim(e.className);
     
-    return artjs.StringUtils.isBlank(className) ? [] : className.split(' ');
+    return artjs.String.isBlank(className) ? [] : className.split(' ');
   },
   
   setClass: function(e, className, add) {
@@ -366,7 +366,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     var classes = this.getClasses(e);
     
     if (this.hasClass(e, className)) {
-      artjs.ArrayUtils.removeItem(classes, className);
+      artjs.Array.removeItem(classes, className);
       e.className = classes.join(' ');
     }
   },
@@ -376,18 +376,18 @@ artjs.ElementUtils = artjs.utils.Element = {
   },
   
   getAttributes: function(e) {
-    return artjs.ObjectUtils.fromArray(artjs.ArrayUtils.map(artjs.$A(e.attributes), this._mapAttribute, this));
+    return artjs.Object.fromArray(artjs.Array.map(artjs.$A(e.attributes), this._mapAttribute, this));
   },
   
   getData: function(e) {
     var attrs = this.getAttributes(e);
-    var data = artjs.ObjectUtils.select(attrs, this._isDataAttribute, this);
+    var data = artjs.Object.select(attrs, this._isDataAttribute, this);
     
-    return artjs.ObjectUtils.mapKey(data, this._removeDataPrefix, this);
+    return artjs.Object.mapKey(data, this._removeDataPrefix, this);
   },
   
   _isDataAttribute: function(v, k) {
-    return artjs.StringUtils.startsWith(k, 'data-');
+    return artjs.String.startsWith(k, 'data-');
   },
   
   _removeDataPrefix: function(k) {
@@ -407,7 +407,7 @@ artjs.ElementUtils = artjs.utils.Element = {
     if (e.style.filter) {
       var re = /alpha\(opacity=(\d+(\.\d+)?)\)/;
 
-      return Number(artjs.ArrayUtils.second(e.style.filter.match(re)));
+      return Number(artjs.Array.second(e.style.filter.match(re)));
     }
     else {
       return e.style.opacity;
@@ -464,8 +464,8 @@ artjs.ElementUtils = artjs.utils.Element = {
     
     return this.toTagString(e)
       + this.toIdString(e) 
-      + artjs.ArrayUtils.map(classes, this.toClassString).join('') 
-      + artjs.ObjectUtils.map(attr, this.toAttrString).join('');
+      + artjs.Array.map(classes, this.toClassString).join('') 
+      + artjs.Object.map(attr, this.toAttrString).join('');
   },
   
   toTagString: function(e) {

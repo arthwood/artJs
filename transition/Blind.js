@@ -6,7 +6,7 @@ artjs.Blind = artjs.transition.Blind = artjs.Class(
     _setStyle: function(value) {
       this.super(value + 'px');
       
-      artjs.ElementUtils.setStyle(this.element, 'overflow', 'hidden');
+      artjs.Element.setStyle(this.element, 'overflow', 'hidden');
     }
   },
   {

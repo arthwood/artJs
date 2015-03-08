@@ -1,5 +1,5 @@
-artjs.ArrayUtils = artjs.utils.Array = {
-  _name: 'ArrayUtils',
+artjs.Array = artjs.utils.Array = {
+  _name: 'Array',
   
   toString: function() {
     return this._name;
@@ -381,7 +381,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
     }
     
     if (!keepOrder) {
-      result = artjs.ObjectUtils.fromPoints(result);
+      result = artjs.Object.fromPoints(result);
     }
     
     return result;
@@ -412,7 +412,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
   },
   
   compact: function(arr) {
-    return this.reject(arr, artjs.ObjectUtils.isNull, this);
+    return this.reject(arr, artjs.Object.isNull, this);
   },
 
   isEmpty: function(arr) {
@@ -452,7 +452,7 @@ artjs.ArrayUtils = artjs.utils.Array = {
   },
   
   _stringifyCallback: function(i) {
-    return artjs.ObjectUtils.isNull(i) ? '' : i.toString();
+    return artjs.Object.isNull(i) ? '' : i.toString();
   },
 
   _indexOf: function(arr, item) {

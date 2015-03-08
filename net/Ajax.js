@@ -15,7 +15,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(
     this.requestData = data;
     this.requestMethod = method || methods.GET;
     
-    if (!artjs.ArrayUtils.includes(artjs.Ajax.SupportedMethods, this.requestMethod)) {
+    if (!artjs.Array.includes(artjs.Ajax.SupportedMethods, this.requestMethod)) {
       this.requestData = this.requestData || {};
       this.requestData._method = this.requestMethod;
       this.requestMethod = methods.POST;
@@ -26,7 +26,7 @@ artjs.Ajax = artjs.net.Ajax = artjs.Class(
     this.requestUrl = this.url;
     
     if (this.requestData) {
-      this.requestQueryData = artjs.ObjectUtils.toQueryString(this.requestData);
+      this.requestQueryData = artjs.Object.toQueryString(this.requestData);
       
       if (this.requestMethod == methods.GET) {
         this.requestUrl += ('?' + this.requestQueryData);

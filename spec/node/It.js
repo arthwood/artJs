@@ -24,7 +24,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(
           
           this.super();
           
-          artjs.ArrayUtils.each(this._receivers, this._testReceiver, this);
+          artjs.Array.each(this._receivers, this._testReceiver, this);
           
           artjs.Spec.getRunner().testComplete();
         }
@@ -36,7 +36,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(
     },
     
     isSuccess: function() {
-      return artjs.ArrayUtils.all(artjs.ArrayUtils.pluck(this._results, 'value'));
+      return artjs.Array.all(artjs.Array.pluck(this._results, 'value'));
     },
     
     pushReceiver: function(receiver) {
@@ -56,13 +56,13 @@ artjs.It = artjs.spec.node.It = artjs.Class(
     },
     
     hasFocus: function() {
-      return artjs.ArrayUtils.any(artjs.ArrayUtils.pluck(this._path, 'focus')) || this.focus;
+      return artjs.Array.any(artjs.Array.pluck(this._path, 'focus')) || this.focus;
     },
     
     _runBefores: function() {
-      var instances = artjs.ArrayUtils.select(this._path, this.ctor._isBefore);
+      var instances = artjs.Array.select(this._path, this.ctor._isBefore);
       
-      artjs.ArrayUtils.invoke(instances, 'execute');
+      artjs.Array.invoke(instances, 'execute');
     }
   }, 
   {
@@ -73,7 +73,7 @@ artjs.It = artjs.spec.node.It = artjs.Class(
     },
     
     instancesWithFocus: function() {
-      return artjs.ArrayUtils.select(this.instances, this._hasFocus, this);
+      return artjs.Array.select(this.instances, this._hasFocus, this);
     },
     
     _hasFocus: function(instance) {

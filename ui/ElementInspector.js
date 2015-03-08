@@ -10,7 +10,7 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(
     _onMouseMove: function(e, ee) {
       var targets = ee.getTargets(e);
       var origin = targets.origin;
-      var eu = artjs.ElementUtils;
+      var eu = artjs.Element;
       
       if (eu.children(origin).any(eu.isText)) {
         this._toggler.toggle(origin);
@@ -21,7 +21,7 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(
       var current = toggler.current;
       
       if (current) {
-        artjs.ElementUtils.addClass(current, 'inspected');
+        artjs.Element.addClass(current, 'inspected');
       }
     },
 
@@ -29,7 +29,7 @@ artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(
       var current = toggler.current;
 
       if (current) {
-        artjs.ElementUtils.removeClass(current, 'inspected');
+        artjs.Element.removeClass(current, 'inspected');
       }
     }
   }

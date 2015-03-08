@@ -39,7 +39,7 @@ artjs.ComponentScanner = {
   _events: {},
   
   scan: function(element) {
-    artjs.ArrayUtils.each(artjs.$findAll(element, '.art'), this._onFound, this);
+    artjs.Array.each(artjs.$findAll(element, '.art'), this._onFound, this);
   },
   
   addListener: function(id, delegate) {
@@ -59,22 +59,22 @@ artjs.ComponentScanner = {
   initElement: function(i) {
     this._element = i;
     
-    var classnames = artjs.ElementUtils.getClasses(i);
+    var classnames = artjs.Element.getClasses(i);
     
-    artjs.ArrayUtils.removeItem(classnames, 'art');
-    artjs.ArrayUtils.each(classnames, this._eachClassName, this);
+    artjs.Array.removeItem(classnames, 'art');
+    artjs.Array.each(classnames, this._eachClassName, this);
   },
   
   _eachClassName: function(i) {
     var path = i.split('-');
-    var _class = artjs.ArrayUtils.inject(path, window, this._injectPathChunk, this);
+    var _class = artjs.Array.inject(path, window, this._injectPathChunk, this);
     
     if (_class instanceof Function) {
       var instance = new _class(this._element);
       
       instance.ctor.instances.push(instance);
     
-      var id = artjs.ElementUtils.getAttributes(instance.getElement()).id;
+      var id = artjs.Element.getAttributes(instance.getElement()).id;
       
       if (id) {
         artjs.Component.idToComponent[id] = instance;
@@ -105,11 +105,11 @@ artjs.ComponentSweeper = {
   },
   
   _onSweep: function(clock) {
-    artjs.ArrayUtils.each(artjs.Component.subclasses, this._sweepInstances, this);
+    artjs.Array.each(artjs.Component.subclasses, this._sweepInstances, this);
   },
   
   _sweepInstances: function(i) {
-    artjs.ArrayUtils.$select(i.instances, this._isOnStage, this);
+    artjs.Array.$select(i.instances, this._isOnStage, this);
   },
   
   _isOnStage: function(i) {
