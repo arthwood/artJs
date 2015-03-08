@@ -1,8 +1,12 @@
 artjs.Component = artjs.component.Base = artjs.Class(
   function(element) {
-    this.element = element;
+    this._element = element;
   },
-  null,
+  {
+    getElement: function() {
+      return this._element;
+    }
+  },
   {
     _name: 'Component',
     
@@ -70,7 +74,7 @@ artjs.ComponentScanner = {
       
       instance.ctor.instances.push(instance);
     
-      var id = artjs.ElementUtils.getAttributes(instance.element).id;
+      var id = artjs.ElementUtils.getAttributes(instance.getElement()).id;
       
       if (id) {
         artjs.Component.idToComponent[id] = instance;
@@ -109,7 +113,7 @@ artjs.ComponentSweeper = {
   },
   
   _isOnStage: function(i) {
-    return artjs.Selector.isDescendantOf(i.element);
+    return artjs.Selector.isDescendantOf(i.getElement());
   }
 };
 

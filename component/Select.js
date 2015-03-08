@@ -4,7 +4,7 @@ artjs.Select = artjs.component.Select = artjs.Class(
     
     this.onChange = new artjs.Event('artjs.Select::onChange');
     
-    artjs.on('change', this.element, artjs.$D(this, '_onChange'));
+    artjs.on('change', this._element, artjs.$D(this, '_onChange'));
   },
   {
     setOptions: function(options) {
@@ -14,23 +14,23 @@ artjs.Select = artjs.component.Select = artjs.Class(
     },
     
     setSelected: function(selected) {
-      var oldOption = artjs.$find(this.element, 'option[selected=selected]');
+      var oldOption = artjs.$find(this._element, 'option[selected=selected]');
       
       if (oldOption) {
         oldOption.removeAttribute('selected');
       }
       
-      var newOption = artjs.$find(this.element, 'option[value=' + selected + ']');
+      var newOption = artjs.$find(this._element, 'option[value="' + selected + '"]');
       
       newOption.setAttribute('selected', 'selected');
     },
     
     getValue: function() {
-      return this.element.value;
+      return this._element.value;
     },
     
     _update: function() {
-      artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderOptions(this._options));
+      artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderOptions(this._options));
     },
     
     _onChange: function(e) {

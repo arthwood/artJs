@@ -1,6 +1,6 @@
 artjs.ElementEvent = artjs.events.Element = artjs.Class(
   function(element, name, delegate) {
-    this.element = element;
+    this._element = element;
     this.delegate = delegate;
     
     artjs.$BA(this);
@@ -13,6 +13,10 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
     }
   },
   {
+    getElement: function () {
+      return this._element;
+    },
+    
     getTargets: function(e, over) {
       if (e.target) {
         return {origin: e.target, current: e.currentTarget, related: e.relatedTarget};
@@ -22,7 +26,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
 
         if (over) originRelated.reverse();
 
-        return {origin: originRelated[0], current: this.element, related: originRelated[1]};
+        return {origin: originRelated[0], current: this._element, related: originRelated[1]};
       }
     },
     
@@ -60,9 +64,24 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
 );
 
 artjs.ClickEvent = artjs.events.Click = artjs.Class(
-  function(element, delegate) {
+  function(element, delegate, selector) {
     this.super(element, 'click', delegate);
-  }, null, null, artjs.ElementEvent
+    this._selector = selector;
+  }, 
+  {
+    _onEvent: function(e) {
+      if (this._selector) {
+        var elements = artjs.$findAll(this._element, this._selector);
+        
+        if (artjs.ArrayUtils.contains(elements, e.target)) {
+          this.super(e);
+        }
+      } 
+      else {
+        this.super(e);
+      }
+    }
+  }, null, artjs.ElementEvent
 );
 
 artjs.MouseMoveEvent = artjs.events.MouseMove = artjs.Class(
@@ -97,6 +116,6 @@ artjs.EventMapping = {
   change: 'ChangeEvent'
 };
 
-artjs.on = function(eventName, target, delegate) {
-  return new artjs[artjs.EventMapping[eventName]](target, delegate);
+artjs.on = function(eventName, target, delegate, selector) {
+  return new artjs[artjs.EventMapping[eventName]](target, delegate, selector);
 };

@@ -5,6 +5,8 @@ artjs.Table = artjs.component.Table = artjs.Class(
     artjs.$BA(this);
     
     this.onItem = new artjs.Event('artjs.Table::onItem');
+    
+    artjs.on('click', this._element, this._onItem.delegate, 'td');
   },
   {
     setData: function(data) {
@@ -30,24 +32,18 @@ artjs.Table = artjs.component.Table = artjs.Class(
     },
     
     _update: function() {
-      artjs.ElementUtils.setContent(this.element, artjs.TemplateHelpers.renderTable(this._data));
+      artjs.ElementUtils.setContent(this._element, artjs.TemplateHelpers.renderTable(this._data));
       
-      var head = artjs.$find(this.element, 'thead');
-      var body = artjs.$find(this.element, 'tbody');
+      var head = artjs.$find(this._element, 'thead');
+      var body = artjs.$find(this._element, 'tbody');
       
       this._headCells = artjs.$findAll(head, 'th');
       this._rows = artjs.$findAll(body, 'tr');
       this._items = artjs.$findAll(body, 'td');
-      
-      artjs.ArrayUtils.each(this._items, this._initItem, this);
-    },
-    
-    _initItem: function(item) {
-      artjs.ElementUtils.onClick(item, this._onItem.delegate);
     },
     
     _onItem: function(e) {
-      this.onItem.fire(e.currentTarget);
+      this.onItem.fire(e.target);
     }
   },
   null,

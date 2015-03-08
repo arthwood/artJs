@@ -4,7 +4,7 @@ artjs.Link = artjs.component.Link = artjs.Class(
     
     this.onClick = new artjs.Event('artjs.Link::onClick');
     
-    artjs.on('click', this.element, artjs.$D(this, '_onClick'));
+    artjs.on('click', this._element, artjs.$D(this, '_onClick'));
   },
   {
     _onClick: function(e) {

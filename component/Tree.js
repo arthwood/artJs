@@ -6,17 +6,19 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     
     this._leafClassToggler = new artjs.ClassToggler('selected');
     this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
+    artjs.on('click', this.getElement(), this._onElement.delegate, 'li a');
   },
   {
     setData: function(data) {
       var content = artjs.$P(this._renderNode(data));
       
-      artjs.ElementUtils.insert(this.element, content);
-      artjs.ArrayUtils.each(artjs.Selector.findAll(this.element, 'li'), this._eachElement, this);
+      artjs.ElementUtils.insert(this.getElement(), content);
+      
+      artjs.ArrayUtils.each(artjs.Selector.findAll(this.getElement(), 'li'), this._eachElement, this);
     },
     
     clickAt: function() {
-      this._openingNode = this.element;
+      this._openingNode = this.getElement();
       
       artjs.ArrayUtils.each(artjs.$A(arguments), this._openAt, this);
     },
@@ -45,8 +47,6 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     _eachElement: function(i) {
       var a = artjs.ElementUtils.firstElement(i);
       
-      artjs.on('click', a, this._onElement.delegate);
-      
       if (this._isNode(a)) {
         artjs.ElementUtils.hide(artjs.$find(i, 'ul'));
       }
@@ -55,10 +55,10 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
       }
     },
     
-    _onElement: function(originalEvent, elementEvent) {
-      originalEvent.preventDefault();
+    _onElement: function(e) {
+      e.preventDefault();
       
-      this._handleClick(elementEvent.element);
+      this._handleClick(e.target);
     },
     
     _handleClick: function(a) {

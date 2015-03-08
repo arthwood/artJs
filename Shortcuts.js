@@ -17,3 +17,6 @@ artjs.$ = artjs.Delegate.callback(artjs.Selector, 'getElements');
 artjs.$find = artjs.Delegate.callback(artjs.Selector, 'find');
 artjs.$findAll = artjs.Delegate.callback(artjs.Selector, 'findAll');
 artjs.$parent = artjs.Delegate.callback(artjs.Selector, 'parent');
+
+artjs.ArrayUtils.contains = artjs.ArrayUtils.includes; 
+artjs.ArrayUtils.containsAll = artjs.ArrayUtils.includesAll; 
