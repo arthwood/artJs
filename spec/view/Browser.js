@@ -1,16 +1,18 @@
 artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
-  function() {
+  function(container) {
     this.super();
     
+    this._container = container || document.body;
     this._runnerTemplate = artjs.$C('div', {className: 'runner'});
-    this._testTemplate = artjs.$C('span');
-    this._resultsTemplate = artjs.$C('div');
+    this._testTemplate = artjs.$C('span', {className: 'test'});
+    this._resultsTemplate = artjs.$C('div', {className: 'results'});
   },
   {
     beforeRun: function() {
       this.super();
       
-      this._element = artjs.$I(document.body, this._runnerTemplate);
+      this._element = artjs.$I(this._container, this._runnerTemplate);
+      this._resultsElement = artjs.$I(this._container, this._resultsTemplate);
     },
     
     onItComplete: function(runner) {
@@ -33,7 +35,6 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       classNames.push(success ? 'success' : 'failure');
       
       this._resultsTemplate.className = classNames.join(' ');
-      var resultsElement = artjs.$I(document.body, this._resultsTemplate);
       
       var resultText = success ? 'Success!' : 'Failure!';
       var statsText = success
@@ -43,8 +44,8 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       var resultElement = artjs.$E('p', {className: 'result'}, resultText);
       var statElement = artjs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
       
-      artjs.$I(resultsElement, resultElement);
-      artjs.$I(resultsElement, statElement);
+      artjs.$I(this._resultsElement, resultElement);
+      artjs.$I(this._resultsElement, statElement);
       
       if (!success) {
         var list = artjs.$E('ul');
@@ -53,7 +54,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
         
         artjs.Array.each(failures, this._getFailureHtml, this);
         
-        artjs.$I(resultsElement, list);
+        artjs.$I(this._resultsElement, list);
       }
     },
     
@@ -76,8 +77,8 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
     }
   },
   {
-    run: function() {
-      var view = new this();
+    run: function(container) {
+      var view = new this(container);
   
       artjs.Spec.init(view);
       artjs.Spec.run();
