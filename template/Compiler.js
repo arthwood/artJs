@@ -1,6 +1,6 @@
 artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
   function(content, scope) {
-    this._tagRegEx = /\{\{.+\}\}/g;
+    this._tagRegEx = /\{\{[^{}]+\}\}/g;
     this._methodRegEx = /^(\w+)\((.*)\)$/;
     this._content = content;
     this._scope = scope;

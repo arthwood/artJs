@@ -386,6 +386,10 @@ artjs.Element = artjs.utils.Element = {
     return artjs.Object.mapKey(data, this._removeDataPrefix, this);
   },
   
+  getDataValue: function(e, name) {
+    return this.getData(e)[name];
+  },
+  
   _isDataAttribute: function(v, k) {
     return artjs.String.startsWith(k, 'data-');
   },
