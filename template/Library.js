@@ -28,8 +28,6 @@ artjs.TemplateLibrary = artjs.template.Library = {
     
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
-    artjs.Element.hide(document.body);
-    
     artjs.Array.each(this._templatesToLoad, this._load, this);
     
     this._loadCheck();
@@ -56,9 +54,10 @@ artjs.TemplateLibrary = artjs.template.Library = {
   _onAllLoaded: function() {
     var body = document.body;
     
-    artjs.Element.show(body);
-    artjs.TemplateBase.renderElement(body, window);
-    this._templatesContainer = artjs.Element.insert(document.body, artjs.$E('div', {id: 'artjs-Templates'}));
+    artjs.ComponentScanner.scan(body);
+    
+    this._templatesContainer = artjs.Element.insert(body, artjs.$E('div', {id: 'artjs-Templates'}));
+    
     artjs.onLibraryLoad.fire(this);
   }
 };

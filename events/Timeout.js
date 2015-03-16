@@ -1,12 +1,13 @@
 artjs.Timeout = artjs.events.Timeout = artjs.Class(
   function(delay) {
+    artjs.Delegate.bindAll(this);
+    
     this._delay = delay;
-    this._onTimeoutDC = artjs.$DC(this, this._onTimeout);
     this.onComplete = new artjs.Event('Timeout:onComplete');
   }, 
   {
     start: function() {
-      this._id = setTimeout(this._onTimeoutDC, this._delay);
+      this._id = setTimeout(this._onTimeout, this._delay);
     },
     
     isRunning: function() {

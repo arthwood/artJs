@@ -2,13 +2,15 @@ artjs.View = artjs.component.View = artjs.Class(
   function(element) {
     this.super(element);
     
-    this._templateId = artjs.Element.getDataValue(this._element, 'template');
-    
     artjs.$BA(this);
     
-    this._model = new artjs.Model();
+    var replace = artjs.String.toBoolean(artjs.Element.getDataValue(this._element, 'replace'));
     
-    this._model.onChange.add(this._onModelChange.delegate);
+    this._renderMethod = replace ? 'renderOnto' : 'renderInto';
+    this._template = this._getTemplate();
+    
+    this.setModel(new artjs.Model());
+    
     this.onUpdate = new artjs.Event('View::onUpdate');
   },
   {
@@ -16,10 +18,28 @@ artjs.View = artjs.component.View = artjs.Class(
       return this._model;
     },
     
+    setModel: function(model) {
+      this._model = model;
+      this._model.onChange.add(this._onModelChange.delegate);
+      this._render();
+    },
+    
     _onModelChange: function(property, newValue, oldValue) {
-      artjs.TemplateHelpers.renderInto(this._element, this._templateId, this._model);
+      this._render();
       
       this.onUpdate.fire(this, property, newValue, oldValue);
+    },
+    
+    _render: function() {
+      artjs.TemplateBase[this._renderMethod](this._element, this._template, this._model);
+    },
+    
+    _getTemplate: function() {
+      var templateId = artjs.Element.getDataValue(this._element, 'template');
+      
+      return templateId
+        ? artjs.TemplateLibrary.getTemplate(templateId)
+        : artjs.Element.getContent(this._element);
     }
   },
   null,

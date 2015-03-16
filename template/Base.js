@@ -17,7 +17,19 @@ artjs.TemplateBase = artjs.template.Base = {
    * @description Renders content into the element with the scope
    */
   renderInto: function(element, content, scope) {
-    artjs.Element.setContent(element, this.render(content, scope));
+    content = this.render(content, scope);
+    
+    artjs.Element.setContent(element, content);
+    
+    this.evalScripts(element);
+    
+    artjs.ComponentScanner.scan(element);
+  },
+  
+  renderOnto: function(element, content, scope) {
+    content = this.render(content, scope);
+    
+    element = artjs.Element.replace(artjs.ElementBuilder.parse(content), element);
     
     this.evalScripts(element);
     

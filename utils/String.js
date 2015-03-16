@@ -153,5 +153,9 @@ artjs.String = artjs.utils.String = {
     var re = new RegExp('^' + substr);
     
     return re.test(str);
+  },
+  
+  toBoolean: function(str) {
+    return str === 'true';
   }
 };
