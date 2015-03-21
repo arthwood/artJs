@@ -22,32 +22,40 @@ artjs.Model = artjs.data.Model = artjs.Class(
     },
     
     _toProperty: function(name) {
-      var set = function(value) {
+      return {
+        configurable: false,
+        enumerable: true,
+        get: this._createGetter(name),
+        set: this._createSetter(name)
+      };
+    },
+    
+    _createGetter: function(name) {
+      var result = function() {
+        var prop = arguments.callee.prop;
+        var privateName = '_' + prop;
+
+        return this[privateName];
+      };
+      
+      result.prop = name;
+      
+      return result;
+    },
+    
+    _createSetter: function(name) {
+      var result = function(value) {
         var prop = arguments.callee.prop;
         var privateName = '_' + prop;
         var oldValue = this[privateName];
-        
+
         this[privateName] = value;
         this.onPropertyChange(prop, value, oldValue);
       };
       
-      set.prop = name;
+      result.prop = name;
       
-      var get = function() {
-        var prop = arguments.callee.prop;
-        var privateName = '_' + prop;
-        
-        return this[privateName];
-      };
-      
-      get.prop = name;
-      
-      return {
-        configurable: false,
-        enumerable: true,
-        set: set,
-        get: get
-      };
+      return result;
     }
   }
 );

@@ -1,27 +1,37 @@
 artjs.Event = artjs.events.Event = artjs.Class(
   function(name) {
-    this.name = name;
-    this.collection = new artjs.DelegateCollection();
+    this._name = name;
+    this._items = [];
   },
   {
     fire: function() {
-      return this.collection.invoke.apply(this.collection, artjs.$A(arguments));
+      this._args = artjs.$A(arguments);
+      
+      return artjs.Array.map(this._items, this._delegateToResult, this);
     },
     
     add: function(delegate) {
-      this.collection.add(delegate);
+      this._items.push(delegate);
     },
     
     remove: function(delegate) {
-      this.collection.remove(delegate);
+      artjs.Array.removeItem(this._items, delegate);
     },
     
     removeAll: function() {
-      this.collection.clear();
+      this._items.splice(0);
     },
     
     getLength: function() {
-      return this.collection.getLength();
+      return this._items.length;
+    },
+    
+    getName: function() {
+      return this._name;
+    },
+    
+    _delegateToResult: function(i, idx, arr) {
+      return i.invoke.apply(i, this._args);
     }
   }
 );
