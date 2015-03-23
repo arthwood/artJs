@@ -1,12 +1,11 @@
 var artjs = {
-  VERSION: '0.2.1',
+  VERSION: '0.2.2',
   
   component: {},
   data: {},
   dom: {},
   events: {},
   math: {},
-  module: {},
   net: {},
   spec: {
     matcher: {},
@@ -17,5 +16,6 @@ var artjs = {
   template: {},
   transition: {},
   ui: {},
-  utils: {}
+  utils: {},
+  view: {}
 };

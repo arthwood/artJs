@@ -1,6 +1,7 @@
 artjs.Model = artjs.data.Model = artjs.Class(
   function() {
     this.onChange = new artjs.Event('Model::onChange');
+    this._channel = new artjs.Channel('Model channel');
   },
   {
     addProperties: function() {
@@ -13,7 +14,19 @@ artjs.Model = artjs.data.Model = artjs.Class(
       Object.defineProperty(this, prop, this._toProperty(prop));
     },
     
-    onPropertyChange: function(prop, value, oldValue) {
+    setProperty: function(prop, value) {
+      var privateName = '_' + prop;
+      
+      this[privateName] = value;
+    },
+    
+    onPropertyChange: function(prop, delegate) {
+      this._channel.addListener(prop, delegate);
+    },
+    
+    _onPropertyChange: function(prop, value, oldValue) {
+      this._channel.fire(prop, {newValue: value, oldValue: oldValue});
+      
       this.onChange.fire(prop, value, oldValue);
     },
     
@@ -50,7 +63,7 @@ artjs.Model = artjs.data.Model = artjs.Class(
         var oldValue = this[privateName];
 
         this[privateName] = value;
-        this.onPropertyChange(prop, value, oldValue);
+        this._onPropertyChange(prop, value, oldValue);
       };
       
       result.prop = name;

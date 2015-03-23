@@ -1,40 +1,3 @@
-artjs.DatePicker = artjs.component.DatePicker = artjs.Class(
-  function(element) {
-    this.super(element);
-
-    artjs.$BA(this);
-    
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth();
-    var data = artjs.Element.getData(this._element);
-    var firstDay = parseInt(data['first-day']);
-    
-    this.year = year;
-    this.month = month;
-    this.yearsRange = new artjs.Point(parseInt(data['year-from']) || year - 100, parseInt(data['year-to']) || year + 20);
-    this.firstDay = isNaN(firstDay) ? 1 : firstDay;
-    this.getElement().setAttribute('readonly', 'readonly');
-    
-    artjs.on('click', this._element, this._onClick.delegate);
-    
-    this.calendar = artjs.Component.onLoad('artjs-Calendar', this._onCalendarLoad.delegate);
-  },
-  {
-    _onCalendarLoad: function(component) {
-      this.calendar = component;
-    },
-    
-    _onClick: function(e) {
-      e.preventDefault();
-      
-      this.calendar.setSource(this);
-    }
-  },
-  null,
-  artjs.Component
-);
-
 artjs.Calendar = artjs.ui.Calendar = artjs.Class(
   function(element) {
     this.super(element);
@@ -102,12 +65,12 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       
       this.firstDay = this._source.firstDay;
       
-      var value = this._source.getElement().value;
+      var value = this._source.getModel().value;
       
-      this.selectedDate = artjs.String.isEmpty(value) 
+      this._selectedDate = artjs.String.isEmpty(value) 
         ? new Date() 
         : artjs.Date.fromYMD(value, this.ctor.SEPARATOR);
-      this.currentDate = new Date(this.selectedDate);
+      this._currentDate = new Date(this._selectedDate);
       
       this._update();
       
@@ -127,12 +90,12 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _update: function() {
-      var monthFirstDate = artjs.Date.firstDate(this.currentDate);
+      var monthFirstDate = artjs.Date.firstDate(this._currentDate);
       var monthFirstDay = monthFirstDate.getDay();
-      var monthDaysNum = artjs.Date.monthDaysNum(this.currentDate);
+      var monthDaysNum = artjs.Date.monthDaysNum(this._currentDate);
       
-      this._months.setSelected(this.currentDate.getMonth() + 1);
-      this._years.setSelected(this.currentDate.getFullYear());
+      this._months.setSelected(this._currentDate.getMonth() + 1);
+      this._years.setSelected(this._currentDate.getFullYear());
       this.startIndex = artjs.Math.sawtooth(monthFirstDay - this.firstDay, 0, 7);
       
       var rowsNum = artjs.Math.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
@@ -152,17 +115,16 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _onEachDay: function(item, idx) {
-      var date = new Date(this.currentDate);
+      var date = new Date(this._currentDate);
       
       date.setDate(idx - this.startIndex + 1);
       
       var value = date.getDate();
-      var valid = (date.getMonth() == this.currentDate.getMonth());
+      var valid = (date.getMonth() == this._currentDate.getMonth());
       var weekend = artjs.Array.includes(this.ctor.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
-      var selected = (date.getTime() == this.selectedDate.getTime());
+      var selected = (date.getTime() == this._selectedDate.getTime());
       
-      item.style.background = this.ctor.CELL_BG[valid ? (weekend ? 'weekend' : 'valid') : 'invalid'];
-      
+      artjs.Element.setClass(item, 'weekend', weekend);
       artjs.Element.setClass(item, 'selected', selected);
       artjs.Element.setClass(item, 'invalid', !valid);
       artjs.Element.setContent(item, value);
@@ -173,11 +135,11 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       var valid = !artjs.Element.hasClass(item, 'invalid');
       
       if (valid) {
-        this.selectedDate.setFullYear(this.currentDate.getFullYear());
-        this.selectedDate.setMonth(this.currentDate.getMonth());
-        this.selectedDate.setDate(parseInt(value, 10));
+        this._selectedDate.setFullYear(this._currentDate.getFullYear());
+        this._selectedDate.setMonth(this._currentDate.getMonth());
+        this._selectedDate.setDate(parseInt(value, 10));
         this._update();
-        this._source.getElement().value = artjs.Date.toYMD(this.selectedDate, this.ctor.SEPARATOR);
+        this._source.getModel().value = artjs.Date.toYMD(this._selectedDate, this.ctor.SEPARATOR);
         this._hide();
       }
       
@@ -197,19 +159,19 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _onMonth: function(v) {
-      this.currentDate.setMonth(this.currentDate.getMonth() + v);
+      this._currentDate.setMonth(this._currentDate.getMonth() + v);
       
       this._update();
     },
     
     _onMonthSelect: function(select) {
-      this.currentDate.setMonth(parseInt(select.getValue(), 10) - 1);
+      this._currentDate.setMonth(parseInt(select.getValue(), 10) - 1);
       
       this._update();
     },
     
     _onYearSelect: function(select) {
-      this.currentDate.setFullYear(parseInt(select.getValue(), 10));
+      this._currentDate.setFullYear(parseInt(select.getValue(), 10));
       
       this._update();
     },
@@ -227,7 +189,6 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     WEEKEND_DAYS: [6, 0],
     ROWS_NUM: 7,
     SEPARATOR: '-',
-    CELL_BG: {valid: 'none', weekend: '#CFFFDF', invalid: '#AAAAAA'},
     
     init: function() {
       artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
