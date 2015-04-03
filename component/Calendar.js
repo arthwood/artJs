@@ -6,11 +6,13 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
 
     this._hide();
     
-    artjs.Component.onLoad('artjs-Calendar-years', this._onYearsSelectLoaded.delegate);
-    artjs.Component.onLoad('artjs-Calendar-months', this._onMonthsSelectLoaded.delegate);
-    artjs.Component.onLoad('artjs-Calendar-days', this._onDaysTableLoaded.delegate);
-    artjs.Component.onLoad('artjs-Calendar-prev', this._onPrevLoaded.delegate);
-    artjs.Component.onLoad('artjs-Calendar-next', this._onNextLoaded.delegate);
+    this._onLoad({
+      'artjs-Calendar-years': '_onYearsSelectLoaded',
+      'artjs-Calendar-months': '_onMonthsSelectLoaded',
+      'artjs-Calendar-days': '_onDaysTableLoaded',
+      'artjs-Calendar-prev': '_onPrevLoaded',
+      'artjs-Calendar-next': '_onNextLoaded'
+    });
   },
   {
     setSource: function(source) {
@@ -59,34 +61,18 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _show: function() {
-      this._years.setOptions(artjs.Array.map(artjs.Array.fromRange(this._source.yearsRange), this.ctor._toYearOption));
-      this._years.setSelected(this._source.year);
-      this._months.setSelected(this._source.month);
-      
-      this.firstDay = this._source.firstDay;
-      
       var value = this._source.getModel().value;
       
       this._selectedDate = artjs.String.isEmpty(value) 
         ? new Date() 
         : artjs.Date.fromYMD(value, this.ctor.SEPARATOR);
       this._currentDate = new Date(this._selectedDate);
+      this._firstDay = this._source.firstDay;
+      this._years.setOptions(artjs.Array.map(artjs.Array.fromRange(this._source.yearsRange), this.ctor._toYearOption));
       
       this._update();
       
       artjs.Element.show(this._element);
-    },
-    
-    _setPosition: function(position) {
-      artjs.Element.setPosition(this._element, position);
-    },
-    
-    _hide: function() {
-      artjs.Element.hide(this._element);
-    },
-    
-    _isHidden: function() {
-      return artjs.Element.isHidden(this._element);
     },
     
     _update: function() {
@@ -94,9 +80,9 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       var monthFirstDay = monthFirstDate.getDay();
       var monthDaysNum = artjs.Date.monthDaysNum(this._currentDate);
       
-      this._months.setSelected(this._currentDate.getMonth() + 1);
-      this._years.setSelected(this._currentDate.getFullYear());
-      this.startIndex = artjs.Math.sawtooth(monthFirstDay - this.firstDay, 0, 7);
+      this._months.setValue(this._currentDate.getMonth() + 1);
+      this._years.setValue(this._currentDate.getFullYear());
+      this.startIndex = artjs.Math.sawtooth(monthFirstDay - this._firstDay, 0, 7);
       
       var rowsNum = artjs.Math.stairs(this.startIndex + monthDaysNum - 1, 0, 7) + 1;
       
@@ -109,7 +95,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     },
     
     _eachHeadData: function(idx) {
-      var index = artjs.Math.sawtooth(this.firstDay + idx, 0, 7);
+      var index = artjs.Math.sawtooth(this._firstDay + idx, 0, 7);
       
       return artjs.Lang.t('datepicker', 'days')[index];
     },
@@ -121,12 +107,15 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       
       var value = date.getDate();
       var valid = (date.getMonth() == this._currentDate.getMonth());
-      var weekend = artjs.Array.includes(this.ctor.WEEKEND_DAYS, (idx + this.firstDay) % 7); 
+      var weekend = artjs.Array.includes(this.ctor.WEEKEND_DAYS, (idx + this._firstDay) % 7); 
       var selected = (date.getTime() == this._selectedDate.getTime());
       
-      artjs.Element.setClass(item, 'weekend', weekend);
-      artjs.Element.setClass(item, 'selected', selected);
-      artjs.Element.setClass(item, 'invalid', !valid);
+      artjs.Element.setClasses(item, {
+        weekend: weekend,
+        selected: selected,
+        invalid: !valid
+      });
+
       artjs.Element.setContent(item, value);
     },
     
@@ -183,6 +172,18 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     
     _buildYearSpan: function(i) {
       return this.yearSpan.x + i;
+    },
+    
+    _setPosition: function(position) {
+      artjs.Element.setPosition(this._element, position);
+    },
+    
+    _hide: function() {
+      artjs.Element.hide(this._element);
+    },
+    
+    _isHidden: function() {
+      return artjs.Element.isHidden(this._element);
     }
   },
   {

@@ -13,16 +13,8 @@ artjs.Select = artjs.component.Select = artjs.Class(
       this._update();
     },
     
-    setSelected: function(selected) {
-      var oldOption = artjs.$find(this._element, 'option[selected=selected]');
-      
-      if (oldOption) {
-        oldOption.removeAttribute('selected');
-      }
-      
-      var newOption = artjs.$find(this._element, 'option[value="' + selected + '"]');
-      
-      newOption.setAttribute('selected', 'selected');
+    setValue: function(selected) {
+      this._element.value = selected;
     },
     
     getValue: function() {

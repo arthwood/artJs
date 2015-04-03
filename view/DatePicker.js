@@ -10,7 +10,7 @@ artjs.DatePicker = artjs.view.DatePicker = artjs.Class(
     
     this.year = year;
     this.month = month;
-    this.yearsRange = new artjs.Point(parseInt(data['year-from']) || year - 100, parseInt(data['year-to']) || year + 20);
+    this.yearsRange = new artjs.Point(parseInt(data['year-from']) || year - 20, parseInt(data['year-to']) || year + 5);
     this.firstDay = isNaN(firstDay) ? 1 : firstDay;
     this.setReadOnly(true);
     

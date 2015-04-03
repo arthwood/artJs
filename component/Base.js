@@ -5,6 +5,14 @@ artjs.Component = artjs.component.Base = artjs.Class(
   {
     getElement: function() {
       return this._element;
+    },
+    
+    _onLoad: function(map) {
+      artjs.Object.eachPair(map, this._onLoadEach, this);
+    },
+    
+    _onLoadEach: function(k, v) {
+      this.ctor.onLoad(k, this[v].delegate);
     }
   },
   {

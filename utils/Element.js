@@ -353,6 +353,16 @@ artjs.Element = artjs.utils.Element = {
     }
   },
   
+  setClasses: function(e, classes) {
+    this._setClassPair.element = e;
+    
+    artjs.Object.eachPair(classes, this._setClassPair, this);
+  },
+  
+  _setClassPair: function(className, add) {
+    this.setClass(arguments.callee.element, className, add);
+  },
+  
   addClass: function(e, className) {
     var classes = this.getClasses(e);
     
