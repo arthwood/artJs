@@ -2,8 +2,6 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
   function(element) {
     this.super(element);
     
-    artjs.$BA(this);
-    
     this._leafClassToggler = new artjs.ClassToggler('selected');
     this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
     artjs.on('click', this.getElement(), this._onElement.delegate, 'li a');
@@ -91,6 +89,8 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
       this.onLeaf.fire(this);
     }
   },
-  null,
+  {
+    _name: 'artjs.Tree'
+  },
   artjs.Component
 );

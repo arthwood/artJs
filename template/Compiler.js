@@ -15,7 +15,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     },
     
     _eachTag: function(i) {
-      var expression = artjs.String.sub(i, 2, -2);      
+      var expression = artjs.String.sub(i, 2, -2);
       var result = this._parseExpression(expression);
       
       this._content = this._content.replace(i, result);
@@ -51,11 +51,18 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     },
     
     _fromScope: function(i) {
-      return this._scope[i] || '';
+      return artjs.String.toS(this._scope[i]);
     },
     
     _stripArg: function(i) {
       return artjs.String.strip(i);
+    }
+  },
+  {
+    compile: function(content, scope) {
+      var instance = new this(content, scope);
+    
+      return instance.compile();
     }
   }
 );

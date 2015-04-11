@@ -29,6 +29,8 @@ artjs.DatePicker = artjs.view.DatePicker = artjs.Class(
       this.calendar.setSource(this);
     }
   },
-  null,
+  {
+    _name: 'artjs.DatePicker'
+  },
   artjs.Input
 );

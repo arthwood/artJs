@@ -1,7 +1,7 @@
 artjs.ElementEvent = artjs.events.Element = artjs.Class(
   function(element, name, delegate) {
     this._element = element;
-    this.delegate = delegate;
+    this._delegate = delegate;
     
     artjs.$BA(this);
 
@@ -31,7 +31,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
     },
     
     _onEvent: function(e) {
-      this.delegate.invoke(e, this);
+      this._delegate.invoke(e, this);
     }
   }
 );
@@ -66,18 +66,35 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
 artjs.ClickEvent = artjs.events.Click = artjs.Class(
   function(element, delegate, selector) {
     this.super(element, 'click', delegate);
+    
     this._selector = selector;
   }, 
   {
     _onEvent: function(e) {
-      if (this._selector) {
-        var elements = artjs.$findAll(this._element, this._selector);
-        
-        if (artjs.Array.contains(elements, e.target)) {
-          this.super(e);
-        }
-      } 
-      else {
+      if (!this._selector || this._matchesSelector(e)) {
+        this.super(e);
+      }
+    },
+    
+    _matchesSelector: function(e) {
+      var elements = artjs.$findAll(this._element, this._selector);
+
+      return artjs.Array.contains(elements, e.target);
+    }
+  }, null, artjs.ElementEvent
+);
+
+artjs.KeyEvent = artjs.events.Key = artjs.Class(
+  function(element, delegate, key) {
+    this.super(element, 'keydown', delegate);
+    
+    this._key = key;
+  }, 
+  {
+    _onEvent: function(e) {
+      var char = e.which || e.keyCode;
+      
+      if (!this._key || this._key == char) {
         this.super(e);
       }
     }
@@ -108,14 +125,22 @@ artjs.ChangeEvent = artjs.events.Change = artjs.Class(
   }, null, null, artjs.ElementEvent
 );
 
+artjs.BlurEvent = artjs.events.Blur = artjs.Class(
+  function(element, delegate) {
+    this.super(element, 'blur', delegate);
+  }, null, null, artjs.ElementEvent
+);
+
 artjs.EventMapping = {
   mousemove: 'MouseMoveEvent',
   mouseover: 'MouseOverEvent',
   mouseout: 'MouseOutEvent',
   click: 'ClickEvent',
-  change: 'ChangeEvent'
+  change: 'ChangeEvent',
+  keydown: 'KeyEvent',
+  blur: 'BlurEvent'
 };
 
-artjs.on = function(eventName, target, delegate, selector) {
-  return new artjs[artjs.EventMapping[eventName]](target, delegate, selector);
+artjs.on = function(eventName, target, delegate, selectorOrKey) {
+  return new artjs[artjs.EventMapping[eventName]](target, delegate, selectorOrKey);
 };

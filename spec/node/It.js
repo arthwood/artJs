@@ -39,12 +39,20 @@ artjs.It = artjs.spec.node.It = artjs.Class(
       return artjs.Array.all(artjs.Array.pluck(this._results, 'value'));
     },
     
+    failureText: function() {
+      return artjs.Array.detect(this._results, this._isFailedResult).failureText();
+    },
+    
     pushReceiver: function(receiver) {
       this._receivers.push(receiver);
     },
     
     getPath: function() {
       return this._path;
+    },
+    
+    _isFailedResult: function(result) { 
+      return !result.value; 
     },
     
     _testReceiver: function(receiver) {

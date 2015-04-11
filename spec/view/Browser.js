@@ -26,7 +26,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
     onComplete: function(runner) {
       var its = artjs.It.instances;
       var duration = runner.getDuration();
-      var failures = artjs.Array.reject(artjs.Array.invoke(its, 'isSuccess'));
+      var failures = artjs.Array.reject(its, this._isSuccess);
       var success = artjs.Array.isEmpty(failures);
       var classNames = ['results'];
       var n = its.length;
@@ -58,9 +58,13 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       }
     },
     
-    _getFailureHtml: function(i) {
-      var path = artjs.Array.map(i.path, this._nodeToString).join(' ');
-      var info = i.failureText();
+    _isSuccess: function(it) { 
+      return it.isSuccess(); 
+    },
+    
+    _getFailureHtml: function(it) {
+      var path = artjs.Array.map(it.getPath(), this._nodeToString).join(' ');
+      var info = it.failureText();
       var pathElement = artjs.$E('p', {className: 'path'}, path);
       var infoElement = artjs.$E('p', {className: 'info'}, info);
       var item = artjs.$E('li');

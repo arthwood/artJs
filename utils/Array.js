@@ -83,9 +83,11 @@ artjs.Array = artjs.utils.Array = {
       if (arr[n] === item) {
         this.removeAt(arr, n);
         
-        if (onlyFirst) { return; }
+        if (onlyFirst) { break; }
       }
     }
+    
+    return n + 1;
   },
 
   arrify: function(v, idx) {

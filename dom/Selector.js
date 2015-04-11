@@ -19,14 +19,14 @@ artjs.Selector = artjs.dom.Selector = {
     return artjs.$A((element || document).querySelectorAll(selector));
   },
   
-  isDescendantOf: function(element, root) {
-    var descendants = this._getDescendants(element, root);
+  isDescendantOf: function(element, ref) {
+    var descendants = this._getDescendants(element, ref);
 
-    return !artjs.Array.isEmpty(descendants);
+    return artjs.Object.isPresent(descendants);
   },
   
-  isSelfOrDescendantOf: function(element, root) {
-    return element == root || this.isDescendantOf(element, root);
+  isSelfOrDescendantOf: function(element, ref) {
+    return element == ref || this.isDescendantOf(element, ref);
   },
   
   getElementById: function(v) {
@@ -37,15 +37,19 @@ artjs.Selector = artjs.dom.Selector = {
     return artjs.$A(document.getElementsByTagName(v));
   },
   
-  _getDescendants: function(e, root) {
+  isOnStage: function(e) {
+    return this.isDescendantOf(e);
+  },
+  
+  _getDescendants: function(e, ref) {
     var result = [];
     
     while (e = this.parent(e)) {
       result.push(e);
     }
     
-    var index = result.indexOf(root || document.body);
+    var index = result.indexOf(ref || document.body);
     
-    return root && index == -1 ? null : result.slice(0, index);
+    return index == -1 ? null : result.slice(0, index);
   }
 };

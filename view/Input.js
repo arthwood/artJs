@@ -4,7 +4,7 @@ artjs.Input = artjs.view.Input = artjs.Class(
     
     this._model.addProperty('value');
     this._model.value = element.value;
-    this._model.onPropertyChange('value', this._onModelValueChange.delegate);
+    this._model.addPropertyListener('value', this._onModelValueChange.delegate);
     
     artjs.on('change', element, this._onUiValueChange);
   },
@@ -26,6 +26,8 @@ artjs.Input = artjs.view.Input = artjs.Class(
       this._model.setProperty(e.currentTarget.value);
     }
   },
-  null,
+  {
+    _name: 'artjs.Input'
+  },
   artjs.View
 );

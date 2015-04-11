@@ -29,6 +29,8 @@ artjs.Select = artjs.component.Select = artjs.Class(
       this.onChange.fire(this);
     }
   },
-  null,
+  {
+    _name: 'artjs.Select'
+  },
   artjs.Component
 );

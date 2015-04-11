@@ -10,8 +10,14 @@ artjs.Model = artjs.data.Model = artjs.Class(
       Object.defineProperties(this, properties);
     },
     
-    addProperty: function(prop) {
+    addProperty: function(prop, value) {
+      this.setProperty(prop, value);
+      
       Object.defineProperty(this, prop, this._toProperty(prop));
+    },
+    
+    setProperties: function(props) {
+      artjs.Object.eachPair(props, this.setProperty, this);
     },
     
     setProperty: function(prop, value) {
@@ -20,13 +26,25 @@ artjs.Model = artjs.data.Model = artjs.Class(
       this[privateName] = value;
     },
     
-    onPropertyChange: function(prop, delegate) {
-      this._channel.addListener(prop, delegate);
+    getProperty: function(prop) {
+      return this['_' + prop];
     },
     
-    _onPropertyChange: function(prop, value, oldValue) {
+    addPropertyListener: function(prop, delegate) {
+      this._channel.addListener(prop, delegate);
+      this._firePropertyChange(prop, this.getProperty(prop));
+    },
+    
+    onPropertyChange: function(prop, value, oldValue) {
+      this._firePropertyChange(prop, value, oldValue);
+      this._fireModelChange(prop, value, oldValue);
+    },
+    
+    _firePropertyChange: function(prop, value, oldValue) {
       this._channel.fire(prop, {newValue: value, oldValue: oldValue});
-      
+    },
+    
+    _fireModelChange: function(prop, value, oldValue) {
       this.onChange.fire(prop, value, oldValue);
     },
     
@@ -45,10 +63,7 @@ artjs.Model = artjs.data.Model = artjs.Class(
     
     _createGetter: function(name) {
       var result = function() {
-        var prop = arguments.callee.prop;
-        var privateName = '_' + prop;
-
-        return this[privateName];
+        return this.getProperty(arguments.callee.prop);
       };
       
       result.prop = name;
@@ -59,11 +74,11 @@ artjs.Model = artjs.data.Model = artjs.Class(
     _createSetter: function(name) {
       var result = function(value) {
         var prop = arguments.callee.prop;
-        var privateName = '_' + prop;
-        var oldValue = this[privateName];
+        var oldValue = this.getProperty(prop);
 
-        this[privateName] = value;
-        this._onPropertyChange(prop, value, oldValue);
+        this.setProperty(prop, value);
+        
+        this.onPropertyChange(prop, value, oldValue);
       };
       
       result.prop = name;

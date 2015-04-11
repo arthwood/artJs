@@ -11,6 +11,8 @@ artjs.Link = artjs.component.Link = artjs.Class(
       this.onClick.fire(e);
     }
   },
-  null,
+  {
+    _name: 'artjs.Link'
+  },
   artjs.Component
 );

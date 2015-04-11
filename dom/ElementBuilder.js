@@ -59,6 +59,14 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
       return node.firstChild;
     },
     
+    unparse: function(element) {
+      var node = document.createElement('div');
+      
+      artjs.Element.insert(node, element);
+      
+      return artjs.Element.getContent(node);
+    },
+    
     create: function(name, attributes, value, empty) {
       return this.parse(this.build(name, attributes, value, empty).toString());
     },

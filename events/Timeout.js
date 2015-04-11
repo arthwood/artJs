@@ -1,6 +1,6 @@
 artjs.Timeout = artjs.events.Timeout = artjs.Class(
   function(delay) {
-    artjs.Delegate.bindAll(this);
+    artjs.$BA(this);
     
     this._delay = delay;
     this.onComplete = new artjs.Event('Timeout:onComplete');

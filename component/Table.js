@@ -2,8 +2,6 @@ artjs.Table = artjs.component.Table = artjs.Class(
   function(element) {
     this.super(element);
     
-    artjs.$BA(this);
-    
     this.onItem = new artjs.Event('artjs.Table::onItem');
     
     artjs.on('click', this._element, this._onItem.delegate, 'td');
@@ -46,6 +44,8 @@ artjs.Table = artjs.component.Table = artjs.Class(
       this.onItem.fire(e.target);
     }
   },
-  null,
+  {
+    _name: 'artjs.Table'
+  },
   artjs.Component
 );

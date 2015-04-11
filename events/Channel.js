@@ -12,6 +12,10 @@ artjs.Channel = artjs.events.Channel = artjs.Class(
       this._getEvent(id).add(delegate);
     },
     
+    removeListener: function(id, delegate) {
+      this._getEvent(id).remove(delegate);
+    },
+    
     fire: function(id, data) {
       this._getEvent(id).fire(data);
     },

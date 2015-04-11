@@ -2,11 +2,9 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
   function(element) {
     this.super(element);
 
-    artjs.$BA(this);
-
     this._hide();
     
-    this._onLoad({
+    this._register({
       'artjs-Calendar-years': '_onYearsSelectLoaded',
       'artjs-Calendar-months': '_onMonthsSelectLoaded',
       'artjs-Calendar-days': '_onDaysTableLoaded',
@@ -190,6 +188,8 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     WEEKEND_DAYS: [6, 0],
     ROWS_NUM: 7,
     SEPARATOR: '-',
+    
+    _name:  'artjs.Calendar',
     
     init: function() {
       artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));

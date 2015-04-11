@@ -98,20 +98,6 @@ artjs.Element = artjs.utils.Element = {
     return this._effectStyle(this._getTransitionStyleValue(prop, duration, type, delay));  
   },
 
-  _getTransitionStyleValue: function(prop, duration, type, delay) {
-    return [prop, duration + 's', type, delay + 's'].join(' ');
-  },
-  
-  _effectStyle: function(value) {
-    this._browserMap.value = value;
-
-    return artjs.Object.fromArray(artjs.Array.map(this.BROWSERS_STYLES, this._browserMap, this));
-  },
-
-  _browserMap: function(browser) {
-    return [browser + 'transition', arguments.callee.value];
-  },
-  
   getSizeStyle: function(e, prop) {
     return this.getSizeStyleValue(this.getStyle(e, prop));
   },
@@ -147,7 +133,11 @@ artjs.Element = artjs.utils.Element = {
   },
   
   remove: function(e) {
-    e.parentNode.removeChild(e);
+    return e.parentNode.removeChild(e);
+  },
+  
+  removeAt: function(e, idx) {
+    return this.remove(this.elementAt(e, idx));
   },
   
   parent: function(e) {
@@ -188,8 +178,8 @@ artjs.Element = artjs.utils.Element = {
     return e.cloneNode(deep);
   },
 
-  insert: function(e, el) {
-    return this.putAtBottom(el, e);
+  insert: function(ref, e) {
+    return this.putAtBottom(e, ref);
   },
   
   putAtBottom: function(e, ref) {
@@ -334,6 +324,10 @@ artjs.Element = artjs.utils.Element = {
     e.innerHTML = v;
   },
   
+  clear: function(e) {
+    this.setContent(e, '');
+  },
+  
   hasClass: function(e, className) {
     return artjs.Array.includes(this.getClasses(e), className);
   },
@@ -361,6 +355,16 @@ artjs.Element = artjs.utils.Element = {
   
   _setClassPair: function(className, add) {
     this.setClass(arguments.callee.element, className, add);
+  },
+  
+  addClasses: function(e, classes) {
+    this._addClass.element = e;
+    
+    artjs.Array.each(classes, this._addClass, this);
+  },
+  
+  _addClass: function(className) {
+    this.addClass(arguments.callee.element, className);
   },
   
   addClass: function(e, className) {
@@ -496,5 +500,19 @@ artjs.Element = artjs.utils.Element = {
   
   toAttrString: function(k, v) {
     return '[' + k + '=' + v + ']';
+  },
+  
+  _getTransitionStyleValue: function(prop, duration, type, delay) {
+    return [prop, duration + 's', type, delay + 's'].join(' ');
+  },
+  
+  _effectStyle: function(value) {
+    this._browserMap.value = value;
+
+    return artjs.Object.fromArray(artjs.Array.map(this.BROWSERS_STYLES, this._browserMap, this));
+  },
+
+  _browserMap: function(browser) {
+    return [browser + 'transition', arguments.callee.value];
   }
 };

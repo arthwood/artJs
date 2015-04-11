@@ -1,5 +1,5 @@
 artjs.TemplateView = artjs.view.Template = artjs.Class(
-  function(element) {
+  function(element, model) {
     var replace = artjs.String.toBoolean(artjs.Element.getDataValue(element, 'replace'));
     
     this._renderMethod = replace ? 'renderOnto' : 'renderInto';
@@ -10,25 +10,15 @@ artjs.TemplateView = artjs.view.Template = artjs.Class(
         ? artjs.TemplateLibrary.getTemplate(templateId)
         : artjs.Element.getContent(element);
     
-    this.super(element);
+    this.super(element, model);
   },
-  {
-    setModel: function(model) {
-      this.super(model);
-      
-      this._render();
-    },
-    
-    _onModelChange: function(property, newValue, oldValue) {
-      this.super(property, newValue, oldValue);
-      
-      this._render();
-    },
-    
+  { 
     _render: function() {
       artjs.TemplateBase[this._renderMethod](this._element, this._template, this._model);
     }
   },
-  null,
-  artjs.view.Base
+  {
+    _name: 'artjs.TemplateView'
+  },
+  artjs.View
 );

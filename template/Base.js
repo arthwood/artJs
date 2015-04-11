@@ -5,9 +5,7 @@ artjs.TemplateBase = artjs.template.Base = {
    * @description Renders content into the element with the scope
    */
   render: function(content, scope) {
-    var compiler = new artjs.TemplateCompiler(content, scope);
-    
-    return compiler.compile();
+    return artjs.TemplateCompiler.compile(content, scope);
   },
   
   /**

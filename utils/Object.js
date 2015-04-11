@@ -28,13 +28,11 @@ artjs.Object = artjs.utils.Object = {
   },
   
   merge: function(target, source) {
-    this.extend(target, source);
+    var result = this.copy(target);
     
-    return target;
-  },
-
-  update: function(target, source) {
-    return this.merge(target, source);
+    this.extend(result, source);
+    
+    return result;
   },
 
   removeValue: function(obj, val) {

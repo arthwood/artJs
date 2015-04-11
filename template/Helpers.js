@@ -83,9 +83,9 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return this.renderElement(type, null, content);
   },
   
-  _renderCollectionItem: function(scope, idx, arr, templateId) {
-    scope._index = idx;
+  _renderCollectionItem: function(data, idx, arr, templateId) {
+    data._index = idx;
     
-    return this.render(templateId, scope);
+    return this.render(templateId, data);
   }
 };

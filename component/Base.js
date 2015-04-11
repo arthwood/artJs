@@ -1,17 +1,44 @@
 artjs.Component = artjs.component.Base = artjs.Class(
   function(element) {
     this._element = element;
+    this._eventHandlers = [];
+    
+    artjs.$BA(this);
   },
   {
     getElement: function() {
       return this._element;
     },
     
-    _onLoad: function(map) {
-      artjs.Object.eachPair(map, this._onLoadEach, this);
+    _fire: function(id) {
+      artjs.Broadcaster.fire(id, this);
     },
     
-    _onLoadEach: function(k, v) {
+    _handle: function(id, method) {
+      this._handleEvent(id, method);
+    },
+      
+    _handleEmit: function(id, method) {
+      this._handleEvent(id, method, artjs.ComponentEventHandler.UP);
+    },
+    
+    _handleBroadcast: function(id, method) {
+      this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
+    },
+    
+    _handleEvent: function(id, method, type) {
+      this._eventHandlers.push(new artjs.ComponentEventHandler(this, id, this[method].delegate, type));
+    },
+    
+    _destroy: function() {
+      artjs.Array.invoke(this._eventHandlers, 'remove');
+    },
+    
+    _register: function(map) {
+      artjs.Object.eachPair(map, this._registerEach, this);
+    },
+    
+    _registerEach: function(k, v) {
       this.ctor.onLoad(k, this[v].delegate);
     }
   },
@@ -39,25 +66,23 @@ artjs.Component = artjs.component.Base = artjs.Class(
       else {
         artjs.ComponentScanner.addListener(id, delegate);
       }
+    },
+    
+    toString: function() {
+      return this._name;
     }
   }
 );
 
 artjs.ComponentScanner = {
-  _events: {},
+  _channel: new artjs.Channel('ComponentScanner'),
   
   scan: function(element) {
     artjs.Array.each(artjs.$findAll(element, '.art'), this._onFound, this);
   },
   
   addListener: function(id, delegate) {
-    var event = this._events[id];
-    
-    if (!event) {
-      event = this._events[id] = new artjs.Event('Component::Load::' + id);
-    }
-    
-    event.add(delegate);
+    this._channel.addListener(id, delegate);
   },
   
   _onFound: function(i) {
@@ -74,11 +99,16 @@ artjs.ComponentScanner = {
   },
   
   _eachClassName: function(i) {
-    var path = i.split('-');
+    this.instantiateClass(i, this._element);
+  },
+  
+  instantiateClass: function(className, element) {
+    var path = className.split('-');
     var _class = artjs.Array.inject(path, window, this._injectPathChunk, this);
+    var instance = null;
     
     if (_class instanceof Function) {
-      var instance = new _class(this._element);
+      instance = new _class(element);
       
       instance.ctor.instances.push(instance);
     
@@ -88,12 +118,10 @@ artjs.ComponentScanner = {
         artjs.Component.idToComponent[id] = instance;
       }
       
-      var event = this._events[id];
-      
-      if (event) {
-        event.fire(instance);
-      }
+      this._channel.fire(id, instance);
     }
+    
+    return instance;
   },
   
   _injectPathChunk: function(result, i) {
@@ -101,28 +129,80 @@ artjs.ComponentScanner = {
   }
 };
 
+artjs.ComponentEventHandler = artjs.Class(
+  function(component, eventId, delegate, type) {
+    this._component = component;
+    this._eventId = eventId;
+    this._delegate = delegate;
+    this._type = type;
+    
+    artjs.Broadcaster.addListener(eventId, artjs.$D(this, '_onEvent'));
+  },
+  {
+    remove: function() {
+      artjs.Broadcaster.removeListener(this._eventId, this._onEvent.delegate);
+    },
+    
+    _onEvent: function(component) {
+      var source = component.getElement();
+      var target = this._component.getElement();
+      var fire;
+  
+      switch (this._type) {
+        case this.ctor.DOWN:
+          fire = artjs.Selector.isDescendantOf(target, source);
+          break;
+        case this.ctor.UP:
+          fire = artjs.Selector.isDescendantOf(source, target);
+          break;
+        default:
+          fire = true;
+      }
+  
+      if (fire) {
+        this._delegate.invoke(component);
+      }
+    }
+  },
+  {
+    UP: 'UP',
+    DOWN: 'DOWN'
+  }
+);
+
 artjs.ComponentSweeper = {
-  INTERVAL: 2000,
+  INTERVAL: 1000,
   
   init: function() {
+    var sweep = artjs.$D(this, '_onSweep');
     var clock = new artjs.Clock(this.INTERVAL);
     
-    clock.onChange.add(new artjs.Delegate(this, '_onSweep'));
+    clock.onChange.add(sweep);
     
     clock.start();
+    
+    artjs.$T(sweep, 100);
   },
   
-  _onSweep: function(clock) {
-    artjs.Array.each(artjs.Component.subclasses, this._sweepInstances, this);
+  _onSweep: function() {
+    this._sweepSubclasses(artjs.Component);
   },
   
-  _sweepInstances: function(i) {
-    artjs.Array.$select(i.instances, this._isOnStage, this);
+  _sweepSubclasses: function(componentClass) {
+    artjs.Array.each(componentClass.subclasses, this._sweep, this);
+  },
+  
+  _sweep: function(i) {
+    var instances = artjs.Array.partition(i.instances, this._isOnStage, this);
+
+    artjs.Array.invoke(instances.y, '_destroy');
+    
+    i.instances = instances.x;
+    
+    this._sweepSubclasses(i);
   },
   
   _isOnStage: function(i) {
-    return artjs.Selector.isDescendantOf(i.getElement());
+    return artjs.Selector.isOnStage(i.getElement());
   }
 };
-
-artjs.ComponentSweeper.init();

@@ -18,11 +18,15 @@ artjs.String = artjs.utils.String = {
   },
 
   isBlank: function(str) {
-    return (str === null) || (str === undefined) || this.isEmpty(str);
+    return artjs.Object.isNull(str) || this.isEmpty(str);
   },
 
   isEmpty: function(str) {
     return this.strip(str) == this.blank();
+  },
+  
+  isPresent: function(str) {
+    return !this.isBlank(str);
   },
   
   nullifyEmpty: function(str) {
@@ -30,7 +34,7 @@ artjs.String = artjs.utils.String = {
   },
   
   toS: function(str) {
-    return str || this.blank();
+    return artjs.Object.isNull(str) ? this.blank() : str;
   },
   
   blank: function() {
