@@ -1,10 +1,12 @@
 artjs.ListView = artjs.view.List = artjs.Class(
   function(element) {
-    var model = new artjs.Model();
-
-    model.addProperty('items', []);
+    this.super(element);
     
-    this.super(element, model);
+    var model = new artjs.Model();
+    
+    model.addProperty('items');
+    
+    this.setModel(model);
     
     var data = artjs.Element.getData(element);
     
@@ -12,20 +14,35 @@ artjs.ListView = artjs.view.List = artjs.Class(
     this._itemClass = data['item-class'];
   },
   {
-    add: function(model) {
-      var items = this._model.items;
-      var idx = items.push(model);
+    setItems: function(items) {
+      artjs.Array.each(items, this._listenItem, this);
       
-      this._renderEach(model, idx - 1);
+      this._model.items = items;
+    },
+    
+    _onItemModelChange: function() {
+      var items = this._model.items;
       
       this._model.onPropertyChange('items', items, items);
     },
     
-    remove: function(model) {
+    addItem: function(item) {
       var items = this._model.items;
-      var idx = artjs.Array.removeItem(items, model);
+      var idx = items.push(item);
+      
+      this._renderEach(item, idx - 1);
+      this._listenItem(item);
+      
+      this._model.onPropertyChange('items', items, items);
+    },
+    
+    removeItem: function(item) {
+      var items = this._model.items;
+      var idx = artjs.Array.removeItem(items, item);
       
       artjs.Element.removeAt(this._element, idx);
+      
+      item.removeListener(this._onItemModelChange.delegate);
       
       this._model.onPropertyChange('items', items, items);
     },
@@ -36,16 +53,18 @@ artjs.ListView = artjs.view.List = artjs.Class(
       artjs.Array.each(this._model.items, this._renderEach, this);
     },
     
-    _renderEach: function(model, idx) {
+    _renderEach: function(item, index) {
       var element = artjs.$E('li', {'data-template': this._itemTemplate});
       
       element = artjs.Element.insert(this._element, element);
       
-      var instance = artjs.ComponentScanner.instantiateClass(this._itemClass, element);
+      item.setProperty('index', index);
       
-      model.setProperty('index', idx);
-      
-      instance.setModel(model);
+      artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+    },
+    
+    _listenItem: function(item) {
+      item.addListener(this._onItemModelChange.delegate);
     }
   },
   {

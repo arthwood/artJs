@@ -1,6 +1,6 @@
 artjs.log = function() {
   if (typeof console === "object") {
-    console.log(artjs.$A(arguments));
+    console.log.apply(console, arguments);
   }
 };
 

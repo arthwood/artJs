@@ -205,7 +205,7 @@ artjs.Array = artjs.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (func.call(context, item, parseInt(i, 10), arr)) { 
+        if (test.call(context, item, parseInt(i, 10), arr)) { 
           result.push(item); 
         }
       }

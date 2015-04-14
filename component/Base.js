@@ -45,7 +45,7 @@ artjs.Component = artjs.component.Base = artjs.Class(
   {
     _name: 'Component',
     
-    idToComponent: {},
+    _idToComponent: {},
     
     _onExtended: function() {
       this.super();
@@ -53,8 +53,12 @@ artjs.Component = artjs.component.Base = artjs.Class(
       this.instances = [];
     },
     
+    register: function(id, instance) {
+      this._idToComponent[id] = instance;
+    },
+    
     find: function(id) {
-      return this.idToComponent[id];
+      return this._idToComponent[id];
     },
     
     onLoad: function(id, delegate) {
@@ -70,6 +74,26 @@ artjs.Component = artjs.component.Base = artjs.Class(
     
     toString: function() {
       return this._name;
+    }
+  }
+);
+
+artjs.ListListener = artjs.Class(
+  function(component, id, delegate) {
+    artjs.$BA(this);
+    
+    this._delegate = delegate;
+    
+    artjs.Component.onLoad(id, this._onLoad.delegate);
+  },
+  {
+    _onLoad: function(list) {
+      list.getModel().addPropertyListener('items', this._delegate);
+    }
+  },
+  {
+    create: function(component, id, delegate) {
+      return new this(component, id, delegate);
     }
   }
 );
@@ -115,7 +139,7 @@ artjs.ComponentScanner = {
       var id = artjs.Element.getAttributes(instance.getElement()).id;
       
       if (id) {
-        artjs.Component.idToComponent[id] = instance;
+        artjs.Component.register(id, instance);
       }
       
       this._channel.fire(id, instance);

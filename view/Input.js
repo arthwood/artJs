@@ -2,9 +2,12 @@ artjs.Input = artjs.view.Input = artjs.Class(
   function(element) {
     this.super(element);
     
-    this._model.addProperty('value');
-    this._model.value = element.value;
-    this._model.addPropertyListener('value', this._onModelValueChange.delegate);
+    var model = new artjs.Model();
+    
+    model.addProperty('value', element.value);
+    model.addPropertyListener('value', this._onModelValueChange.delegate);
+    
+    this.setModel(model);
     
     artjs.on('change', element, this._onUiValueChange);
   },

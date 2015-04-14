@@ -12,7 +12,7 @@ artjs.TemplateView = artjs.view.Template = artjs.Class(
     
     this.super(element, model);
   },
-  { 
+  {
     _render: function() {
       artjs.TemplateBase[this._renderMethod](this._element, this._template, this._model);
     }

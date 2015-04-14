@@ -49,6 +49,10 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     this[name] = method;
   },
   
+  renderChecked: function(checked) {
+    return checked ? 'checked' : artjs.String.blank();
+  },
+  
   _map: function(coll, func) {
     return artjs.Array.map(coll, func, this).join('');
   },

@@ -4,13 +4,8 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
     this._delegate = delegate;
     
     artjs.$BA(this);
-
-    if (element.addEventListener) {
-      element.addEventListener(name, this._onEvent, false);
-    }
-    else {
-      element.attachEvent('on' + name, this._onEvent);
-    }
+    
+    element.addEventListener(name, this._onEvent, false);
   },
   {
     getElement: function () {
@@ -63,9 +58,9 @@ artjs.MouseEvent = artjs.events.Mouse = artjs.Class(
   }, null, artjs.ElementEvent
 );
 
-artjs.ClickEvent = artjs.events.Click = artjs.Class(
-  function(element, delegate, selector) {
-    this.super(element, 'click', delegate);
+artjs.AbstractClickEvent = artjs.events.AbstractClick = artjs.Class(
+  function(element, name, delegate, selector) {
+    this.super(element, name, delegate);
     
     this._selector = selector;
   }, 
@@ -82,6 +77,24 @@ artjs.ClickEvent = artjs.events.Click = artjs.Class(
       return artjs.Array.contains(elements, e.target);
     }
   }, null, artjs.ElementEvent
+);
+
+artjs.ClickEvent = artjs.events.Click = artjs.Class(
+  function(element, delegate, selector) {
+    this.super(element, 'click', delegate, selector);
+  },
+  null,
+  null,
+  artjs.AbstractClickEvent
+);
+  
+artjs.DoubleClickEvent = artjs.events.DoubleClick = artjs.Class(
+  function(element, delegate, selector) {
+    this.super(element, 'dblclick', delegate, selector);
+  },
+  null,
+  null,
+  artjs.AbstractClickEvent
 );
 
 artjs.KeyEvent = artjs.events.Key = artjs.Class(
@@ -136,6 +149,7 @@ artjs.EventMapping = {
   mouseover: 'MouseOverEvent',
   mouseout: 'MouseOutEvent',
   click: 'ClickEvent',
+  dblclick: 'DoubleClickEvent',
   change: 'ChangeEvent',
   keydown: 'KeyEvent',
   blur: 'BlurEvent'

@@ -94,7 +94,7 @@ artjs.Object = artjs.utils.Object = {
     
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        result[i] = func.call(context, obj[i]);
+        result[i] = func.call(context, i, obj[i]);
       }
     }
     
@@ -106,7 +106,7 @@ artjs.Object = artjs.utils.Object = {
     
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        result[func.call(context, i)] = obj[i];
+        result[func.call(context, i, obj[i])] = obj[i];
       }
     }
     
