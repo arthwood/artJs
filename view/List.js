@@ -36,13 +36,27 @@ artjs.ListView = artjs.view.List = artjs.Class(
       this._model.onPropertyChange('items', items, items);
     },
     
+    removeItems: function(items) {
+      var removedItems = artjs.Array.$removeItems(this._model.items, items);
+      
+      artjs.Array.each(removedItems, this._removeItemListener, this);
+      
+      items = this._model.items;
+      
+      this._model.onPropertyChange('items', items, items);
+    },
+    
+    _removeItemListener: function(item) {
+      item.removeListener(this._onItemModelChange.delegate);
+    },
+    
     removeItem: function(item) {
       var items = this._model.items;
       var idx = artjs.Array.removeItem(items, item);
       
       artjs.Element.removeAt(this._element, idx);
       
-      item.removeListener(this._onItemModelChange.delegate);
+      this._removeItemListener(item);
       
       this._model.onPropertyChange('items', items, items);
     },

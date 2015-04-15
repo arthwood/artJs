@@ -63,17 +63,13 @@ artjs.Array = artjs.utils.Array = {
     
     return this.all(subset, this._includesAll);
   },
-
-  _includesAll: function(i, idx) {
-    return this.includesInv(i, arguments.callee.arr);
-  },
   
   insertAt: function(arr, idx, insertion) {
     return arr.slice(0, idx).concat(insertion).concat(arr.slice(idx));
   },
   
   removeAt: function(arr, idx) {
-    return arr.splice(idx, 1);
+    return this.first(arr.splice(idx, 1));
   },
 
   removeItem: function(arr, item, onlyFirst) {
@@ -88,6 +84,18 @@ artjs.Array = artjs.utils.Array = {
     }
     
     return n + 1;
+  },
+  
+  removeItems: function(arr, items) {
+    this._contains.items = items;
+    
+    return this.reject(arr, this._contains, this);
+  },
+  
+  $removeItems: function(arr, items) {
+    this._contains.items = items;
+    
+    return this.$reject(arr, this._contains, this);
   },
 
   arrify: function(v, idx) {
@@ -122,18 +130,10 @@ artjs.Array = artjs.utils.Array = {
     return this.map(arr, delegate.callback());
   },
   
-  _invoke: function(i, idx, arr, meth, args) {
-    return i[meth].apply(i, args);
-  },
-  
   pluck: function(arr, prop) {
     this._pluck.prop = prop;
     
     return this.map(arr, this._pluck, this);
-  },
-
-  _pluck: function(i) {
-    return i[arguments.callee.prop];
   },
   
   each: function(arr, func, context) {
@@ -189,11 +189,7 @@ artjs.Array = artjs.utils.Array = {
   },
   
   flatten: function(arr) {
-    return this.inject(arr, [], this._flattenCallback, this);
-  },
-  
-  _flattenCallback: function(mem, i, idx) {
-    mem.splice.apply(mem, [mem.length, 0].concat(i));
+    return this.inject(arr, [], this._flatten, this);
   },
   
   select: function(arr, func, context) {
@@ -250,14 +246,17 @@ artjs.Array = artjs.utils.Array = {
     var n = arr.length - 1;
     var test = func || this.identity;
     var item;
+    var result = [];
     
     for (var i = n; i >= 0; i--) {
       item = arr[i];
       
       if (test.call(context || this, item, parseInt(i, 10), arr)) {
-        this.removeAt(arr, i);
+        result.push(this.removeAt(arr, i));
       }
     }
+    
+    return result;
   },
   
   detect: function(arr, func, context) {
@@ -399,16 +398,6 @@ artjs.Array = artjs.utils.Array = {
     return this.select(arr[0], this._intersectionSelect, this);
   },
   
-  _intersectionSelect: function(i) {
-    this._intersectionInclude.item = i;
-    
-    return this.all(arguments.callee.array, this._intersectionInclude, this);
-  },
-  
-  _intersectionInclude: function(arr, idx) {
-    return this.includes(arr, arguments.callee.item);
-  },
-  
   selectNonEmpty: function(arr) {
     return this.select(arr, this.isNotEmpty, this);
   },
@@ -426,34 +415,60 @@ artjs.Array = artjs.utils.Array = {
   },
   
   numerize: function(arr) {
-    return this.map(arr, this._numerizeCallback);
+    return this.map(arr, this._numerize);
   },
 
   print: function(arr) {
-    this.eachItem(arr, this._printEach, this);
-  },
-  
-  _printEach: function(i) {
-    artjs.p(i);
-  },
-  
-  _numerizeCallback: function (i) {
-    return Number(i);
+    this.eachItem(arr, this._print, this);
   },
   
   sum: function(arr) {
-    return Number(this.inject(arr, 0, this._sumCallback, this));
-  },
-  
-  _sumCallback: function(sum, i) {
-    return sum + i;
+    return Number(this.inject(arr, 0, this._sum, this));
   },
   
   stringify: function(arr) {
-    return this.map(arr, this._stringifyCallback, this);
+    return this.map(arr, this._stringify, this);
   },
   
-  _stringifyCallback: function(i) {
+  _flatten: function(mem, i, idx) {
+    mem.splice.apply(mem, [mem.length, 0].concat(i));
+  },
+  
+  _includesAll: function(i, idx) {
+    return this.includesInv(i, arguments.callee.arr);
+  },
+  
+  _intersectionSelect: function(i) {
+    this._intersectionInclude.item = i;
+    
+    return this.all(arguments.callee.array, this._intersectionInclude, this);
+  },
+  
+  _intersectionInclude: function(arr, idx) {
+    return this.includes(arr, arguments.callee.item);
+  },
+  
+  _invoke: function(i, idx, arr, meth, args) {
+    return i[meth].apply(i, args);
+  },
+  
+  _numerize: function (i) {
+    return Number(i);
+  },
+  
+  _pluck: function(i) {
+    return i[arguments.callee.prop];
+  },
+  
+  _print: function(i) {
+    artjs.p(i);
+  },
+  
+  _sum: function(sum, i) {
+    return sum + i;
+  },
+  
+  _stringify: function(i) {
     return artjs.Object.isNull(i) ? '' : i.toString();
   },
 
@@ -465,5 +480,9 @@ artjs.Array = artjs.utils.Array = {
     }
 
     return -1;
-  }
+  },
+  
+  _contains: function(i) {
+    return this.contains(arguments.callee.items, i);
+  },
 };

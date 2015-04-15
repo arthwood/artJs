@@ -6,7 +6,7 @@ artjs.Button = artjs.component.Button = artjs.Class(
     
     this.onClick = new artjs.Event('artjs.Button::onClick');
     
-    artjs.on('click', this._element, artjs.$D(this, '_onClick'));
+    artjs.on('click', this._element, this._onClick.delegate);
   },
   {
     _onClick: function(e) {
