@@ -1,22 +1,58 @@
 artjs.String = artjs.utils.String = {
   _name: 'String',
   
-  toString: function() {
-    return this._name;
+  addZeros: function(str, n, left) {
+    return this.align(str, n, '0', left);
+  },
+  
+  align: function(str, n, char, left) {
+    var c = this.getMultiPattern(char, n - str.length);
+    
+    return left ? str + c : c + str;
+  },
+  
+  blank: function() {
+    return '';
+  },
+  
+  capitalize: function(str) {
+    return artjs.Array.map(str.split(' '), this.capitalizeWord).join(' ');
+  },
+  
+  capitalizeWord: function(str) {
+    return str.charAt(0).toUpperCase() + str.substr(1);
+  },
+  
+  capitalizeUnderscored: function(str) {
+    return this.strip(this.capitalize(str.replace(new RegExp('_', 'g'), ' ')));
+  },
+  
+  countPattern: function(str, pattern) {
+    return str.match(new RegExp(pattern, 'g')).length;
   },
   
   first: function(str) {
     return str.substr(0, 1);
   },
   
-  last: function(str) {
-    return str.substr(str.length - 1, 1);
+  formatPrice: function(price) {
+    var parts = price.toString().split('.');
+    var integer = parts[0];
+    var decimal = parts[1];
+  
+    return integer + '.' + (decimal ? this.addZeros(decimal, 2, true) : '00');
   },
   
-  strip: function(str) {
-    return str.replace(/\s/g, this.blank());
+  getMultiPattern: function(pattern, n) {
+    var str = this.blank();
+    
+    while (n-- > 0) {
+      str += pattern;
+    }
+  
+    return str;
   },
-
+  
   isBlank: function(str) {
     return artjs.Object.isNull(str) || this.isEmpty(str);
   },
@@ -29,48 +65,18 @@ artjs.String = artjs.utils.String = {
     return !this.isBlank(str);
   },
   
+  last: function(str) {
+    return str.substr(str.length - 1, 1);
+  },
+  
+  match: function(str, re) {
+    var result = re.exec(str);
+    
+    return result && artjs.Array.last(result);
+  },
+  
   nullifyEmpty: function(str) {
     return this.isEmpty(str) ? null : str;
-  },
-  
-  toS: function(str) {
-    return artjs.Object.isNull(str) ? this.blank() : str;
-  },
-  
-  blank: function() {
-    return '';
-  },
-  
-  countPattern: function(str, pattern) {
-    return str.match(new RegExp(pattern, 'g')).length;
-  },
-  
-  align: function(str, n, char, left) {
-    var c = this.getMultiPattern(char, n - str.length);
-    
-    return left ? str + c : c + str;
-  },
-  
-  getMultiPattern: function (pattern, n) {
-    var str = this.blank();
-    
-    while (n-- > 0) {
-      str += pattern;
-    }
-  
-    return str;
-  },
-  
-  formatPrice: function(price) {
-    var parts = price.toString().split('.');
-    var integer = parts[0];
-    var decimal = parts[1];
-  
-    return integer + '.' + (decimal ? this.addZeros(decimal, 2, true) : '00');
-  },
-  
-  addZeros: function(str, n, left) {
-    return this.align(str, n, '0', left);
   },
   
   truncate: function(text, length, onlyWords, end) {
@@ -101,37 +107,18 @@ artjs.String = artjs.utils.String = {
     }
   },
 
-  _subtruncation: function(text, index, end) {
-    return this._truncation(text.substr(0, index), end);
-  },
-  
-  _truncation: function(text, end) {
-    return text + (end || '...');
-  },
-  
   singularOrPlural: function(text, n) {
     return text + ((n == 1) ? this.blank() : 's');
   },
   
-  capitalize: function(str) {
-    return artjs.Array.map(str.split(' '), this.capitalizeWord).join(' ');
-  },
-  
-  capitalizeWord: function(str) {
-    return str.charAt(0).toUpperCase() + str.substr(1);
-  },
-  
-  capitalizeUnderscored: function(str) {
-    return this.strip(this.capitalize(str.replace(new RegExp('_', 'g'), ' ')));
-  },
-
-  trim: function(str, character, replacement) {
-    var c = character || ' ';
-    var r = replacement || '';
+  startsWith: function(str, substr) {
+    var re = new RegExp('^' + substr);
     
-    return str
-      .replace(new RegExp('^' + c + '+'), r)
-      .replace(new RegExp(c + '+$'), r);
+    return re.test(str);
+  },
+  
+  strip: function(str) {
+    return str.replace(/\s/g, this.blank());
   },
   
   sub: function(str, i, j) {
@@ -149,17 +136,36 @@ artjs.String = artjs.utils.String = {
     return str.substring(i, j);
   },
   
+  toBoolean: function(str) {
+    return str === 'true';
+  },
+  
   toJson: function(str) {
     return JSON.parse(str);
   },
   
-  startsWith: function(str, substr) {
-    var re = new RegExp('^' + substr);
-    
-    return re.test(str);
+  toS: function(str) {
+    return artjs.Object.isNull(str) ? this.blank() : str;
   },
   
-  toBoolean: function(str) {
-    return str === 'true';
+  toString: function() {
+    return this._name;
+  },
+  
+  trim: function(str, character, replacement) {
+    var c = character || ' ';
+    var r = replacement || '';
+    
+    return str
+      .replace(new RegExp('^' + c + '+'), r)
+      .replace(new RegExp(c + '+$'), r);
+  },
+  
+  _subtruncation: function(text, index, end) {
+    return this._truncation(text.substr(0, index), end);
+  },
+  
+  _truncation: function(text, end) {
+    return text + (end || '...');
   }
 };

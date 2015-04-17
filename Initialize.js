@@ -17,6 +17,8 @@ var artjs = {
   template: {},
   transition: {},
   ui: {},
-  utils: {},
+  utils: {
+    component: {}
+  },
   view: {}
 };

@@ -5,10 +5,10 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
     
     var actualValue = this._actual.value;
     var expected = this._matcher.expected;
-    var dc = artjs.$DC(this, this.resolve);
+    var dc = artjs.$DC(this, 'resolve');
     
     if (!this._isForMock()) {
-      this._original = artjs.$D(actualValue, actualValue[expected]);
+      this._original = artjs.$D(actualValue, expected);
     }
     
     actualValue[expected] = dc;

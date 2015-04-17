@@ -57,7 +57,7 @@ function expect(value) {
 }
 
 function mock() {
-  return new artjs.Mock();
+  return new artjs.Mock(artjs.$A(arguments));
 }
 
 function subject() {
