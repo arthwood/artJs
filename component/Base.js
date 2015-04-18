@@ -49,8 +49,6 @@ artjs.Component = artjs.component.Base = artjs.Class(
     
     _onExtended: function() {
       this.super();
-      
-      this.instances = [];
     },
     
     register: function(id, instance) {

@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
   artjs.onDocumentLoad.fire();
   artjs.TemplateLibrary.init();
   artjs.Calendar.init();
-  artjs.ComponentSweeper.init();
   artjs.Router.navigateTo(location.hash);
 }, false);
 
