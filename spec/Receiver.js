@@ -124,7 +124,7 @@ artjs.SpecReceiver = artjs.spec.Receiver = artjs.Class(
       var n = this._successCounter;
       var value = times == null ? n > 0 : n == times;
   
-      return new artjs.SpecResult(this._actual, this._matcher, value);
+      return new artjs.SpecResult(this._actual, this._matcher, Boolean(this._actual.not ^ value));
     },
     
     rollback: function() {

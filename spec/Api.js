@@ -48,6 +48,10 @@ function beNull() {
   return new artjs.NullMatcher();
 }
 
+function contain(value) {
+  return new artjs.ContainMatcher(value);
+}
+
 function receive(expected) {
   return new artjs.ReceiveMatcher(expected);
 }

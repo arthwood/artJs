@@ -9,7 +9,13 @@ artjs.BaseMatcher = artjs.spec.matcher.Base = artjs.Class(
     },
     
     _failureData: function(actual) {
-      return [actual.value, 'expected to', this.toText, String(this.expected)];
+      var result = [actual.value, 'expected to', this.toText, String(this.expected)];
+      
+      if (actual.not) {
+        result.splice(2, 0, 'not');
+      }
+      
+      return result;
     },
 
     failureText: function(actual) {

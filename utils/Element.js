@@ -13,7 +13,7 @@ artjs.Element = artjs.utils.Element = {
   },
   
   show: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     
     artjs.Array.removeItem(this.HIDDEN_ELEMENTS, hidden);
     
@@ -23,7 +23,7 @@ artjs.Element = artjs.utils.Element = {
   },
   
   hide: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     
     if (!hidden) {
       this.HIDDEN_ELEMENTS.push({element: e, display: e.style.display});
@@ -44,18 +44,18 @@ artjs.Element = artjs.utils.Element = {
   },
   
   isHidden: function(e) {
-    var hidden = this.getHidden(e);
+    var hidden = this._getHidden(e);
     
     return hidden || e.style.display == 'none';
   },
   
-  getHidden: function(e) {
-    var delegate = artjs.$D(this, 'detectHiddenElement', e);
+  _getHidden: function(e) {
+    var delegate = artjs.$D(this, '_detectHiddenElement', e);
     
     return artjs.Array.detect(this.HIDDEN_ELEMENTS, delegate.callback(), this);
   },
   
-  detectHiddenElement: function(i, e) {
+  _detectHiddenElement: function(i, idx, arr, e) {
     return i.element == e;
   },
   
