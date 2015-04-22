@@ -11,6 +11,13 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       'artjs-Calendar-prev': '_onPrevLoaded',
       'artjs-Calendar-next': '_onNextLoaded'
     });
+    
+    this._onEachDayDelegate = artjs.$D(this, '_onEachDay');
+    this._onItemDelegate = artjs.$D(this, '_onItem');
+    this._onPrevMonthDelegate = artjs.$D(this, '_onPrevMonth');
+    this._onNextMonthDelegate = artjs.$D(this, '_onNextMonth');
+    this._onMonthSelectDelegate = artjs.$D(this, '_onMonthSelect');
+    this._onYearSelectDelegate = artjs.$D(this, '_onYearSelect');
   },
   {
     setSource: function(source) {
@@ -24,12 +31,12 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     
     _onYearsSelectLoaded: function(select) {
       this._years = select;
-      this._years.onChange.add(this._onYearSelect.delegate);
+      this._years.onChange.add(this._onYearSelectDelegate);
     },
     
     _onMonthsSelectLoaded: function(select) {
       this._months = select;
-      this._months.onChange.add(this._onMonthSelect.delegate);
+      this._months.onChange.add(this._onMonthSelectDelegate);
       this._months.setOptions(artjs.Array.map(artjs.Lang.t('datepicker', 'months'), this.ctor._toMonthOption));
     },
     
@@ -39,15 +46,15 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
         head: this._getDaysRow(),
         body: artjs.Array.build(this.ctor.ROWS_NUM, this._getDaysRow)
       });
-      this._days.onItem.add(this._onItem.delegate);
+      this._days.onItem.add(this._onItemDelegate);
     },
     
     _onPrevLoaded: function(prev) {
-      prev.onClick.add(this._onPrevMonth.delegate);
+      prev.onClick.add(this._onPrevMonthDelegate);
     },
     
     _onNextLoaded: function(next) {
-      next.onClick.add(this._onNextMonth.delegate);
+      next.onClick.add(this._onNextMonthDelegate);
     },
     
     _getDaysRow: function() {
@@ -89,7 +96,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       }
 
       this._days.updateHead(artjs.Array.build(7, this._eachHeadData, this));
-      this._days.iterate(this._onEachDay.delegate);
+      this._days.iterate(this._onEachDayDelegate);
     },
     
     _eachHeadData: function(idx) {

@@ -4,7 +4,7 @@ artjs.Text = artjs.component.Text = artjs.Class(
     
     this.onChange = new artjs.Event('artjs.Text::onChange');
     
-    artjs.on('change', this._element, this._onChange.delegate);
+    artjs.on('change', this._element, artjs.$D(this, '_onChange'));
   },
   {
     setValue: function(value) {

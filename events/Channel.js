@@ -20,6 +20,10 @@ artjs.Channel = artjs.events.Channel = artjs.Class(
       this._getEvent(id).fire(data);
     },
     
+    getEvents: function() {
+      return this._events;
+    },
+    
     toString: function() {
       return this._name;
     },

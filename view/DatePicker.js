@@ -14,9 +14,9 @@ artjs.DatePicker = artjs.view.DatePicker = artjs.Class(
     this.firstDay = isNaN(firstDay) ? 1 : firstDay;
     this.setReadOnly(true);
     
-    artjs.on('click', this._element, this._onClick.delegate);
+    artjs.on('click', this._element, artjs.$D(this, '_onClick'));
     
-    this.calendar = artjs.Component.onLoad('artjs-Calendar', this._onCalendarLoad.delegate);
+    this.calendar = artjs.Component.onLoad('artjs-Calendar', artjs.$D(this, '_onCalendarLoad'));
   },
   {
     _onCalendarLoad: function(component) {

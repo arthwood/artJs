@@ -24,7 +24,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   
   init: function() {
-    artjs.$BA(this);
+    this._onLoadSuccessDelegate = artjs.$D(this, '_onLoadSuccess');
     
     this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
@@ -34,7 +34,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   
   _load: function(i) {
-    var request = artjs.$get(this.config.PATH + '/' +  i + '.html', null, this._onLoadSuccess.delegate);
+    var request = artjs.$get(this.config.PATH + '/' +  i + '.html', null, this._onLoadSuccessDelegate);
     
     request.id = i;
   },

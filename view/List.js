@@ -12,6 +12,7 @@ artjs.ListView = artjs.view.List = artjs.Class(
     
     this._itemTemplate = data.template;
     this._itemClass = data['item-class'];
+    this._onItemModelChangeDelegate = artjs.$D(this, '_onItemModelChange');
   },
   {
     setItems: function(items) {
@@ -47,7 +48,7 @@ artjs.ListView = artjs.view.List = artjs.Class(
     },
     
     _removeItemListener: function(item) {
-      item.removeListener(this._onItemModelChange.delegate);
+      item.removeListener(this._onItemModelChangeDelegate);
     },
     
     removeItem: function(item) {
@@ -78,7 +79,7 @@ artjs.ListView = artjs.view.List = artjs.Class(
     },
     
     _listenItem: function(item) {
-      item.addListener(this._onItemModelChange.delegate);
+      item.addListener(this._onItemModelChangeDelegate);
     }
   },
   {

@@ -5,11 +5,11 @@ artjs.Input = artjs.view.Input = artjs.Class(
     var model = new artjs.Model();
     
     model.addProperty('value', element.value);
-    model.addPropertyListener('value', this._onModelValueChange.delegate);
+    model.addPropertyListener('value', artjs.$D(this, '_onModelValueChange'));
     
     this.setModel(model);
     
-    artjs.on('change', element, this._onUiValueChange);
+    artjs.on('change', element, artjs.$D(this, '_onUiValueChange'));
   },
   {
     setReadOnly: function(value) {

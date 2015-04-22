@@ -1,12 +1,10 @@
 artjs.ElementInspector = artjs.ui.ElementInspector = artjs.Class(
   function() {
-    artjs.$BA(this);
-    
-    artjs.on('mousemove', document, this._onMouseMove.delegate);
+    artjs.on('mousemove', document, artjs.$D(this, '_onMouseMove'));
 
     this._toggler = new artjs.Toggler(true);
-    this._toggler.onActivate.add(this._onActivate.delegate);
-    this._toggler.onDeactivate.add(this._onDeactivate.delegate);
+    this._toggler.onActivate.add(artjs.$D(this, '_onActivate'));
+    this._toggler.onDeactivate.add(artjs.$D(this, '_onDeactivate'));
   },
   {
     _onMouseMove: function(e, ee) {

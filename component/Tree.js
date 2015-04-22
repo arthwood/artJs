@@ -4,7 +4,7 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     
     this._leafClassToggler = new artjs.ClassToggler('selected');
     this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
-    artjs.on('click', this.getElement(), this._onElement.delegate, 'li a');
+    artjs.on('click', this._element, artjs.$D(this, '_onElement'), 'li a');
   },
   {
     setData: function(data) {

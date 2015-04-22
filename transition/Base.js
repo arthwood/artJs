@@ -1,6 +1,6 @@
 artjs.TransitionBase = artjs.transition.Base = artjs.Class(
   function(property, element, value, duration, type, delay, from) {
-    artjs.$BA(this);
+    this._onDeferredDelegate = artjs.$D(this, '_onDeferred');
     
     this.property = property;
     this.element = element;
@@ -17,7 +17,7 @@ artjs.TransitionBase = artjs.transition.Base = artjs.Class(
         this._setStyle(this.from);
       }
       
-      artjs.Timeout.fire(this._onDeferred.delegate, 100);
+      artjs.Timeout.fire(this._onDeferredDelegate, 100);
     },
     
     _onDeferred: function() {

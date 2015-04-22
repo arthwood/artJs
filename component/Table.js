@@ -4,7 +4,7 @@ artjs.Table = artjs.component.Table = artjs.Class(
     
     this.onItem = new artjs.Event('artjs.Table::onItem');
     
-    artjs.on('click', this._element, this._onItem.delegate, 'td');
+    artjs.on('click', this._element, artjs.$D(this, '_onItem'), 'td');
   },
   {
     setData: function(data) {

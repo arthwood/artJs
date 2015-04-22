@@ -28,7 +28,7 @@ artjs.utils.component.Scanner = artjs.ComponentScanner = {
   
   instantiateClass: function(className, element) {
     var path = className.split('-');
-    var _class = artjs.Array.inject(path, window, this._injectPathChunk, this);
+    var _class = artjs.Array.inject(path, window, this._injectPathChunk);
     var instance = null;
     
     if (_class instanceof Function) {

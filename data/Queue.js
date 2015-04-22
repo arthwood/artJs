@@ -1,9 +1,8 @@
 artjs.Queue = artjs.data.Queue = artjs.Class(
   function(data) {
-    artjs.$BA(this);
     this.onChange = new artjs.Event('Queue::onChange');
     this.list = new artjs.List(data);
-    this.list.onChange.add(this._onChange.delegate);
+    this.list.onChange.add(artjs.$D(this, '_onChange'));
   },
   {
     _onChange: function() {

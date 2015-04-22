@@ -1,9 +1,6 @@
 artjs.Component = artjs.component.Base = artjs.Class(
   function(element) {
     this._element = element;
-    this._eventHandlers = [];
-    
-    artjs.$BA(this);
   },
   {
     getElement: function() {
@@ -19,19 +16,15 @@ artjs.Component = artjs.component.Base = artjs.Class(
     },
       
     _handleEmit: function(id, method) {
-      this._handleEvent(id, method, artjs.ComponentEventHandler.UP);
+      return this._handleEvent(id, method, artjs.ComponentEventHandler.UP);
     },
     
     _handleBroadcast: function(id, method) {
-      this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
+      return this._handleEvent(id, method, artjs.ComponentEventHandler.DOWN);
     },
     
     _handleEvent: function(id, method, type) {
-      this._eventHandlers.push(new artjs.ComponentEventHandler(this, id, this[method].delegate, type));
-    },
-    
-    _destroy: function() {
-      artjs.Array.invoke(this._eventHandlers, 'remove');
+      return new artjs.ComponentEventHandler(this, id, artjs.$D(this, method), type);
     },
     
     _register: function(map) {
@@ -39,7 +32,7 @@ artjs.Component = artjs.component.Base = artjs.Class(
     },
     
     _registerEach: function(k, v) {
-      this.ctor.onLoad(k, this[v].delegate);
+      this.ctor.onLoad(k, artjs.$D(this, v));
     }
   },
   {

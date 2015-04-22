@@ -30,7 +30,11 @@ artjs.Event = artjs.events.Event = artjs.Class(
       return this._name;
     },
     
-    _delegateToResult: function(i, idx, arr) {
+    getItems: function() {
+      return this._items;
+    },
+    
+    _delegateToResult: function(i) {
       return i.invoke.apply(i, this._args);
     }
   }

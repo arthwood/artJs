@@ -3,9 +3,7 @@ artjs.ElementEvent = artjs.events.Element = artjs.Class(
     this._element = element;
     this._delegate = delegate;
     
-    artjs.$BA(this);
-    
-    element.addEventListener(name, this._onEvent, false);
+    element.addEventListener(name, artjs.$DC(this, '_onEvent'), false);
   },
   {
     getElement: function () {

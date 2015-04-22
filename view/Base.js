@@ -1,5 +1,9 @@
 artjs.View = artjs.view.Base = artjs.Class(
-  null,
+  function(element) {
+    this.super(element);
+    
+    this._onModelChangeDelegate = artjs.$D(this, '_onModelChange');
+  },
   {
     getModel: function() {
       return this._model;
@@ -7,7 +11,7 @@ artjs.View = artjs.view.Base = artjs.Class(
     
     setModel: function(model) {
       this._model = model;
-      this._model.addListener(this._onModelChange.delegate);
+      this._model.addListener(this._onModelChangeDelegate);
       
       this._render();
     },

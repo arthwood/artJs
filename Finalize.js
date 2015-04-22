@@ -7,6 +7,7 @@ artjs.onLibraryLoad = new artjs.Event('library:load');
 document.addEventListener('DOMContentLoaded', function() {
   artjs.onDocumentLoad.fire();
   artjs.TemplateLibrary.init();
+  artjs.ComponentEventHandler.init();
   artjs.Calendar.init();
   artjs.Router.navigateTo(location.hash);
 }, false);
