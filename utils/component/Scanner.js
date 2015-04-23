@@ -33,7 +33,9 @@ artjs.utils.component.Scanner = artjs.ComponentScanner = {
     
     if (_class instanceof Function) {
       instance = new _class(element);
-    
+      
+      artjs.Component.instances.push(instance);
+      
       var id = artjs.Element.getAttributes(instance.getElement()).id;
       
       if (id) {

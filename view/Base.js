@@ -21,6 +21,12 @@ artjs.View = artjs.view.Base = artjs.Class(
     },
     
     _render: function() {
+    },
+    
+    _destroy: function() {
+      this.super();
+      
+      this._model.removeListener(this._onModelChangeDelegate);
     }
   },
   {

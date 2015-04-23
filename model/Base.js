@@ -2,7 +2,6 @@ artjs.Model = artjs.model.Base = artjs.Class(
   function() {
     this._onChange = new artjs.Event('Model::onChange');
     this._channel = new artjs.Channel('Model channel');
-    this._properties = [];
   },
   {
     addProperties: function(props) {
@@ -44,6 +43,10 @@ artjs.Model = artjs.model.Base = artjs.Class(
       this._firePropertyChange(prop, this.getProperty(prop));
     },
     
+    removePropertyListener: function(prop, delegate) {
+      this._channel.removeListener(prop, delegate);
+    },
+    
     onPropertyChange: function(prop, value, oldValue) {
       this._firePropertyChange(prop, value, oldValue);
       this._fireChange(prop, value, oldValue);
@@ -62,8 +65,6 @@ artjs.Model = artjs.model.Base = artjs.Class(
     },
     
     _toProperty: function(name) {
-      this._properties.push(name);
-      
       return {
         configurable: false,
         enumerable: true,

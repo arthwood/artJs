@@ -4,12 +4,13 @@ artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(
     this._eventId = eventId;
     this._delegate = delegate;
     this._type = type;
+    this._onEventDelegate = artjs.$D(this, '_onEvent');
     
-    artjs.Broadcaster.addListener(eventId, artjs.$D(this, '_onEvent'));
+    artjs.Broadcaster.addListener(this._eventId, this._onEventDelegate);
   },
   {
-    getComponent: function() {
-      return this._component;
+    _destroy: function() {
+      artjs.Broadcaster.removeListener(this._eventId, this._onEventDelegate);
     },
     
     _onEvent: function(component) {
@@ -35,29 +36,6 @@ artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(
   },
   {
     UP: 'UP',
-    DOWN: 'DOWN',
-    SWEEP_INTERVAL: 2000,
-    
-    init: function() {
-      var clock = new artjs.Clock(this.SWEEP_INTERVAL);
-      
-      clock.onChange.add(artjs.$D(this, '_onTick'));
-      
-      clock.start();
-    },
-    
-    _onTick: function() {
-      artjs.Array.each(artjs.Object.values(artjs.Broadcaster.getEvents()), this._checkEvent, this);
-    },
-    
-    _checkEvent: function(event) {
-      artjs.Array.$select(event.getItems(), this._isValidDelegate, this);
-    },
-    
-    _isValidDelegate: function(delegate) {
-      var instance = delegate.object;
-      
-      return (instance.ctor != this) || artjs.Selector.isOnStage(instance.getComponent().getElement());
-    }
+    DOWN: 'DOWN'
   }
 );

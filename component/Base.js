@@ -1,6 +1,7 @@
 artjs.Component = artjs.component.Base = artjs.Class(
   function(element) {
     this._element = element;
+    this._handlers = [];
   },
   {
     getElement: function() {
@@ -24,7 +25,11 @@ artjs.Component = artjs.component.Base = artjs.Class(
     },
     
     _handleEvent: function(id, method, type) {
-      return new artjs.ComponentEventHandler(this, id, artjs.$D(this, method), type);
+      var handler = new artjs.ComponentEventHandler(this, id, artjs.$D(this, method), type);
+      
+      this._handlers.push(handler);
+      
+      return handler;
     },
     
     _register: function(map) {
@@ -33,6 +38,12 @@ artjs.Component = artjs.component.Base = artjs.Class(
     
     _registerEach: function(k, v) {
       this.ctor.onLoad(k, artjs.$D(this, v));
+    },
+    
+    _destroy: function() {
+      artjs.Array.invoke(this._handlers, '_destroy');
+      
+      delete this._handlers;
     }
   },
   {
@@ -40,10 +51,8 @@ artjs.Component = artjs.component.Base = artjs.Class(
     
     _idToComponent: {},
     
-    _onExtended: function() {
-      this.super();
-    },
-    
+    instances: [],
+
     register: function(id, instance) {
       this._idToComponent[id] = instance;
     },
