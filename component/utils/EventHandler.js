@@ -1,4 +1,4 @@
-artjs.utils.component.EventHandler = artjs.ComponentEventHandler = artjs.Class(
+artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(
   function(component, eventId, delegate, type) {
     this._component = component;
     this._eventId = eventId;

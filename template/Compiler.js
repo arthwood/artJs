@@ -59,10 +59,16 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     }
   },
   {
+    _name: 'Compiler',
+    
     compile: function(content, scope) {
       var instance = new this(content, scope);
     
       return instance.compile();
+    },
+    
+    toString: function() {
+      return this._name;
     }
   }
 );

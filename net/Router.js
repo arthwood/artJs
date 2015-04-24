@@ -5,6 +5,12 @@ artjs.Router = artjs.net.Router = {
   
   mapping: {
   },
+
+  _name: 'Router',
+  
+  toString: function() {
+    return this._name;
+  },
   
   navigateTo: function(hash) {
     var path = artjs.String.match(hash, this.ROUTE_RE);
