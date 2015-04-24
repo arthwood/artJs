@@ -1,4 +1,4 @@
-artjs.utils.component.Scanner = artjs.ComponentScanner = {
+artjs.component.utils.Scanner = artjs.ComponentScanner = {
   _channel: new artjs.Channel('ComponentScanner'),
   
   scan: function(element) {

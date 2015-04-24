@@ -1,4 +1,4 @@
-artjs.utils.component.Sweeper = artjs.ComponentSweeper = {
+artjs.component.utils.Sweeper = artjs.ComponentSweeper = {
   INTERVAL: 1000,
   
   init: function() {
