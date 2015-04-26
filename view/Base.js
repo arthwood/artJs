@@ -27,6 +27,24 @@ artjs.View = artjs.view.Base = artjs.Class(
       this.super();
       
       this._model.removeListener(this._onModelChangeDelegate);
+      
+      this._cleanupChannel(this._model.getChannel());
+      this._cleanupChannel(artjs.Broadcaster);
+    },
+    
+    _cleanupChannel: function(channel) {
+      var events = artjs.Object.values(channel.getEvents());
+      var listeners = artjs.Array.invoke(events, 'getItems');
+      
+      artjs.Array.each(listeners, this._filterListeners, this);
+    },
+    
+    _filterListeners: function(listeners) {
+      artjs.Array.$reject(listeners, this._filterListener, this);
+    },
+    
+    _filterListener: function(delegate) {
+      return delegate.object == this;
     }
   },
   {

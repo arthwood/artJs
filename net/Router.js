@@ -14,10 +14,8 @@ artjs.Router = artjs.net.Router = {
   
   navigateTo: function(hash) {
     var path = artjs.String.match(hash, this.ROUTE_RE);
-      
-    if (!artjs.Object.isNull(path)) {
-      this._navigateTo(path);
-    }
+    
+    this._navigateTo(artjs.String.toS(path));
   },
   
   _navigateTo: function(path) {

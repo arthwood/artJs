@@ -9,9 +9,12 @@ document.addEventListener('DOMContentLoaded', function() {
   artjs.TemplateLibrary.init();
   artjs.ComponentSweeper.init();
   artjs.Calendar.init();
-  artjs.Router.navigateTo(location.hash);
 }, false);
 
 window.addEventListener('load', function() {
   artjs.onWindowLoad.fire();
 }, false);
+
+artjs.onLibraryLoad.add(artjs.$F(function() {
+  artjs.Router.navigateTo(location.hash);
+}));

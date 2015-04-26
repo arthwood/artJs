@@ -1,9 +1,13 @@
 artjs.Model = artjs.model.Base = artjs.Class(
   function() {
-    this._onChange = new artjs.Event('Model::onChange');
     this._channel = new artjs.Channel('Model channel');
+    this._onChange = new artjs.Event('Model::onChange');
   },
   {
+    addListener: function(delegate) {
+      this._onChange.add(delegate);
+    },
+    
     addProperties: function(props) {
       var properties = artjs.Object.mapValue(props, this._toProperty, this);
       
@@ -18,33 +22,17 @@ artjs.Model = artjs.model.Base = artjs.Class(
       this._setProperty(prop, value);
     },
     
-    setProperties: function(props) {
-      artjs.Object.eachPair(props, this.setProperty, this);
-    },
-    
-    setProperty: function(prop, value) {
-      this._setProperty(this.ctor.toPrivate(prop), value);
-    },
-    
-    getProperty: function(prop) {
-      return this[this.ctor.toPrivate(prop)];
-    },
-    
-    addListener: function(delegate) {
-      this._onChange.add(delegate);
-    },
-    
-    removeListener: function(delegate) {
-      this._onChange.remove(delegate);
-    },
-    
     addPropertyListener: function(prop, delegate) {
       this._channel.addListener(prop, delegate);
       this._firePropertyChange(prop, this.getProperty(prop));
     },
     
-    removePropertyListener: function(prop, delegate) {
-      this._channel.removeListener(prop, delegate);
+    getChannel: function() {
+      return this._channel;
+    },
+    
+    getProperty: function(prop) {
+      return this[this.ctor.toPrivate(prop)];
     },
     
     onPropertyChange: function(prop, value, oldValue) {
@@ -52,25 +40,20 @@ artjs.Model = artjs.model.Base = artjs.Class(
       this._fireChange(prop, value, oldValue);
     },
     
-    _setProperty: function(prop, value) {
-      this[prop] = value;
+    removeListener: function(delegate) {
+      this._onChange.remove(delegate);
     },
     
-    _firePropertyChange: function(prop, newValue, oldValue) {
-      this._channel.fire(prop, {newValue: newValue, oldValue: oldValue});
+    removePropertyListener: function(prop, delegate) {
+      this._channel.removeListener(prop, delegate);
     },
     
-    _fireChange: function(prop, value, oldValue) {
-      this._onChange.fire(prop, value, oldValue);
+    setProperties: function(props) {
+      artjs.Object.eachPair(props, this.setProperty, this);
     },
     
-    _toProperty: function(name) {
-      return {
-        configurable: false,
-        enumerable: true,
-        get: this._createGetter(name),
-        set: this._createSetter(name)
-      };
+    setProperty: function(prop, value) {
+      this._setProperty(this.ctor.toPrivate(prop), value);
     },
     
     _createGetter: function(name) {
@@ -96,6 +79,27 @@ artjs.Model = artjs.model.Base = artjs.Class(
       result.prop = name;
       
       return result;
+    },
+    
+    _fireChange: function(prop, value, oldValue) {
+      this._onChange.fire(prop, value, oldValue);
+    },
+    
+    _firePropertyChange: function(prop, newValue, oldValue) {
+      this._channel.fire(prop, {newValue: newValue, oldValue: oldValue});
+    },
+    
+    _setProperty: function(prop, value) {
+      this[prop] = value;
+    },
+    
+    _toProperty: function(name) {
+      return {
+        configurable: false,
+        enumerable: true,
+        get: this._createGetter(name),
+        set: this._createSetter(name)
+      };
     }
   },
   {
