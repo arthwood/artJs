@@ -11,7 +11,7 @@ artjs.View = artjs.view.Base = artjs.Class(
     
     setModel: function(model) {
       this._model = model;
-      this._model.addListener(this._onModelChangeDelegate);
+      this._model.onChange.add(this._onModelChangeDelegate);
       
       this._render();
     },
@@ -26,7 +26,7 @@ artjs.View = artjs.view.Base = artjs.Class(
     _destroy: function() {
       this.super();
       
-      this._model.removeListener(this._onModelChangeDelegate);
+      this._model.onChange.remove(this._onModelChangeDelegate);
       
       this._cleanupChannel(this._model.getChannel());
       this._cleanupChannel(artjs.Broadcaster);

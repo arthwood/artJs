@@ -1,5 +1,5 @@
 artjs.Router = artjs.net.Router = {
-  ROUTE_RE: new RegExp('#/(.*)'),
+  ROUTE_RE: new RegExp('#!?/(.*)'),
   
   defaultController: null,
   

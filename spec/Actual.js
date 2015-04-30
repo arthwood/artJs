@@ -11,7 +11,7 @@ artjs.Actual = artjs.spec.Actual = artjs.Class(
         artjs.Spec.pushResult(new artjs.SpecResult(this, matcher, Boolean(this.not ^ value)));
       }
       else {
-        artjs.Spec.pushReceiver(matcher.receiver);
+        artjs.Spec.pushReceiver(value);
       }
       
       return value;
