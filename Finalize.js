@@ -16,5 +16,5 @@ window.addEventListener('load', function() {
 }, false);
 
 artjs.onLibraryLoad.add(artjs.$F(function() {
-  artjs.Router.navigateTo(location.hash);
+  artjs.Router.init();
 }));

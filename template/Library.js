@@ -1,8 +1,7 @@
 artjs.TemplateLibrary = artjs.template.Library = {
-  BASE_TEMPLATES: ['artjs/calendar'],
-  
   config: {
     PATH: '/templates',
+    BASE_TEMPLATES: ['artjs/calendar'],
     TEMPLATES: []
   },
   
@@ -26,7 +25,7 @@ artjs.TemplateLibrary = artjs.template.Library = {
   init: function() {
     this._onLoadSuccessDelegate = artjs.$D(this, '_onLoadSuccess');
     
-    this._templatesToLoad = this.BASE_TEMPLATES.concat(this.config.TEMPLATES);
+    this._templatesToLoad = this.config.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
     artjs.Array.each(this._templatesToLoad, this._load, this);
     

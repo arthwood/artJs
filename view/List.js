@@ -40,12 +40,10 @@ artjs.ListView = artjs.view.List = artjs.Class(
       artjs.Array.each(this._model.items, this._renderItem, this);
     },
     
-    _renderItem: function(item, index) {
+    _renderItem: function(item) {
       var element = artjs.$E('li', {'data-template': this._itemTemplate});
       
       element = artjs.Element.insert(this._element, element);
-      
-      item.setProperty('index', index);
       
       artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
     }
