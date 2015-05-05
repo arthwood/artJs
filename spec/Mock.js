@@ -8,7 +8,14 @@ artjs.Mock = artjs.spec.Mock = artjs.Class(
     },
     
     toString: function() {
-      return 'mock';
+      return this.ctor.toString();
+    }
+  },
+  {
+    _name: 'Mock',
+    
+    toString: function() {
+      return this._name;
     }
   }
 );

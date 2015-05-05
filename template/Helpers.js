@@ -53,6 +53,10 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return checked ? 'checked' : artjs.String.blank();
   },
   
+  pluralize: function(n, str) {
+    return artjs.String.pluralize(n, str);
+  },
+  
   _map: function(coll, func) {
     return artjs.Array.map(coll, func, this).join('');
   },

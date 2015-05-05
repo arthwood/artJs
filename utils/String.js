@@ -107,8 +107,8 @@ artjs.String = artjs.utils.String = {
     }
   },
 
-  singularOrPlural: function(text, n) {
-    return text + ((n == 1) ? this.blank() : 's');
+  pluralize: function(n, str) {
+    return str + ((n == 1) ? this.blank() : 's');
   },
   
   startsWith: function(str, substr) {

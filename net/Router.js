@@ -1,5 +1,5 @@
 artjs.Router = artjs.net.Router = {
-  ROUTE_RE: new RegExp('#/(.*)'),
+  ROUTE_RE: new RegExp('#!?/(.*)'),
   
   defaultController: null,
   
@@ -8,16 +8,24 @@ artjs.Router = artjs.net.Router = {
 
   _name: 'Router',
   
-  toString: function() {
-    return this._name;
+  init: function() {
+    this._update();
+    
+    addEventListener('popstate', artjs.$DC(this, '_onPopState'));
   },
   
   navigateTo: function(hash) {
     var path = artjs.String.match(hash, this.ROUTE_RE);
-      
-    if (!artjs.Object.isNull(path)) {
-      this._navigateTo(path);
-    }
+    
+    this._navigateTo(artjs.String.toS(path));
+  },
+  
+  toString: function() {
+    return this._name;
+  },
+  
+  _onPopState: function() {
+    this._update();
   },
   
   _navigateTo: function(path) {
@@ -38,5 +46,9 @@ artjs.Router = artjs.net.Router = {
       
       delegate.invoke();
     }
+  },
+  
+  _update: function() {
+    this.navigateTo(location.hash);
   }
 };

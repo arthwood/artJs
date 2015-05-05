@@ -73,17 +73,19 @@ artjs.Array = artjs.utils.Array = {
   },
 
   removeItem: function(arr, item, onlyFirst) {
+    var result = [];
     var n = arr.length;
 
     while (n-- > 0) {
       if (arr[n] === item) {
+        result.push(n);
         this.removeAt(arr, n);
         
         if (onlyFirst) { break; }
       }
     }
     
-    return n + 1;
+    return result.reverse();
   },
   
   removeItems: function(arr, items) {

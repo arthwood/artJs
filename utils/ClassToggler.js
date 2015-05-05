@@ -11,7 +11,7 @@ artjs.ClassToggler = artjs.utils.ClassToggler = artjs.Class(
     toggle: function(item) {
       this._toggler.toggle(item);
     },
-  
+    
     getCurrent: function() {
       return this._toggler.current;
     },
