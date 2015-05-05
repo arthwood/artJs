@@ -45,7 +45,9 @@ artjs.ListView = artjs.view.List = artjs.Class(
       
       element = artjs.Element.insert(this._element, element);
       
-      artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+      if (this._itemClass) {
+        artjs.ComponentScanner.instantiateClass(this._itemClass, element).setModel(item);
+      }
     }
   },
   {

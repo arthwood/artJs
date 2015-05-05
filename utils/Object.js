@@ -180,7 +180,7 @@ artjs.Object = artjs.utils.Object = {
   },
   
   is: function(obj, type) {
-    return obj.constructor === type;
+    return this.isPresent(obj) && obj.constructor === type;
   },
   
   isEmpty: function(obj) {

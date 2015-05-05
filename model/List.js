@@ -2,7 +2,7 @@ artjs.ListModel = artjs.model.List = artjs.Class(
   function() {
     this.super();
     
-    this.addProperty('items');
+    this.addProperty('items', []);
     this.addPropertyListener('items', artjs.$D(this, '_onItemsChange'));
     this._onItemChangeDelegate = artjs.$D(this, '_onItemChange');
     this.onItemChange = new artjs.Event('ListModel::onItemChange');

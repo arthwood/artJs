@@ -9,21 +9,31 @@ artjs.ReceiveMatcher = artjs.spec.matcher.Receive = artjs.Class(
       return this.receiver;
     },
     
+    _isFailed: function(result) {
+      return !result.success;
+    },
+    
     _failureData: function(actual) {
       var result = this.super(actual);
-      var expectedArgs = this.receiver.args();
+      var results = this.receiver.getResults();
+      var times = this.receiver.getTimes();
       
-      if (expectedArgs) {
-        var actualArgs = this.receiver.actualArgs();
+      if (artjs.Object.isPresent(times)) {
+        var success = artjs.Array.reject(results, this._isFailed);
         
-        result.push('with');
-        result.push(this._argsString(expectedArgs));
+        result.push(times + ' times, but was ' + success.length);
+      }
+      else {
+        var failure = artjs.Array.detect(results, this._isFailed);
         
-        if (actualArgs) {
-          result.push('but was ' +  this._argsString(actualArgs));
+        if (failure) {
+          result.push(
+            'with' + this._argsString(failure.args.expected) 
+            + ', but was ' +  this._argsString(failure.args.actual)
+          );
         }
       }
-
+      
       return result;
     },
     
