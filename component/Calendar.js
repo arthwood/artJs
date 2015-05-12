@@ -199,7 +199,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
     _name:  'artjs.Calendar',
     
     init: function() {
-      artjs.onLibraryLoad.add(artjs.$D(this, '_onLibraryLoad'));
+      artjs.TemplateLibrary.onLoad.add(artjs.$D(this, '_onLibraryLoad'));
     },
     
     _toMonthOption: function(i, idx) {
@@ -210,8 +210,8 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
       return {value: i, text: i};
     },
     
-    _onLibraryLoad: function() {
-      artjs.TemplateLibrary.loadTemplate('artjs/calendar');
+    _onLibraryLoad: function(library) {
+      library.loadTemplate('artjs/calendar');
     }
   },
   artjs.Component

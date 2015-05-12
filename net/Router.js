@@ -8,6 +8,14 @@ artjs.Router = artjs.net.Router = {
 
   _name: 'Router',
   
+  getCurrentPath: function() {
+    return this.getPath(location.hash);
+  },
+  
+  getPath: function(hash) {
+    return artjs.String.match(hash, this.ROUTE_RE);
+  },
+  
   init: function() {
     this._update();
     
@@ -15,9 +23,7 @@ artjs.Router = artjs.net.Router = {
   },
   
   navigateTo: function(hash) {
-    var path = artjs.String.match(hash, this.ROUTE_RE);
-    
-    this._navigateTo(artjs.String.toS(path));
+    this._navigateTo(artjs.String.toS(this.getPath(hash)));
   },
   
   toString: function() {

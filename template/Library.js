@@ -23,11 +23,15 @@ artjs.TemplateLibrary = artjs.template.Library = {
   },
   
   init: function() {
+    this.onLoad = new artjs.Event('TemplateLibrary:onLoad');
+    
     this._onLoadSuccessDelegate = artjs.$D(this, '_onLoadSuccess');
     
     this._templatesToLoad = this.config.BASE_TEMPLATES.concat(this.config.TEMPLATES);
     
     artjs.Array.each(this._templatesToLoad, this._load, this);
+    
+    artjs.Element.hide(document.body);
     
     this._loadCheck();
   },
@@ -55,8 +59,10 @@ artjs.TemplateLibrary = artjs.template.Library = {
     
     artjs.ComponentScanner.scan(body);
     
-    this._templatesContainer = artjs.Element.insert(body, artjs.$E('div', {id: 'artjs-Templates'}));
+    this._templatesContainer = artjs.Element.insert(body, artjs.$E('div', {id: 'artjs-templates'}));
     
-    artjs.onLibraryLoad.fire(this);
+    artjs.Element.show(body);
+    
+    this.onLoad.fire(this);
   }
 };
