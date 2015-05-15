@@ -5,7 +5,7 @@ artjs.Router = artjs.net.Router = {
   
   mapping: {
   },
-
+  
   _name: 'Router',
   
   getCurrentPath: function() {
@@ -16,14 +16,38 @@ artjs.Router = artjs.net.Router = {
     return artjs.String.match(hash, this.ROUTE_RE);
   },
   
+  getRoute: function() {
+    return this._route;
+  },
+  
   init: function() {
-    this._update();
+    this.navigateTo(null, true);
     
     addEventListener('popstate', artjs.$DC(this, '_onPopState'));
   },
   
-  navigateTo: function(hash) {
-    this._navigateTo(artjs.String.toS(this.getPath(hash)));
+  navigateTo: function(hash, first) {
+    var path = artjs.String.toS(this.getPath(hash || location.hash));
+    var fragments = path.split('/');
+    var controllerId = artjs.String.nullifyEmpty(fragments.shift());
+    var action = fragments.shift();
+    var declaredController = this.mapping[controllerId];
+    var controller = declaredController || this.defaultController;
+    var delegate;
+    
+    if (controller) {
+      delegate = new artjs.Delegate(controller, action || 'index');
+    
+      if (controller == this.defaultController) {
+         delegate.args.push(controllerId);
+      }
+      
+      delegate.args.push(first);
+      
+      delegate.invoke();
+    }
+    
+    this._route = delegate;
   },
   
   toString: function() {
@@ -31,30 +55,6 @@ artjs.Router = artjs.net.Router = {
   },
   
   _onPopState: function() {
-    this._update();
-  },
-  
-  _navigateTo: function(path) {
-    var fragments = path.split('/');
-    var controllerId = fragments.shift();
-    var action = fragments.shift();
-    var declaredController = this.mapping[controllerId];
-    var controller = declaredController || this.defaultController;
-    
-    if (controller) {
-      var delegate = new artjs.Delegate(controller, action || 'index');
-    
-      delegate.args = fragments;
-      
-      if (!declaredController) {
-         delegate.args.unshift(controllerId);
-      }
-      
-      delegate.invoke();
-    }
-  },
-  
-  _update: function() {
-    this.navigateTo(location.hash);
+    this.navigateTo();
   }
 };

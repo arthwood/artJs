@@ -350,7 +350,7 @@ artjs.Element = artjs.utils.Element = {
   setClasses: function(e, classes) {
     this._setClassPair.element = e;
     
-    artjs.Object.eachPair(classes, this._setClassPair, this);
+    artjs.Object.each(classes, this._setClassPair, this);
   },
   
   _setClassPair: function(className, add) {

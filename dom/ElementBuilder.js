@@ -33,7 +33,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
       
       sa.e = e;
       
-      artjs.Object.eachPair(this.attributes, sa);
+      artjs.Object.each(this.attributes, sa);
       
       if (this.value && !this.isEmpty) { e.innerHTML = this.value; }
       

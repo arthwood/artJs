@@ -7,11 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   artjs.TemplateLibrary.init();
   artjs.ComponentSweeper.init();
   artjs.Calendar.init();
-  
-  artjs.TemplateLibrary.onLoad.add(artjs.$F(function() {
-    artjs.Router.init();
-  }));
-  
+  artjs.TemplateLibrary.onLoad.add(artjs.$D(artjs.Router, 'init'));
   artjs.onDocumentLoad.fire();
 }, false);
 

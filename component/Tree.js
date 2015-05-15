@@ -4,15 +4,17 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     
     this._hash = Boolean(hash);
     this._leafClassToggler = new artjs.ClassToggler('selected');
+    this._noAction = false;
     this.onNode = new artjs.Event('artjs.Tree::onNode');
     this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
     artjs.on('click', this._element, artjs.$D(this, '_onClick'), 'li a');
   },
   {
-    clickAt: function(path) {
+    clickAt: function(path, noAction) {
+      this._noAction = Boolean(noAction);
       this._openingNode = this.getElement();
-      
       artjs.Array.each(path, this._openAt, this);
+      this._noAction = false;
     },
       
     getCurrent: function() {
@@ -35,7 +37,10 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     
     _openAt: function(i) {
       this._openingNode = artjs.Element.elementAt(artjs.Selector.find(this._openingNode, 'ul'), i);
-      this._onElement(artjs.Element.firstElement(this._openingNode));
+      
+      var element = artjs.Element.firstElement(this._openingNode);
+      
+      this._onElement(element);
     },
     
     _renderNode: function(node) {
@@ -98,7 +103,9 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     _onLeaf: function(e) {
       this._leafClassToggler.toggle(artjs.Element.parent(this._current));
       
-      this.onLeaf.fire(this, e);
+      if (!this._noAction) {
+        this.onLeaf.fire(this, e);
+      }
     }
   },
   {

@@ -4,7 +4,7 @@ artjs.Calendar = artjs.ui.Calendar = artjs.Class(
 
     this._hide();
     
-    this._register({
+    this._registerAll({
       'artjs-Calendar-years': '_onYearsSelectLoaded',
       'artjs-Calendar-months': '_onMonthsSelectLoaded',
       'artjs-Calendar-days': '_onDaysTableLoaded',

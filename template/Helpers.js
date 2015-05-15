@@ -42,7 +42,7 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
   },
   
   registerAll: function(helpers) {
-    artjs.Object.eachPair(helpers, this.register, this);
+    artjs.Object.each(helpers, this.register, this);
   },
   
   register: function(name, method) {

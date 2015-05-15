@@ -46,7 +46,7 @@ artjs.Object = artjs.utils.Object = {
   each: function(obj, func, context) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        func.call(context, obj[i]);
+        func.call(context, i, obj[i]);
       }
     }
   },
@@ -59,10 +59,10 @@ artjs.Object = artjs.utils.Object = {
     }
   },
   
-  eachPair: function(obj, func, context) {
+  eachValue: function(obj, func, context) {
     for (var i in obj) {
       if (obj.hasOwnProperty(i)) {
-        func.call(context, i, obj[i]);
+        func.call(context, obj[i]);
       }
     }
   },
@@ -219,9 +219,9 @@ artjs.Object = artjs.utils.Object = {
   },
   
   removeValue: function(obj, val) {
-    var delegate = artjs.$D(this, '_eachPairDeleteValue', obj, val);
+    var delegate = artjs.$D(this, '_eachDeleteValue', obj, val);
     
-    this.eachPair(obj, delegate.callback());
+    this.each(obj, delegate.callback());
   },
   
   removeKeys: function(obj, keys) {
@@ -334,7 +334,7 @@ artjs.Object = artjs.utils.Object = {
     return [key, value];
   },
 
-  _eachPairDeleteValue: function(i, j, obj, val) {
+  _eachDeleteValue: function(i, j, obj, val) {
     if (j === val) {
       this._deleteKey(obj, i);
     }

@@ -20,9 +20,9 @@ artjs.Selector = artjs.dom.Selector = {
   },
   
   isDescendantOf: function(element, ref) {
-    var descendants = this._getDescendants(element, ref);
+    var ancestors = this.getAncestors(element, ref);
 
-    return artjs.Object.isPresent(descendants);
+    return artjs.Object.isPresent(ancestors);
   },
   
   isSelfOrDescendantOf: function(element, ref) {
@@ -41,7 +41,7 @@ artjs.Selector = artjs.dom.Selector = {
     return this.isDescendantOf(e);
   },
   
-  _getDescendants: function(e, ref) {
+  getAncestors: function(e, ref) {
     var result = [];
     
     while (e = this.parent(e)) {
