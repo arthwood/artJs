@@ -32,11 +32,11 @@ artjs.Component = artjs.component.Base = artjs.Class(
       return handler;
     },
     
-    _register: function(map) {
-      artjs.Object.eachPair(map, this._registerEach, this);
+    _registerAll: function(map) {
+      artjs.Object.each(map, this._register, this);
     },
     
-    _registerEach: function(k, v) {
+    _register: function(k, v) {
       this.ctor.onLoad(k, artjs.$D(this, v));
     },
     

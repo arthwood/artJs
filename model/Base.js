@@ -9,7 +9,7 @@ artjs.Model = artjs.model.Base = artjs.Class(
       
       Object.defineProperties(this, properties);
       
-      artjs.Object.eachPair(props, this._setProperty, this);
+      artjs.Object.each(props, this._setProperty, this);
     },
     
     addProperty: function(prop, value) {
@@ -44,7 +44,7 @@ artjs.Model = artjs.model.Base = artjs.Class(
     },
     
     setProperties: function(props) {
-      artjs.Object.eachPair(props, this.setProperty, this);
+      artjs.Object.each(props, this.setProperty, this);
     },
     
     setProperty: function(prop, value) {

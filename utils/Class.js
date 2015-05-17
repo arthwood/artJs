@@ -37,11 +37,11 @@ artjs.ClassBuilder = function(ctor, proto, stat, superclass) {
   this.ctor.prototype.ctor = this.ctor;
   
   if (proto) {
-    artjs.Object.eachPair(proto, this._eachProto, this);
+    artjs.Object.each(proto, this._eachProto, this);
   }
   
   if (stat) {
-    artjs.Object.eachPair(stat, this._eachStat, this);
+    artjs.Object.each(stat, this._eachStat, this);
   }
   
   this.ctor._onCreated();

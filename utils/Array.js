@@ -1,8 +1,57 @@
 artjs.Array = artjs.utils.Array = {
   _name: 'Array',
   
-  toString: function() {
-    return this._name;
+  all: function(arr, func, context) {
+    var test = func || this.identity;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (!test.call(context || this, item, parseInt(i, 10), arr)) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  },
+  
+  any: function (arr, func, context) {
+    var test = func || this.identity;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (test.call(context || this, item, parseInt(i, 10), arr)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  },
+  
+  areItemsEqual: function(i, idx, arr, func, context) {
+    return this.uniq(i, func, context).length == 1;
+  },
+  
+  arrify: function(v, idx) {
+    var args = [];
+    var n = v.length;
+
+    for (var i = idx || 0; i < n; i++) {
+      args.push(v[i]);
+    }
+
+    return args;
+  },
+  
+  beforeLast: function(arr) {
+    return this.getItemAt(arr, arr.length - 2);
   },
   
   build: function(n, func, context) {
@@ -13,6 +62,69 @@ artjs.Array = artjs.utils.Array = {
     }
     
     return arr;
+  },
+  
+  clone: function(arr) {
+    return arr.concat();
+  },
+  
+  compact: function(arr) {
+    return this.reject(arr, artjs.Object.isNull, this);
+  },
+  
+  detect: function(arr, func, context) {
+    var test = func || this.identity;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        if (test.call(context || this, item, parseInt(i, 10), arr)) {
+          return item;
+        }
+      }
+    }
+    
+    return null;
+  },
+  
+  each: function(arr, func, context) {
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        func.call(context, item, parseInt(i, 10), arr);
+      }
+    }
+  },
+
+  eachIndex: function(arr, func, context) {
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        func.call(context, parseInt(i, 10), arr);
+      }
+    }
+  },
+  
+  eachItem: function(arr, func, context) {
+    var item;
+
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+
+        func.call(context, item, arr);
+      }
+    }
+  },
+  
+  equal: function(arr, func, context) {
+    var delegate = artjs.$D(this, 'areItemsEqual', func, context);
+    
+    return this.all(this.transpose(arr), delegate.callback(), this);
   },
   
   fromRange: function(point) {
@@ -30,24 +142,44 @@ artjs.Array = artjs.utils.Array = {
     return this.getItemAt(arr, 0);
   },
   
-  second: function(arr) {
-    return this.getItemAt(arr, 1);
-  },
-  
-  third: function(arr) {
-    return this.getItemAt(arr, 2);
-  },
-  
-  last: function(arr) {
-    return this.getItemAt(arr, arr.length - 1);
-  },
-  
-  beforeLast: function(arr) {
-    return this.getItemAt(arr, arr.length - 2);
+  flatten: function(arr) {
+    return this.inject(arr, [], this._flatten, this);
   },
   
   getItemAt: function(arr, i) {
     return arr[i];
+  },
+  
+  groupBy: function(arr, func, context, keepOrder) {
+    var test = func || this.identity;
+    var result = [];
+    var values = {};
+    var group;
+    var item;
+    
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        group = String(test.call(context || this, item, parseInt(i, 10)));
+        
+        if (values[group] == undefined) {
+          result.push(new artjs.Point(group, values[group] = []));
+        }
+        
+        values[group].push(item);
+      }
+    }
+    
+    if (!keepOrder) {
+      result = artjs.Object.fromPoints(result);
+    }
+    
+    return result;
+  },
+  
+  identity: function(i) {
+    return i;
   },
   
   includesInv: function(item, arr) {
@@ -64,110 +196,8 @@ artjs.Array = artjs.utils.Array = {
     return this.all(subset, this._includesAll);
   },
   
-  insertAt: function(arr, idx, insertion) {
-    return arr.slice(0, idx).concat(insertion).concat(arr.slice(idx));
-  },
-  
-  removeAt: function(arr, idx) {
-    return this.first(arr.splice(idx, 1));
-  },
-
-  removeItem: function(arr, item, onlyFirst) {
-    var result = [];
-    var n = arr.length;
-
-    while (n-- > 0) {
-      if (arr[n] === item) {
-        result.push(n);
-        this.removeAt(arr, n);
-        
-        if (onlyFirst) { break; }
-      }
-    }
-    
-    return result.reverse();
-  },
-  
-  removeItems: function(arr, items) {
-    this._contains.items = items;
-    
-    return this.reject(arr, this._contains, this);
-  },
-  
-  $removeItems: function(arr, items) {
-    this._contains.items = items;
-    
-    return this.$reject(arr, this._contains, this);
-  },
-
-  arrify: function(v, idx) {
-    var args = [];
-    var n = v.length;
-
-    for (var i = idx || 0; i < n; i++) {
-      args.push(v[i]);
-    }
-
-    return args;
-  },
-  
-  map: function(arr, func, context) {
-    var result = [];
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        result.push(func.call(context, item, parseInt(i, 10), arr));
-      }
-    }
-
-    return result;
-  },
-
-  invoke: function(arr, meth) {
-    var delegate = artjs.$D(this, '_invoke', meth, this.arrify(arguments, 2));
-    
-    return this.map(arr, delegate.callback());
-  },
-  
-  pluck: function(arr, prop) {
-    this._pluck.prop = prop;
-    
-    return this.map(arr, this._pluck, this);
-  },
-  
-  each: function(arr, func, context) {
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        func.call(context, item, parseInt(i, 10), arr);
-      }
-    }
-  },
-
-  eachItem: function(arr, func, context) {
-    var item;
-
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-
-        func.call(context, item, arr);
-      }
-    }
-  },
-
-  eachIndex: function(arr, func, context) {
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        func.call(context, parseInt(i, 10), arr);
-      }
-    }
+  indexOf: function(arr, item) {
+    return arr.indexOf ? arr.indexOf(item) : this._indexOf(arr, item);
   },
   
   inject: function(arr, init, func, context) {
@@ -190,40 +220,76 @@ artjs.Array = artjs.utils.Array = {
     return result;
   },
   
-  flatten: function(arr) {
-    return this.inject(arr, [], this._flatten, this);
+  insertAt: function(arr, idx, insertion) {
+    return arr.slice(0, idx).concat(insertion).concat(arr.slice(idx));
   },
   
-  select: function(arr, func, context) {
+  intersection: function(arr) {
+    this._intersectionSelect.array = arr.slice(1);
+    
+    return this.select(arr[0], this._intersectionSelect, this);
+  },
+  
+  invoke: function(arr, meth) {
+    var delegate = artjs.$D(this, '_invoke', meth, this.arrify(arguments, 2));
+    
+    return this.map(arr, delegate.callback());
+  },
+  
+  isEmpty: function(arr) {
+    return arr.length == 0;
+  },
+
+  isNotEmpty: function(arr) {
+    return !this.isEmpty(arr);
+  },
+  
+  last: function(arr) {
+    return this.getItemAt(arr, arr.length - 1);
+  },
+  
+  map: function(arr, func, context) {
     var result = [];
-    var test = func || this.identity;
     var item;
     
     for (var i in arr) {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (test.call(context, item, parseInt(i, 10), arr)) { 
-          result.push(item); 
-        }
+        result.push(func.call(context, item, parseInt(i, 10), arr));
       }
     }
-    
+
     return result;
   },
   
-  $select: function(arr, func, context) {
-    var n = arr.length - 1;
-    var test = func || this.identity;
+  numerize: function(arr) {
+    return this.map(arr, this._numerize);
+  },
+  
+  partition: function(arr, func, context) {
+    var point = new artjs.Point([], []);
     var item;
     
-    for (var i = n; i >= 0; i--) {
-      item = arr[i];
-      
-      if (!test.call(context || this, item, parseInt(i, 10), arr)) { 
-        this.removeAt(arr, i);
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i)) {
+        item = arr[i];
+        
+        (func.call(context, item, i, arr) ? point.x : point.y).push(item);
       }
     }
+    
+    return point;
+  },
+  
+  pluck: function(arr, prop) {
+    this._pluck.prop = prop;
+    
+    return this.map(arr, this._pluck, this);
+  },
+  
+  print: function(arr) {
+    this.eachItem(arr, this._print, this);
   },
   
   reject: function(arr, func, context) {
@@ -261,7 +327,44 @@ artjs.Array = artjs.utils.Array = {
     return result;
   },
   
-  detect: function(arr, func, context) {
+  removeAt: function(arr, idx) {
+    return this.first(arr.splice(idx, 1));
+  },
+
+  removeItem: function(arr, item, onlyFirst) {
+    var result = [];
+    var n = arr.length;
+
+    while (n-- > 0) {
+      if (arr[n] === item) {
+        result.push(n);
+        this.removeAt(arr, n);
+        
+        if (onlyFirst) { break; }
+      }
+    }
+    
+    return result.reverse();
+  },
+  
+  removeItems: function(arr, items) {
+    this._contains.items = items;
+    
+    return this.reject(arr, this._contains, this);
+  },
+  
+  $removeItems: function(arr, items) {
+    this._contains.items = items;
+    
+    return this.$reject(arr, this._contains, this);
+  },
+  
+  second: function(arr) {
+    return this.getItemAt(arr, 1);
+  },
+  
+  select: function(arr, func, context) {
+    var result = [];
     var test = func || this.identity;
     var item;
     
@@ -269,23 +372,47 @@ artjs.Array = artjs.utils.Array = {
       if (arr.hasOwnProperty(i)) {
         item = arr[i];
         
-        if (test.call(context || this, item, parseInt(i, 10), arr)) {
-          return item;
+        if (test.call(context, item, parseInt(i, 10), arr)) { 
+          result.push(item); 
         }
       }
     }
     
-    return null;
+    return result;
   },
-
-  equal: function(arr, func, context) {
-    var delegate = artjs.$D(this, 'areItemsEqual', func, context);
+  
+  $select: function(arr, func, context) {
+    var n = arr.length - 1;
+    var test = func || this.identity;
+    var item;
     
-    return this.all(this.transpose(arr), delegate.callback(), this);
+    for (var i = n; i >= 0; i--) {
+      item = arr[i];
+      
+      if (!test.call(context || this, item, parseInt(i, 10), arr)) { 
+        this.removeAt(arr, i);
+      }
+    }
   },
-
-  areItemsEqual: function(i, idx, arr, func, context) {
-    return this.uniq(i, func, context).length == 1;
+  
+  selectNonEmpty: function(arr) {
+    return this.select(arr, this.isNotEmpty, this);
+  },
+  
+  sum: function(arr) {
+    return Number(this.inject(arr, 0, this._sum, this));
+  },
+  
+  stringify: function(arr) {
+    return this.map(arr, this._stringify, this);
+  },
+  
+  third: function(arr) {
+    return this.getItemAt(arr, 2);
+  },
+  
+  toString: function() {
+    return this._name;
   },
   
   transpose: function(arr) {
@@ -302,134 +429,15 @@ artjs.Array = artjs.utils.Array = {
     
     return result;
   },
-
-  all: function(arr, func, context) {
-    var test = func || this.identity;
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        if (!test.call(context || this, item, parseInt(i, 10), arr)) {
-          return false;
-        }
-      }
-    }
-    
-    return true;
-  },
-  
-  any: function (arr, func, context) {
-    var test = func || this.identity;
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        if (test.call(context || this, item, parseInt(i, 10), arr)) {
-          return true;
-        }
-      }
-    }
-    
-    return false;
-  },
-  
-  identity: function(i) {
-    return i;
-  },
-  
-  partition: function(arr, func, context) {
-    var point = new artjs.Point([], []);
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        (func.call(context, item, i, arr) ? point.x : point.y).push(item);
-      }
-    }
-    
-    return point;
-  },
   
   uniq: function(arr, func, context) {
     var groups = this.groupBy(arr, func, context, true);
     
     return this.map(this.pluck(groups, 'y'), this.first, this);
   },
-
-  groupBy: function(arr, func, context, keepOrder) {
-    var test = func || this.identity;
-    var result = [];
-    var values = {};
-    var group;
-    var item;
-    
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i)) {
-        item = arr[i];
-        
-        group = String(test.call(context || this, item, parseInt(i, 10)));
-        
-        if (values[group] == undefined) {
-          result.push(new artjs.Point(group, values[group] = []));
-        }
-        
-        values[group].push(item);
-      }
-    }
-    
-    if (!keepOrder) {
-      result = artjs.Object.fromPoints(result);
-    }
-    
-    return result;
-  },
   
-  indexOf: function(arr, item) {
-    return arr.indexOf ? arr.indexOf(item) : this._indexOf(arr, item);
-  },
-  
-  intersection: function(arr) {
-    this._intersectionSelect.array = arr.slice(1);
-    
-    return this.select(arr[0], this._intersectionSelect, this);
-  },
-  
-  selectNonEmpty: function(arr) {
-    return this.select(arr, this.isNotEmpty, this);
-  },
-  
-  compact: function(arr) {
-    return this.reject(arr, artjs.Object.isNull, this);
-  },
-
-  isEmpty: function(arr) {
-    return arr.length == 0;
-  },
-
-  isNotEmpty: function(arr) {
-    return !this.isEmpty(arr);
-  },
-  
-  numerize: function(arr) {
-    return this.map(arr, this._numerize);
-  },
-
-  print: function(arr) {
-    this.eachItem(arr, this._print, this);
-  },
-  
-  sum: function(arr) {
-    return Number(this.inject(arr, 0, this._sum, this));
-  },
-  
-  stringify: function(arr) {
-    return this.map(arr, this._stringify, this);
+  _contains: function(i) {
+    return this.contains(arguments.callee.items, i);
   },
   
   _flatten: function(mem, i, idx) {
@@ -438,6 +446,16 @@ artjs.Array = artjs.utils.Array = {
   
   _includesAll: function(i, idx) {
     return this.includesInv(i, arguments.callee.arr);
+  },
+  
+  _indexOf: function(arr, item) {
+    for (var i in arr) {
+      if (arr.hasOwnProperty(i) && arr[i] === item) {
+        return parseInt(i);
+      }
+    }
+
+    return -1;
   },
   
   _intersectionSelect: function(i) {
@@ -472,19 +490,5 @@ artjs.Array = artjs.utils.Array = {
   
   _stringify: function(i) {
     return artjs.Object.isNull(i) ? '' : i.toString();
-  },
-
-  _indexOf: function(arr, item) {
-    for (var i in arr) {
-      if (arr.hasOwnProperty(i) && arr[i] === item) {
-        return parseInt(i);
-      }
-    }
-
-    return -1;
-  },
-  
-  _contains: function(i) {
-    return this.contains(arguments.callee.items, i);
-  },
+  }
 };

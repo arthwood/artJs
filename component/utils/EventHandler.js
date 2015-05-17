@@ -1,9 +1,10 @@
 artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(
-  function(component, eventId, delegate, type) {
+  function(component, eventId, delegate, type, allowSelf) {
     this._component = component;
     this._eventId = eventId;
     this._delegate = delegate;
     this._type = type;
+    this._allowSelf = Boolean(allowSelf);
     this._onEventDelegate = artjs.$D(this, '_onEvent');
     
     artjs.Broadcaster.addListener(this._eventId, this._onEventDelegate);
@@ -16,7 +17,7 @@ artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(
     _onEvent: function(component) {
       var source = component.getElement();
       var target = this._component.getElement();
-      var fire;
+      var fire = false;
   
       switch (this._type) {
         case this.ctor.DOWN:
@@ -26,7 +27,9 @@ artjs.component.utils.EventHandler = artjs.ComponentEventHandler = artjs.Class(
           fire = artjs.Selector.isDescendantOf(source, target);
           break;
         default:
-          fire = true;
+          if ((source != target) || this._allowSelf) {
+            fire = true;
+          }
       }
   
       if (fire) {
