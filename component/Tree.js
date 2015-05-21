@@ -3,7 +3,6 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     this.super(element);
     
     this._hash = Boolean(hash);
-    this._leafClassToggler = new artjs.ClassToggler('selected');
     this._noAction = false;
     this.onNode = new artjs.Event('artjs.Tree::onNode');
     this.onLeaf = new artjs.Event('artjs.Tree::onLeaf');
@@ -101,8 +100,6 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     },
     
     _onLeaf: function(e) {
-      this._leafClassToggler.toggle(artjs.Element.parent(this._current));
-      
       if (!this._noAction) {
         this.onLeaf.fire(this, e);
       }

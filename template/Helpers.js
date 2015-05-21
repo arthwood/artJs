@@ -1,4 +1,8 @@
 artjs.TemplateHelpers = artjs.template.Helpers = {
+  linkTo: function(caption, path) {
+    return this.renderElement('a', {href: '#/' + path}, caption);
+  },
+  
   render: function(templateId, scope) {
     var template = artjs.TemplateLibrary.getTemplate(templateId);
     

@@ -11,10 +11,8 @@ artjs.Link = artjs.component.Link = artjs.Class(
       return artjs.Element.getAttributes(this._element).href;
     },
     
-    _onClick: function(e) {
+    _onClick: function(e, ee) {
       this.onClick.fire(e);
-      
-      artjs.Router.navigateTo(this.getHref());
     }
   },
   {

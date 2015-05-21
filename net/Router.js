@@ -1,60 +1,43 @@
 artjs.Router = artjs.net.Router = {
-  ROUTE_RE: new RegExp('#!?/(.*)'),
-  
-  defaultController: null,
+  defaultController: new artjs.Controller(),
   
   mapping: {
   },
   
   _name: 'Router',
   
-  getCurrentPath: function() {
-    return this.getPath(location.hash);
-  },
-  
-  getPath: function(hash) {
-    return artjs.String.match(hash, this.ROUTE_RE);
-  },
-  
-  getRoute: function() {
-    return this._route;
-  },
-  
   init: function() {
-    this.navigateTo(null, true);
+    this.onNavigate = new artjs.Event('Router:onNavigate');
     
     addEventListener('popstate', artjs.$DC(this, '_onPopState'));
-  },
-  
-  navigateTo: function(hash, first) {
-    var path = artjs.String.toS(this.getPath(hash || location.hash));
-    var fragments = path.split('/');
-    var controllerId = artjs.String.nullifyEmpty(fragments.shift());
-    var action = fragments.shift();
-    var declaredController = this.mapping[controllerId];
-    var controller = declaredController || this.defaultController;
-    var delegate;
     
-    if (controller) {
-      delegate = new artjs.Delegate(controller, action || 'index');
-    
-      if (controller == this.defaultController) {
-         delegate.args.push(controllerId);
-      }
-      
-      delegate.args.push(first);
-      
-      delegate.invoke();
-    }
-    
-    this._route = delegate;
+    artjs.TemplateLibrary.onLoad.add(artjs.$D(this, '_onLibraryLoad'));
   },
   
   toString: function() {
     return this._name;
   },
   
+  _navigateTo: function(route) {
+    this.onNavigate.fire(route);
+    
+    route.go();
+  },
+  
+  _reload: function() {
+    var route = new artjs.Route();
+    
+    this._navigateTo(route);
+  },
+  
+  _onLibraryLoad: function() {
+    var route = new artjs.Route({action: 'load'});
+    
+    this._navigateTo(route);
+    this._reload();
+  },
+  
   _onPopState: function() {
-    this.navigateTo();
+    this._reload();
   }
 };
