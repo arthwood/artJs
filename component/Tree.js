@@ -9,13 +9,13 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
     artjs.on('click', this._element, artjs.$D(this, '_onClick'), 'li a');
   },
   {
-    clickAt: function(path, noAction) {
-      this._noAction = Boolean(noAction);
+    openAt: function(path) {
       this._openingNode = this.getElement();
       artjs.Array.each(path, this._openAt, this);
+      this._openingNode = null;
       this._noAction = false;
     },
-      
+    
     getCurrent: function() {
       return this._current;
     },
@@ -92,15 +92,16 @@ artjs.Tree = artjs.component.Tree = artjs.Class(
       }
       
       var ul = artjs.Element.next(this._current);
+      var action = this._openingNode ? 'show' : 'toggle';
       
-      artjs.Element.toggle(ul);
+      artjs.Element[action](ul);
       artjs.Element.setClass(artjs.$parent(this._current), 'expanded', !artjs.Element.isHidden(ul));
       
       this.onNode.fire(this, e);
     },
     
     _onLeaf: function(e) {
-      if (!this._noAction) {
+      if (!this._openingNode) {
         this.onLeaf.fire(this, e);
       }
     }

@@ -48,6 +48,10 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       return delegate;
     },
     
+    bind: function(object, methodName) {
+      this._bind(object, object, methodName);
+    },
+    
     bindAll: function(context) {
       var container = context.ctor ? context.ctor.prototype : context;
       var callbacks = artjs.Object.keys(artjs.Object.select(container, this._isCallback, this));
@@ -59,17 +63,12 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
       artjs.Array.each(all, this._bindEach, this);
     },
     
-    delegateTo: function(source, target) {
-      var functions = artjs.Object.keys(artjs.Object.select(source, this._isPublicMethod, this));
-      
-      this._bindSource = source;
-      this._bindTarget = target;
-      
-      artjs.Array.each(functions, this._bindEach, this);
+    func: function(method) {
+      return this.create.apply(this, [null, method].concat(artjs.Array.arrify(arguments, 1)));
     },
     
-    func: function(method, withSource) {
-      return this.create(null, method, withSource);
+    _bind: function(target, object, methodName) {
+      target[methodName] = this.callback(object, methodName);
     },
     
     _isCallback: function(v, k) {
@@ -85,7 +84,7 @@ artjs.Delegate = artjs.events.Delegate = artjs.Class(
     },
     
     _bindEach: function(i) {
-      this._bindTarget[i] = this.callback(this._bindSource, i);
+      this._bind(this._bindTarget, this._bindSource, i);
     }
   }
 );

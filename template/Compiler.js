@@ -3,7 +3,7 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
     this._tagRegEx = /\{\{[^{}]+\}\}/g;
     this._methodRegEx = /^(\w+)\((.*)\)$/;
     this._content = content;
-    this._scope = scope;
+    this._scope = scope || {};
   },
   {
     compile: function() {
@@ -36,9 +36,13 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
       var argsStr = artjs.Array.first(exec);
       var args = artjs.Array.map(argsStr.split(','), this._stripArg, this);
       var argsValues = artjs.Array.map(args, this._parseArg, this);
-      var helpers = artjs.TemplateHelpers;
+      var delegate = artjs.$D(artjs.TemplateHelpers, action);
       
-      return helpers[action].apply(helpers, argsValues.concat(this._scope));
+      if (!delegate.method) { throw 'Trying to call unregistered "' + action + '" helper'; }
+      
+      delegate.args = argsValues.concat(this._scope);
+      
+      return delegate.invoke();
     },
     
     _parseArg: function(i) {

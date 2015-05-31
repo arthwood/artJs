@@ -1,5 +1,4 @@
-artjs.Broadcaster = artjs.events.Broadcaster = new artjs.Channel('Broadcaster');
-
+artjs.Broadcaster = new artjs.Channel('Broadcaster');
 artjs.onDocumentLoad = new artjs.Event('document:load');
 artjs.onWindowLoad = new artjs.Event('window:load');
 

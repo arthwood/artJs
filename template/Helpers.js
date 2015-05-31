@@ -41,7 +41,11 @@ artjs.TemplateHelpers = artjs.template.Helpers = {
     return this.renderElement('table', null, head + foot + body);
   },
   
-  renderElement: function(name, attrs, value) {
+  renderElement: function(name, attrs, value, compile) {
+    if (compile) {
+      value = artjs.TemplateBase.render(value);
+    }
+    
     return artjs.$B(name, attrs, value).toString();
   },
   

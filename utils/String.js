@@ -31,6 +31,13 @@ artjs.String = artjs.utils.String = {
     return str.match(new RegExp(pattern, 'g')).length;
   },
   
+  escapeHtml: function(str) {
+    return str
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '\"');
+  },
+  
   first: function(str) {
     return str.substr(0, 1);
   },
