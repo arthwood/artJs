@@ -8,7 +8,7 @@ artjs.ElementBuilder = artjs.dom.ElementBuilder = artjs.Class(
   {
     toString: function() {
       var attributes = this.attributes && artjs.Object.isNotEmpty(this.attributes) 
-        ? (' ' + this.ctor._attributesString(this.attributes) + ' ') 
+        ? ' ' + this.ctor._attributesString(this.attributes)
         : '';
       var part;
       

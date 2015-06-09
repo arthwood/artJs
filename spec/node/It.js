@@ -84,6 +84,10 @@ artjs.It = artjs.spec.node.It = artjs.Class(
       return artjs.Array.select(this.instances, this._hasFocus, this);
     },
     
+    getRunInstances: function() {
+      return artjs.Spec.hasFocus() ? this.instancesWithFocus() : this.instances;
+    },
+    
     _hasFocus: function(instance) {
       return instance.hasFocus();
     },

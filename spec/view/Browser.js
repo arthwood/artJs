@@ -24,7 +24,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
     },
     
     onComplete: function(runner) {
-      var its = artjs.It.instances;
+      var its = artjs.It.getRunInstances();
       var duration = runner.getDuration();
       var failures = artjs.Array.reject(its, this._isSuccess);
       var success = artjs.Array.isEmpty(failures);
@@ -40,7 +40,7 @@ artjs.BrowserSpecView = artjs.spec.view.Browser = artjs.Class(
       var statsText = success
         ? n + ' tests in total.'
         : k + ' tests failed of ' + n + ' total.';
-      var durationText = 'Duration: ' + artjs.Date.miliToHMSM(duration);
+      var durationText = 'Duration: ' + artjs.Date.msToHMSM(duration);
       var resultElement = artjs.$E('p', {className: 'result'}, resultText);
       var statElement = artjs.$E('p', {className: 'stat'}, statsText + '<br/>' + durationText);
       

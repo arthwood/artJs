@@ -130,17 +130,12 @@ artjs.String = artjs.utils.String = {
   
   sub: function(str, i, j) {
     var n = str.length;
-    var jZero = (j === 0);
-    
-    str += str;
-    i = i % n;
-    j = j % n;
-    if (i < 0) { i += n; }
-    if (j < 0) { j += n; }
-    if (jZero) { j = n; }
-    if (j < i) { j += n; }
-    
-    return str.substring(i, j);
+    var start = (i % n + n) % n;
+    var end = (j % n + n) % n;
+   
+    if ((end < start) || (end == start) && (i != j)) end += n;
+   
+    return (str + str).substring(start, end);
   },
   
   toBoolean: function(str) {

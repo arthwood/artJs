@@ -1,12 +1,12 @@
-artjs.component.utils.TreeCrawler = artjs.TreeCrawler = {
-  find: function(tree, value) {
+artjs.utils.TreeCrawler = artjs.TreeCrawler = {
+  find: function(data, value) {
     var result = [];
     
     this._value = value;
     this._result = result;
     this._path = [];
     
-    this._traverse(tree.getData());
+    this._traverse(data);
     
     return result;
   },

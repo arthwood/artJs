@@ -1,23 +1,10 @@
 artjs.Date = artjs.utils.Date = {
   _name: 'Date',
   
-  toString: function() {
-    return this._name; 
-  },
-  
-  getTime: function() {
-    return (new Date()).getTime();
+  copy: function(date) {
+    return new Date(date);
   },
 
-  monthDaysNum: function(date) {
-    var d = this.copy(date);
-    
-    d.setMonth(d.getMonth() + 1);
-    d.setDate(0);
-    
-    return d.getDate();
-  },
-  
   firstDate: function(date) {
     var d = this.copy(date);
     
@@ -29,46 +16,6 @@ artjs.Date = artjs.utils.Date = {
   firstDay: function(date) {
     return this.firstDate(date).getDay();
   },
-  
-  toHMS: function(date, separator) {
-    var su = artjs.String;
-    
-    separator = separator || ':';
-    
-    return su.addZeros(date.getHours().toString(), 2, false) + 
-      separator + su.addZeros(date.getMinutes().toString(), 2, false) + 
-      separator + su.addZeros(date.getSeconds().toString(), 2, false);
-  },
-  
-  toYMD: function(date, separator) {
-    var su = artjs.String;
-    
-    separator = separator || '-';
-    
-    return date.getFullYear() +
-      separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) +
-      separator + su.addZeros(date.getDate().toString(), 2, false);
-  },
-  
-  toDMY: function(date, separator) {
-    separator = separator || '-';
-    
-    var ymd = this.toYMD(date, separator);
-    var arr = ymd.split(separator);
-    
-    arr.reverse();
-    
-    return arr.join(separator);
-  },
-  
-  fromYMD: function(str, separator) {
-    separator = separator || '-';
-    
-    var arr = str.split(separator);
-    var au = artjs.Array;
-    
-    return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
-  },
 
   fromDMY: function(str, separator) {
     separator = separator || '-';
@@ -79,10 +26,25 @@ artjs.Date = artjs.utils.Date = {
     return new Date(parseInt(au.third(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.first(arr), 10));
   },
 
-  minutesToHM: function(minutes, separator) {
-    separator = separator || ':';
+  fromYMD: function(str, separator) {
+    separator = separator || '-';
     
-    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
+    var arr = str.split(separator);
+    var au = artjs.Array;
+    
+    return new Date(parseInt(au.first(arr), 10), parseInt(au.second(arr), 10) - 1, parseInt(au.third(arr), 10));
+  },
+  
+  getDateShifted: function (date, days) {
+    var dateCopy = this.copy(date);
+  
+    dateCopy.setDate(date.getDate() + days);
+  
+    return dateCopy;
+  },
+  
+  getTime: function() {
+    return (new Date()).getTime();
   },
   
   hmToMinutes: function(hm, separator) {
@@ -93,14 +55,51 @@ artjs.Date = artjs.utils.Date = {
     return 60 * parseInt(arr[0], 10) + parseInt(arr[1], 10);
   },
   
-  secondsToMS: function(s, separator) {
-    var seconds = s % 60;
-    var minutes = (s - seconds) / 60;
-    var su = artjs.String;
-    
+  minutesToHM: function(minutes, separator) {
     separator = separator || ':';
     
-    return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
+    return Math.floor(minutes / 60) + separator + artjs.String.addZeros((minutes % 60).toString(), 2);
+  },
+  
+  monthDaysNum: function(date) {
+    var d = this.copy(date);
+    
+    d.setMonth(d.getMonth() + 1);
+    d.setDate(0);
+    
+    return d.getDate();
+  },
+  
+  msToHMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes % 60;
+    var totalHours = (totalMinutes - minutes) / 60;
+    var hours = totalHours;
+
+    return hours.toString() +
+      ':' +
+      artjs.String.addZeros(minutes.toString(), 2) +
+      ':' +
+      artjs.String.addZeros(seconds.toString(), 2) +
+      '.' +
+      artjs.String.addZeros(mili.toString(), 3);
+  },
+
+  msToMSM: function(v) {
+    var mili = v % 1000;
+    var totalSeconds = (v - mili) / 1000;
+    var seconds = totalSeconds % 60;
+    var totalMinutes = (totalSeconds - seconds) / 60;
+    var minutes = totalMinutes;
+
+    return minutes.toString() +
+      ':' +
+      artjs.String.addZeros(seconds.toString(), 2) +
+      '.' +
+      artjs.String.addZeros(mili.toString(), 3);
   },
   
   msToSeconds: function(ms, separator) {
@@ -119,55 +118,53 @@ artjs.Date = artjs.utils.Date = {
     
     return this.minutesToHM(minutes, separator) + separator + artjs.String.addZeros(seconds.toString(), 2);
   },
-
-  miliToHMSM: function(v) {
-    var mili = v % 1000;
-    var totalSeconds = (v - mili) / 1000;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes % 60;
-    var totalHours = (totalMinutes - minutes) / 60;
-    var hours = totalHours;
-
-    return hours.toString() +
-      ':' +
-      artjs.String.addZeros(minutes.toString(), 2) +
-      ':' +
-      artjs.String.addZeros(seconds.toString(), 2) +
-      '.' +
-      artjs.String.addZeros(mili.toString(), 3);
-  },
-
-  miliToMSM: function(v) {
-    var mili = v % 1000;
-    var totalSeconds = (v - mili) / 1000;
-    var seconds = totalSeconds % 60;
-    var totalMinutes = (totalSeconds - seconds) / 60;
-    var minutes = totalMinutes;
-
-    return minutes.toString() +
-      ':' +
-      artjs.String.addZeros(seconds.toString(), 2) +
-      '.' +
-      artjs.String.addZeros(mili.toString(), 3);
-  },
   
-  /**
-   * Overrides Object.copy if injected.
-   */
-  copy: function(date) {
-    return new Date(date);
-  },
-  
-  getDateShifted: function (date, days) {
-    var dateCopy = this.copy(date);
-  
-    dateCopy.setDate(date.getDate() + days);
-  
-    return dateCopy;
+  secondsToMS: function(s, separator) {
+    var seconds = s % 60;
+    var minutes = (s - seconds) / 60;
+    var su = artjs.String;
+    
+    separator = separator || ':';
+    
+    return su.addZeros(minutes.toString(), 2) + separator + su.addZeros(seconds.toString(), 2);
   },
   
   stripDayTime: function(date) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  },
+  
+  toDMY: function(date, separator) {
+    separator = separator || '-';
+    
+    var ymd = this.toYMD(date, separator);
+    var arr = ymd.split(separator);
+    
+    arr.reverse();
+    
+    return arr.join(separator);
+  },
+  
+  toHMS: function(date, separator) {
+    var su = artjs.String;
+    
+    separator = separator || ':';
+    
+    return su.addZeros(date.getHours().toString(), 2, false) + 
+      separator + su.addZeros(date.getMinutes().toString(), 2, false) + 
+      separator + su.addZeros(date.getSeconds().toString(), 2, false);
+  },
+  
+  toString: function() {
+    return this._name; 
+  },
+  
+  toYMD: function(date, separator) {
+    var su = artjs.String;
+    
+    separator = separator || '-';
+    
+    return date.getFullYear() +
+      separator + su.addZeros((date.getMonth() + 1).toString(), 2, false) +
+      separator + su.addZeros(date.getDate().toString(), 2, false);
   }
 };
