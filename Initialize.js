@@ -1,5 +1,5 @@
 var artjs = {
-  VERSION: '0.4',
+  VERSION: '0.4.0',
   
   component: {
     utils: {}
