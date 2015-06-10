@@ -78,9 +78,8 @@ artjs.TemplateCompiler = artjs.template.Compiler = artjs.Class(
       if (!delegate.method) { throw 'Trying to call unregistered "' + action + '" helper'; }
       
       var argsStr = artjs.Array.first(exec);
-      var argsValues = this._parseArguments(argsStr);
       
-      delegate.args = argsValues.concat(this._scope);
+      delegate.args = this._parseArguments(argsStr);
       
       return delegate.invoke();
     },

@@ -1,6 +1,10 @@
 artjs.TemplateHelpers = artjs.template.Helpers = {
   linkTo: function(caption, path) {
-    return this.renderElement('a', {href: '#/' + path}, caption);
+    path = artjs.Object.getDefault(path, caption);
+    
+    var href = (artjs.String.startsWith(path, 'http') ? '' : '#/') + path;
+    
+    return this.renderElement('a', {href: href}, caption);
   },
   
   render: function(templateId, scope) {
