@@ -6,22 +6,10 @@
   },
   "description": "ArtJs framework.",
   "files": [
-    "component",
-    "data",
-    "dom",
-    "events",
-    "math",
-    "model",
-    "net",
-    "spec",
-    "template",
-    "transition",
-    "ui",
-    "utils",
-    "view",
-    "Initialize.js",
-    "Finalize.js",
-    "Shortcuts.js"
+    "src",
+    "src/Initialize.js",
+    "src/Finalize.js",
+    "src/Shortcuts.js"
   ],
   "homepage": "http://artjs.org",
   "keywords": [
@@ -34,5 +22,5 @@
     "type": "git",
     "url": "https://github.com/arthwood/artJs.git"
   },
-  "version": "0.4.1"
+  "version": "0.4.2"
 }
