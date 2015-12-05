@@ -1,6 +1,6 @@
 artjs.Model = artjs.model.Base = artjs.Class(
   function() {
-    this._channel = new artjs.Channel('Model channel');
+    this._channelSet = new artjs.ChannelSet('Properties');
     this.onChange = new artjs.Event('Model::onChange');
   },
   {
@@ -19,15 +19,15 @@ artjs.Model = artjs.model.Base = artjs.Class(
     },
     
     addPropertyListener: function(prop, delegate, fire) {
-      this._channel.addListener(prop, delegate);
+      this._channelSet.addListener(prop, delegate);
       
       if (fire) {
-        this._channel.fire(prop, {newValue: this.getProperty(prop)});
+        this._channelSet.fire(prop, {newValue: this.getProperty(prop)});
       }
     },
     
-    getChannel: function() {
-      return this._channel;
+    getChannelSet: function() {
+      return this._channelSet;
     },
     
     getProperty: function(prop) {
@@ -35,20 +35,12 @@ artjs.Model = artjs.model.Base = artjs.Class(
     },
     
     onPropertyChange: function(prop, value, oldValue) {
-      this._channel.fire(prop, {newValue: value, oldValue: oldValue});
+      this._channelSet.fire(prop, {newValue: value, oldValue: oldValue});
       this.onChange.fire(this, prop, value, oldValue);
     },
     
     removePropertyListener: function(prop, delegate) {
-      this._channel.removeListener(prop, delegate);
-    },
-    
-    setProperties: function(props) {
-      artjs.Object.each(props, this.setProperty, this);
-    },
-    
-    setProperty: function(prop, value) {
-      this._setProperty(this.ctor.toPrivate(prop), value);
+      this._channelSet.removeListener(prop, delegate);
     },
     
     _createGetter: function(name) {
@@ -66,7 +58,7 @@ artjs.Model = artjs.model.Base = artjs.Class(
         var prop = arguments.callee.prop;
         var oldValue = this.getProperty(prop);
 
-        this.setProperty(prop, value);
+        this._setProperty(this.ctor.toPrivate(prop), value);
         
         this.onPropertyChange(prop, value, oldValue);
       };

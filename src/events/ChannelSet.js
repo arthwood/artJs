@@ -1,11 +1,11 @@
-artjs.Channel = artjs.events.Channel = artjs.Class(
+artjs.ChannelSet = artjs.events.Channel = artjs.Class(
   function(name) {
     this._name = name;
-    this._events = {};
+    this._channels = {};
   },
   {
     register: function(id) {
-      this._events[id] = new artjs.Event(id);
+      this._channels[id] = new artjs.Event(id);
     },
     
     addListener: function(id, delegate) {
@@ -20,8 +20,8 @@ artjs.Channel = artjs.events.Channel = artjs.Class(
       this._getEvent(id).fire(data);
     },
     
-    getEvents: function() {
-      return this._events;
+    getChannels: function() {
+      return this._channels;
     },
     
     toString: function() {
@@ -41,7 +41,7 @@ artjs.Channel = artjs.events.Channel = artjs.Class(
     },
     
     _findEvent: function(id) {
-      return this._events[id];
+      return this._channels[id];
     }
   }
 );

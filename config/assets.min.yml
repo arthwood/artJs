@@ -25,7 +25,7 @@ javascripts:
     - 'net/Router'
     - 'data/List'
     - 'data/Queue'
-    - 'events/Channel'
+    - 'events/ChannelSet'
     - 'events/Clock'
     - 'events/ElementEvent'
     - 'events/Timeline'

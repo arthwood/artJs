@@ -1,5 +1,5 @@
 artjs.component.utils.Scanner = artjs.ComponentScanner = {
-  _channel: new artjs.Channel('ComponentScanner'),
+  _channel: new artjs.ChannelSet('ComponentScanner'),
   
   scan: function(element) {
     artjs.Array.each(artjs.$findAll(element, '.art'), this._onFound, this);

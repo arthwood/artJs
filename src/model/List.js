@@ -13,21 +13,21 @@ artjs.ListModel = artjs.model.List = artjs.Class(
     addItem: function(item) {
       this._listenItem(item);
       
-      var result = this.items.push(item);
+      var index = this.items.push(item);
       
-      this.onItemAdd.fire(this, item);
-      
-      return result;
+      this.onItemAdd.fire(item, index);
     },
     
     removeItem: function(item) {
       item.onChange.remove(this._onItemChangeDelegate);
 
-      var result = artjs.Array.removeItem(this.items, item, true);
+      var index = artjs.Array.removeItem(this.items, item, true);
       
-      this.onItemRemove.fire(this, item);
-      
-      return result;
+      this.onItemRemove.fire(item, index);
+    },
+    
+    removeItems: function(items) {
+      artjs.Array.each(items, this.removeItem, this);
     },
     
     _listenItem: function(item) {
@@ -35,7 +35,7 @@ artjs.ListModel = artjs.model.List = artjs.Class(
     },
     
     _onItemChange: function(item, property) {
-      this.onItemChange.fire(this, item, property);
+      this.onItemChange.fire(item, property);
     },
     
     _onItemsChange: function() {

@@ -10,8 +10,13 @@ artjs.View = artjs.view.Base = artjs.Class(
     },
     
     setModel: function(model) {
+      if (this._model) {
+        this._removeModelListeners();
+      }
+      
       this._model = model;
-      this._model.onChange.add(this._onModelChangeDelegate);
+      
+      this._addModelListeners();
       
       this._render();
     },
@@ -26,14 +31,14 @@ artjs.View = artjs.view.Base = artjs.Class(
     _destroy: function() {
       this.super();
       
-      this._model.onChange.remove(this._onModelChangeDelegate);
+      this._removeModelListeners();
       
-      this._cleanupChannel(this._model.getChannel());
-      this._cleanupChannel(artjs.Broadcaster);
+      this._cleanupChannelSet(this._model.getChannelSet());
+      this._cleanupChannelSet(artjs.Broadcaster);
     },
     
-    _cleanupChannel: function(channel) {
-      var events = artjs.Object.values(channel.getEvents());
+    _cleanupChannelSet: function(channelSet) {
+      var events = artjs.Object.values(channelSet.getChannels());
       var listeners = artjs.Array.invoke(events, 'getItems');
       
       artjs.Array.each(listeners, this._filterListeners, this);
@@ -45,6 +50,14 @@ artjs.View = artjs.view.Base = artjs.Class(
     
     _filterListener: function(delegate) {
       return delegate.object == this;
+    },
+    
+    _addModelListeners: function() {
+      this._model.onChange.add(this._onModelChangeDelegate);
+    },
+    
+    _removeModelListeners: function() {
+      this._model.onChange.remove(this._onModelChangeDelegate);
     }
   },
   {
